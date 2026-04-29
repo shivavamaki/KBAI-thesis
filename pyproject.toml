@@ -1,0 +1,9 @@
+[project]
+name = "medicheck-thesis"
+version = "0.1.0"
+description = "Knowledge-Based Generative AI for prescription multi-label medication error classification"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

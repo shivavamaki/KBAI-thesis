@@ -1,0 +1,35 @@
+{
+  "type": "object",
+  "required": [
+    "order_id",
+    "has_medication_error",
+    "error_categories",
+    "error_details",
+    "ncc_merp_severity_category",
+    "overall_recommendation",
+    "evidence_quotes"
+  ],
+  "properties": {
+    "order_id": {"type": "string"},
+    "has_medication_error": {"type": "boolean"},
+    "error_categories": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "error_details": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["category", "implicated_drugs", "rationale"],
+        "properties": {
+          "category": {"type": "string"},
+          "implicated_drugs": {"type": "array", "items": {"type": "string"}},
+          "rationale": {"type": "string"}
+        }
+      }
+    },
+    "ncc_merp_severity_category": {"type": "string"},
+    "overall_recommendation": {"type": "string"},
+    "evidence_quotes": {"type": "array", "items": {"type": "string"}}
+  }
+}

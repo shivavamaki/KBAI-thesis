@@ -1,0 +1,132 @@
+เช็กแล้ว จุดที่ผิดที่สุดคือ **knowledge base ยังไม่พร้อมตอนเริ่ม inference** ไม่ใช่ prompt เป็นหลัก
+
+## ตัวการหลัก
+ใน notebook ที่อัปโหลด `build_knowledge.py` ทำแบบนี้:
+
+```python
+client.vector_stores.file_batches.create(
+    vector_store_id=vector_store_id,
+    file_ids=uploaded_file_ids
+)
+```
+
+แล้วจบทันที
+
+แต่เอกสาร OpenAI ระบุว่า การเพิ่มไฟล์เข้า vector store เป็น **async operation** และควร **poll จนพ้น `in_progress`** ก่อนใช้งาน ([developers.openai.com](https://developers.openai.com/api/docs/assistants/tools/file-search/)) ถ้ายังไม่เสร็จแล้วคุณยิง `responses.create(... file_search ...)` ต่อทันที โมเดลอาจค้นไฟล์ไม่ได้จริงในรอบนั้น และผลลัพธ์อาจออกมาเป็น empty output ได้
+
+อีกอย่าง ใน docs ฝั่ง file search ก็ระบุว่าต้อง “set up a knowledge base in a vector store and uploaded files to it” ก่อนใช้งานกับ Responses API ([developers.openai.com](https://developers.openai.com/api/docs/guides/tools-file-search/))
+
+## ตัวการรอง
+มีอีก 2 จุดที่ทำให้ดูเหมือน “empty response” ทั้งที่จริงเป็นคนละปัญหา
+
+อย่างแรก ใน notebook cell ที่เพิ่ม
+
+```python
+import traceback
+from openai import APIConnectionError, APITimeoutError, RateLimitError, APIError
+```
+
+มันไม่ได้แก้ `run_inference.py` เลย เพราะเป็นแค่ import ใน notebook ไม่ได้เขียนลงไฟล์สคริปต์ ดังนั้น network error ที่เกิดหลังเคสแรกยังไม่ถูก retry หรือ log แบบละเอียด
+
+อย่างที่สอง `build_knowledge.py` ตอนนี้ “reuse vector store เดิม + attach files ใหม่ทุกครั้ง” ทำให้มีโอกาสเกิดไฟล์ซ้ำใน store ได้ ซึ่งไม่ใช่สาเหตุหลักของ empty output แต่ทำให้ retrieval สกปรกและไม่เสถียรขึ้น
+
+## สิ่งที่น่าจะแก้แล้วหายมากที่สุด
+แก้ `build_knowledge.py` ให้รอ indexing เสร็จก่อน โดยเปลี่ยนช่วง attach files เป็นแบบนี้
+
+```python
+print("Attaching files and waiting for indexing to finish...")
+file_batch = client.vector_stores.file_batches.create_and_poll(
+    vector_store_id=vector_store_id,
+    file_ids=uploaded_file_ids
+)
+
+print("file_batch.status:", file_batch.status)
+print("file_batch.file_counts:", file_batch.file_counts)
+
+if getattr(file_batch, "status", None) != "completed":
+    raise RuntimeError(f"Vector store ingestion not completed: {file_batch}")
+```
+
+ถ้า SDK ของคุณไม่มี `create_and_poll()` ให้ poll เองแบบนี้
+
+```python
+print("Attaching files...")
+batch = client.vector_stores.file_batches.create(
+    vector_store_id=vector_store_id,
+    file_ids=uploaded_file_ids
+)
+
+for _ in range(60):
+    status = client.vector_stores.retrieve(vector_store_id)
+    print("vector_store.status:", status.status, "file_counts:", status.file_counts)
+    if status.status == "completed":
+        break
+    time.sleep(5)
+else:
+    raise RuntimeError("Vector store did not finish processing in time")
+```
+
+OpenAI docs ระบุชัดว่าควรรอจนไฟล์ออกจาก `in_progress` และ SDK มี helper สำหรับ upload/poll ด้วย ([developers.openai.com](https://developers.openai.com/api/docs/assistants/tools/file-search/))
+
+## แล้ว empty response มาจากตรงไหนใน flow
+flow ของคุณตอนนี้น่าจะเป็นแบบนี้:
+
+1. อัปโหลดไฟล์
+2. สร้าง batch เข้า vector store
+3. ยังไม่รอ processing เสร็จ
+4. เรียก `run_inference.py` ทันที
+5. `file_search` ยังไม่มี indexed chunks พร้อมใช้
+6. response ไม่มีข้อความที่ `extract_text_from_response()` ดึงได้
+7. เลยขึ้น `Model returned empty text output.`
+
+## เพิ่มตัวเช็กก่อนเริ่ม inference
+ก่อนรัน `run_inference.py` ลองเช็กสถานะ vector store ก่อน
+
+```python
+from openai import OpenAI
+import json
+
+client = OpenAI(api_key=OPENAI_API_KEY)
+
+cache = json.load(open("/content/drive/MyDrive/medicheck_cache/knowledge_cache.json", "r"))
+vs_id = cache["vector_store"]["id"]
+
+vs = client.vector_stores.retrieve(vs_id)
+print("vector_store_id:", vs.id)
+print("status:", vs.status)
+print("file_counts:", vs.file_counts)
+```
+
+ถ้า `status` ยังไม่ใช่ `completed` อย่าเพิ่ง run inference
+
+ตาม API reference, vector store มีสถานะ `in_progress` / `completed` / `expired` ชัดเจน ([developers.openai.com](https://developers.openai.com/api/reference/resources/vector_stores/?utm_source=chatgpt.com))
+
+## อีกจุดที่ควรแก้ใน `run_inference.py`
+ให้ log response object ทั้งก้อนเมื่อ text ว่าง จะได้รู้ว่าเป็น empty จริง, refusal, หรือ tool-only output
+
+```python
+def extract_text_from_response(response):
+    output_text = getattr(response, "output_text", None)
+    if isinstance(output_text, str) and output_text.strip():
+        return output_text.strip()
+
+    if hasattr(response, "model_dump"):
+        preview = response.model_dump()
+    else:
+        preview = str(response)
+
+    raise ValueError(f"Model returned empty text output. Response preview: {str(preview)[:3000]}")
+```
+
+และต้องใส่ retry ใน `run_inference.py` เอง ไม่ใช่ import แยกใน notebook cell
+
+## สรุป
+สาเหตุหลักสุดคือ `build_knowledge.py` ใช้ `file_batches.create(...)` แล้วไม่รอให้ vector store processing เสร็จ ก่อนเอาไปใช้กับ `file_search` ซึ่ง docs บอกว่าต้อง poll ให้พ้น `in_progress` ก่อน ([developers.openai.com](https://developers.openai.com/api/docs/assistants/tools/file-search/))
+
+ถ้าจะแก้ให้ตรงจุดที่สุด:
+- แก้ `build_knowledge.py` ให้ poll จน `completed`
+- เช็ก `vector_store.status` ก่อน run inference
+- ใส่ retry/log ใน `run_inference.py`
+- อย่า attach ไฟล์ซ้ำเข้า vector store เดิมทุกรอบ
+
+ส่ง `build_knowledge.py` กับ `run_inference.py` เวอร์ชันล่าสุดมาอีกครั้งได้ เดี๋ยวผม rewrite ให้เป็นคู่ที่รันต่อกันได้เลยแบบไม่หลุดจุดนี้
