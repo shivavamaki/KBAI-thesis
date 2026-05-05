@@ -146,6 +146,60 @@ python scripts/build_knowledge.py ... --force_new_vector_store
 
 ---
 
+## Pharmacist Review Web App
+
+แอปสำหรับเภสัชกรตรวจสอบและจำแนกความคลาดเคลื่อนของใบสั่งยาด้วยตนเอง  
+ผลลัพธ์จะเป็น reference standard สำหรับเปรียบเทียบกับ AI
+
+### Run the app
+
+```powershell
+streamlit run pharmacist_app/app.py
+```
+
+เปิด browser ที่ `http://localhost:8501`
+
+### Workflow
+
+1. ใส่ path ของไฟล์ข้อมูล JSON ใน sidebar แล้วกด **Load File**
+2. ระบบจะแสดงใบสั่งยาทีละรายการพร้อมตารางยา
+3. เลือกการจำแนก:
+   - **Has medication error?** — Yes / No
+   - **Error categories** — เลือกได้หลายประเภท (NCC MERP 12 ประเภท)
+   - **Severity** — A ถึง I (NCC MERP)
+   - **Implicated drugs** — ยาที่เกี่ยวข้อง
+   - **Notes** — เหตุผลประกอบ
+4. กด **Save & Next →** เพื่อบันทึกและไปเคสถัดไป
+5. กด **⬇ Download results** เพื่อดาวน์โหลด JSON
+
+### Output format
+
+บันทึกที่ `outputs/pharmacist_reference.json` — รูปแบบเดียวกับ AI output สำหรับเปรียบเทียบโดยตรง:
+
+```json
+[
+  {
+    "order_id": "string",
+    "has_medication_error": true,
+    "error_categories": ["Prescribing Error"],
+    "error_details": [{"category": "...", "implicated_drugs": [...], "rationale": "..."}],
+    "implicated_drugs": ["amoxicillin"],
+    "ncc_merp_severity_category": "C",
+    "overall_recommendation": "string",
+    "reviewed_at": "2026-05-05T10:00:00"
+  }
+]
+```
+
+### Features
+
+- บันทึกอัตโนมัติทุกครั้งที่กด Save — ไม่ต้องกลัวข้อมูลหาย
+- กลับมาต่อได้ — โหลดไฟล์ output เดิมเพื่อดูผลที่บันทึกไว้แล้ว
+- กระโดดไปเคสใดก็ได้ด้วย "Jump to case #"
+- Skip โดยไม่บันทึกได้
+
+---
+
 ## Evaluate
 
 ```bash
