@@ -52,75 +52,96 @@ KBAI-thesis/
 
 ---
 
-## Setup (local)
+## Setup (local / PC)
 
-```bash
+### Step 1 — Install dependencies
+
+```powershell
 python -m venv .venv
-.venv\Scripts\activate        # Windows
-# source .venv/bin/activate   # macOS/Linux
+.venv\Scripts\activate
 
 pip install -r requirements.txt
+```
+
+### Step 2 — Create `.env`
+
+```powershell
 copy .env.example .env
 ```
 
-ตั้งค่า `.env`:
+แก้ไข `.env`:
 
 ```env
 OPENAI_API_KEY=your_api_key_here
 VECTOR_STORE_NAME=medicheck_knowledge_base
-VECTOR_STORE_ID=                        # filled automatically after first build
+VECTOR_STORE_ID=                   # see Step 3
 MODEL=gpt-4.1-mini
+GROUP_COLUMN=ID                    # column that groups rows into one case
 ```
+
+### Step 3 — Get `VECTOR_STORE_ID`
+
+**ถ้าเคย build บน Colab แล้ว** — เปิดไฟล์  
+`MyDrive/thesis/Result/medicheck_cache/vector_store_id.txt`  
+แล้ว copy ID (รูปแบบ `vs_xxx...`) ใส่ใน `.env`:
+
+```env
+VECTOR_STORE_ID=vs_xxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+**ถ้ายังไม่เคย build** — รัน build บน PC ก่อน (ดูหัวข้อ Build ด้านล่าง)  
+หลัง build สำเร็จ `VECTOR_STORE_ID` จะถูกบันทึกอัตโนมัติใน `.env`
+
+### Step 4 — Copy data file
+
+วางไฟล์ข้อมูลไว้ที่ `data/raw/`:
+
+```
+data/raw/RT_COMMON_904_test_clean_blinded_first_sheet.json
+```
+
+รองรับทั้ง `.json` (array of records) และ `.csv`
+
+### Step 5 — Run inference
+
+```powershell
+python scripts/run_inference.py `
+  --input data/raw/RT_COMMON_904_test_clean_blinded_first_sheet.json `
+  --output outputs/predictions.jsonl
+```
+
+ผลลัพธ์จะถูกบันทึกที่ `outputs/predictions.jsonl`  
+กรณีมีเคสที่ล้มเหลวจะบันทึกที่ `outputs/failed_cases.json`
 
 ---
 
-## Build knowledge base (ทำครั้งเดียว)
+## Build knowledge base (ทำครั้งเดียว — หรือเมื่อไฟล์ KB เปลี่ยน)
 
-```bash
-python scripts/build_knowledge.py ^
-  --knowledge_files ^
-    knowledge_base/medication_error_kb_chunked.jsonl ^
-    knowledge_base/allergy_rules.jsonl ^
-    knowledge_base/BKN_Med_List.jsonl ^
-    "knowledge_base/index-color-2021-draft-change-10-2022.pdf" ^
-    "knowledge_base/MedFacts - Pocket Guide of Drug Interaction.pdf" ^
-    knowledge_base/DrugInteractionsChapter.pdf ^
-    "knowledge_base/คู่มือการใช้ยาที่มีความเสี่ยงสูง High Alert Drug ปรับปรุง 2564 HAD_2109.pdf" ^
-    "knowledge_base/การจัดการยาความเสี่ยงสูง.pdf" ^
+> ข้ามขั้นตอนนี้ถ้า `VECTOR_STORE_ID` มีแล้วใน `.env`
+
+วาง KB files ทั้งหมดไว้ใน `knowledge_base/` แล้วรัน:
+
+```powershell
+python scripts/build_knowledge.py `
+  --knowledge_files `
+    knowledge_base/medication_error_kb_chunked.jsonl `
+    knowledge_base/allergy_rules.jsonl `
+    knowledge_base/BKN_Med_List.jsonl `
+    "knowledge_base/index-color-2021-draft-change-10-2022.pdf" `
+    "knowledge_base/MedFacts - Pocket Guide of Drug Interaction.pdf" `
+    knowledge_base/DrugInteractionsChapter.pdf `
+    "knowledge_base/คู่มือการใช้ยาที่มีความเสี่ยงสูง High Alert Drug ปรับปรุง 2564 HAD_2109.pdf" `
+    "knowledge_base/การจัดการยาความเสี่ยงสูง.pdf" `
   --cache_path outputs/knowledge_cache.json
 ```
 
 หลัง build สำเร็จ `VECTOR_STORE_ID` จะถูกบันทึกอัตโนมัติใน `.env`  
-**ครั้งต่อไปไม่ต้อง build ใหม่** — inference จะอ่าน ID จาก `.env` โดยตรง
+**ครั้งต่อไปไม่ต้อง build ใหม่**
 
 หากต้องการ rebuild ทั้งหมด (เมื่อไฟล์ KB เปลี่ยน):
 
-```bash
+```powershell
 python scripts/build_knowledge.py ... --force_new_vector_store
-```
-
----
-
-## Run inference (local)
-
-Copy your JSON data file to `data/raw/` then run:
-
-```bash
-python scripts/run_inference.py ^
-  --input data/raw/RT_COMMON_904_test_clean_blinded_first_sheet.json ^
-  --output outputs/predictions.jsonl
-```
-
-Accepts both `.json` (array of records) and `.csv` inputs.  
-`GROUP_COLUMN` in `.env` controls which column groups rows into cases (default: `ID`).
-
-**Required `.env` before running:**
-
-```env
-OPENAI_API_KEY=your_api_key_here
-VECTOR_STORE_ID=vs_xxx          ← copy from Colab vector_store_id.txt after build
-MODEL=gpt-4.1-mini
-GROUP_COLUMN=ID
 ```
 
 ---
