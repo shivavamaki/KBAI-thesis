@@ -7,7 +7,7 @@ from openai import OpenAI, APIConnectionError, APITimeoutError, RateLimitError, 
 from pydantic import ValidationError
 from .config import get_settings
 from .io import load_json, append_jsonl, save_json
-from .prompting import DEFAULT_SYSTEM_PROMPT, build_case_prompt
+from .prompting import DEFAULT_SYSTEM_PROMPT, build_case_prompt, extract_drug_names
 from .schemas import ClassificationResult
 
 
@@ -102,13 +102,7 @@ def classify_case(
     max_kb_results: int = 5,
 ) -> Dict[str, Any]:
     user_prompt = build_case_prompt(case_id, case_df)
-
-    # Build KB query from drug names in the case
-    drugs = [
-        str(row.get("drug_name", "")).strip()
-        for _, row in case_df.iterrows()
-        if row.get("drug_name") and pd.notna(row.get("drug_name"))
-    ]
+    drugs = extract_drug_names(case_df)
     kb_query = f"medication error classification {' '.join(drugs[:5])}".strip()
 
     for attempt in range(1, max_retries + 1):
@@ -164,7 +158,12 @@ def run_inference(
 ) -> Dict[str, Any]:
     vector_store_id = _resolve_vector_store_id(cache_path)
     client = OpenAI(api_key=api_key)
-    df = pd.read_csv(input_path)
+    if input_path.lower().endswith(".json"):
+        import json as _json
+        with open(input_path, "r", encoding="utf-8") as f:
+            df = pd.DataFrame(_json.load(f))
+    else:
+        df = pd.read_csv(input_path)
     results = {}
     failed = []
 

@@ -3,15 +3,14 @@ from medicheck.config import get_settings
 from medicheck.inference import run_inference
 
 def main():
+    settings = get_settings()
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", required=True)
     parser.add_argument("--output", default="outputs/predictions.jsonl")
     parser.add_argument("--cache_path", default="outputs/knowledge_cache.json")
-    parser.add_argument("--group_column", default="case_id")
+    parser.add_argument("--group_column", default=settings.group_column)
     parser.add_argument("--max_cases", type=int, default=None)
     args = parser.parse_args()
-
-    settings = get_settings()
     result = run_inference(
         api_key=settings.openai_api_key,
         input_path=args.input,

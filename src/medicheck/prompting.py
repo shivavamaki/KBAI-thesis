@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 import pandas as pd
 
@@ -8,28 +9,43 @@ If evidence is insufficient, set has_medication_error to false.
 Return JSON only.
 """.strip()
 
+# Columns that identify the group — strip from per-row records to avoid duplication
+_GROUP_COLS = {"case_id", "ID", "id", "order_id"}
+
+# Known drug-name column variants (checked in order)
+_DRUG_COLS = ("drug_name", "Drug", "drug", "DRUG", "medication", "Medication")
+
+
 def build_case_prompt(case_id: str, case_df: pd.DataFrame) -> str:
-    first = case_df.iloc[0].to_dict()
-    patient_fields = [
-        "patient_age", "weight_kg", "height_cm", "bmi", "bsa",
-        "sbp", "dbp", "allergy_text", "diagnosis_icd"
-    ]
+    """Build user prompt. Works with any column layout (local CSV or Colab JSON)."""
+    records = []
+    for _, row in case_df.iterrows():
+        record = {
+            k: v for k, v in row.items()
+            if k not in _GROUP_COLS
+            and pd.notna(v)
+            and str(v).strip() not in ("", "-", "None", "nan")
+        }
+        if record:
+            records.append(record)
 
-    lines = [f"Order/case ID: {case_id}", "", "Patient data:"]
-    for field in patient_fields:
-        if field in first and pd.notna(first[field]):
-            lines.append(f"- {field}: {first[field]}")
+    return (
+        f"Order ID: {case_id}\n"
+        f"Prescription: {json.dumps(records, ensure_ascii=False, separators=(',', ':'))}\n"
+        f"Classify medication errors. Return JSON only."
+    )
 
-    lines.append("")
-    lines.append("Medication orders:")
-    med_fields = ["drug_name", "dose", "route", "frequency", "duration", "status"]
-    for idx, row in case_df.iterrows():
-        med = []
-        for field in med_fields:
-            if field in row and pd.notna(row[field]):
-                med.append(f"{field}={row[field]}")
-        lines.append(f"{idx + 1}. " + "; ".join(med))
 
-    lines.append("")
-    lines.append("Classify medication errors using the required JSON schema.")
-    return "\n".join(lines)
+def extract_drug_names(case_df: pd.DataFrame) -> list:
+    """Return de-duplicated drug names from whichever column exists in the dataframe."""
+    for col in _DRUG_COLS:
+        if col in case_df.columns:
+            seen, result = set(), []
+            for val in case_df[col]:
+                s = str(val).strip()
+                if s and s not in ("", "-", "None", "nan") and s not in seen:
+                    seen.add(s)
+                    result.append(s)
+            if result:
+                return result
+    return []
