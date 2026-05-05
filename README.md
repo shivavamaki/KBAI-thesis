@@ -103,10 +103,24 @@ python scripts/build_knowledge.py ... --force_new_vector_store
 
 ## Run inference (local)
 
+Copy your JSON data file to `data/raw/` then run:
+
 ```bash
 python scripts/run_inference.py ^
-  --input data/samples/prescriptions_sample.csv ^
+  --input data/raw/RT_COMMON_904_test_clean_blinded_first_sheet.json ^
   --output outputs/predictions.jsonl
+```
+
+Accepts both `.json` (array of records) and `.csv` inputs.  
+`GROUP_COLUMN` in `.env` controls which column groups rows into cases (default: `ID`).
+
+**Required `.env` before running:**
+
+```env
+OPENAI_API_KEY=your_api_key_here
+VECTOR_STORE_ID=vs_xxx          ← copy from Colab vector_store_id.txt after build
+MODEL=gpt-4.1-mini
+GROUP_COLUMN=ID
 ```
 
 ---
