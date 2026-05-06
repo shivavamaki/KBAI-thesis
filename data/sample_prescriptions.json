@@ -1,0 +1,92 @@
+[
+  {
+    "order_id": "ORD001",
+    "Drug": "Metformin",
+    "Dose": "500mg",
+    "Frequency": "BID",
+    "Route": "Oral",
+    "Duration": "30 days",
+    "Status": "Active"
+  },
+  {
+    "order_id": "ORD002",
+    "Drug": "Lisinopril",
+    "Dose": "10mg",
+    "Frequency": "OD",
+    "Route": "Oral",
+    "Duration": "90 days",
+    "Status": "Active"
+  },
+  {
+    "order_id": "ORD003",
+    "Drug": "Atorvastatin",
+    "Dose": "20mg",
+    "Frequency": "OD",
+    "Route": "Oral",
+    "Duration": "90 days",
+    "Status": "Active"
+  },
+  {
+    "order_id": "ORD004",
+    "Drug": "Amlodipine",
+    "Dose": "5mg",
+    "Frequency": "OD",
+    "Route": "Oral",
+    "Duration": "90 days",
+    "Status": "Active"
+  },
+  {
+    "order_id": "ORD005",
+    "Drug": "Metoprolol",
+    "Dose": "25mg",
+    "Frequency": "BID",
+    "Route": "Oral",
+    "Duration": "90 days",
+    "Status": "Active"
+  },
+  {
+    "order_id": "ORD006",
+    "Drug": "Omeprazole",
+    "Dose": "20mg",
+    "Frequency": "OD",
+    "Route": "Oral",
+    "Duration": "30 days",
+    "Status": "Active"
+  },
+  {
+    "order_id": "ORD007",
+    "Drug": "Sertraline",
+    "Dose": "50mg",
+    "Frequency": "OD",
+    "Route": "Oral",
+    "Duration": "90 days",
+    "Status": "Active"
+  },
+  {
+    "order_id": "ORD008",
+    "Drug": "Levothyroxine",
+    "Dose": "75mcg",
+    "Frequency": "OD",
+    "Route": "Oral",
+    "Duration": "90 days",
+    "Status": "Active"
+  },
+  {
+    "order_id": "ORD009",
+    "Drug": "Aspirin",
+    "Dose": "100mg",
+    "Frequency": "OD",
+    "Route": "Oral",
+    "Duration": "90 days",
+    "Status": "Active"
+  },
+  {
+    "order_id": "ORD010",
+    "Drug": "Metformin",
+    "Dose": "850mg",
+    "Frequency": "TID",
+    "Route": "Oral",
+    "Duration": "90 days",
+    "Status": "Active"
+  }
+]

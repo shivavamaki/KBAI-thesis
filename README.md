@@ -1,10 +1,31 @@
-# MediCheck Thesis Repository
+# MediCheck — Knowledge-Based AI for Prescription Error Classification
 
 โครงสร้าง Git repository สำหรับปริญญานิพนธ์เรื่อง  
 **การจำแนกใบสั่งยาแบบหลายป้ายกำกับด้วย Knowledge Base Generative AI**  
 **Prescription Multi-label Classification with Knowledge Base Generative AI**
 
 > **หมายเหตุ:** ไม่ควร commit ข้อมูลผู้ป่วยจริง, API key, HN, VN, order number หรือไฟล์ที่ระบุตัวตนผู้ป่วยได้ลง Git
+
+---
+
+## ⚡ Pharmacist Review App — Quick Start
+
+### Windows
+```bash
+run.bat
+```
+
+### Mac/Linux
+```bash
+bash run.sh
+```
+
+**Or any OS:**
+```bash
+python3 launch.py
+```
+
+📖 **Full Guide:** [Quick Start Documentation](docs/QUICKSTART.md)
 
 ---
 

@@ -1,0 +1,19 @@
+[client]
+showErrorDetails = true
+logger.level = "warning"
+
+[server]
+headless = false
+port = 8501
+runOnSave = true
+maxUploadSize = 200
+
+[logger]
+level = "warning"
+
+[theme]
+primaryColor = "#1f77b4"
+backgroundColor = "#0e1117"
+secondaryBackgroundColor = "#262730"
+textColor = "#fafafa"
+font = "sans serif"
