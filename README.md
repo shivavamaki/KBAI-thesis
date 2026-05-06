@@ -25,6 +25,22 @@ bash run.sh
 python3 launch.py
 ```
 
+### Run the app step by step
+1. Test the app:
+```bash
+python3 launch.py
+```
+2. Verify setup:
+```bash
+python3 tools/verify_app.py
+```
+3. Create distribution package:
+```bash
+bash tools/create_package.sh
+```
+4. Share the generated package:
+- `medicheck-app.zip`
+
 📖 **Full Guide:** [Quick Start Documentation](docs/QUICKSTART.md)
 
 ---
