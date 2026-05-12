@@ -334,35 +334,47 @@ textarea:focus{{outline:none;border-color:#4c6ef5}}
 
 <script>
 const CATS = {cat_json};
-let cases = [], results = {{}}, idx = 0, hasErr = false, pickedContent = null;
-let currentDrugs = [];  // drug list for current case
+let cases = [], results = {{}}, idx = 0, hasErr = false;
+let currentDrugs = [];
+let fileReadPromise = null;  // resolves with file text content
 
 // ── File picker ──────────────────────────────────────────────────────────────
 function onFilePick(input) {{
   const file = input.files[0];
   if (!file) return;
-  document.getElementById('inPath').value = file.name + ' (selected via Browse)';
-  const reader = new FileReader();
-  reader.onload = e => {{ pickedContent = e.target.result; }};
-  reader.readAsText(file, 'utf-8');
+  document.getElementById('inPath').value = '&#128462; ' + file.name;
+  document.getElementById('loadErr').textContent = '';
+  // Wrap FileReader in a Promise so loadFile() can await it
+  fileReadPromise = new Promise((resolve, reject) => {{
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result);
+    reader.onerror = () => reject(new Error('Could not read file'));
+    reader.readAsText(file, 'utf-8');
+  }});
 }}
 
 // ── Load ─────────────────────────────────────────────────────────────────────
 async function loadFile() {{
   const op = document.getElementById('outPath').value.trim();
-  document.getElementById('loadErr').textContent = 'Loading...';
+  const errEl = document.getElementById('loadErr');
+  const btn = document.querySelector('.lcard .btn-p');
+  btn.textContent = 'Loading...'; btn.disabled = true;
+  errEl.textContent = '';
   try {{
     let body;
-    if (pickedContent) {{
-      body = JSON.stringify({{content: pickedContent, output: op}});
+    if (fileReadPromise) {{
+      // Wait for FileReader to finish (handles race condition)
+      const content = await fileReadPromise;
+      body = JSON.stringify({{content: content, output: op}});
     }} else {{
       const ip = document.getElementById('inPath').value.trim().replace(/^['"]+|['"]+$/g, '');
-      if (!ip) {{ document.getElementById('loadErr').textContent = 'Please select a file or enter a path.'; return; }}
+      if (!ip) {{ errEl.textContent = 'Please select a file or enter a path.'; return; }}
       body = JSON.stringify({{input: ip, output: op}});
     }}
     const r = await fetch('/api/load', {{method: 'POST', headers: {{'Content-Type': 'application/json'}}, body}});
     const d = await r.json();
-    if (!r.ok) {{ document.getElementById('loadErr').textContent = d.error || 'Failed'; return; }}
+    if (!r.ok) {{ errEl.textContent = d.error || 'Server error'; return; }}
+    if (!d.cases || d.cases.length === 0) {{ errEl.textContent = 'No cases found in file. Check JSON format (must be array of records).'; return; }}
     cases = d.cases;
     results = d.results;
     document.getElementById('loadScreen').style.display = 'none';
@@ -373,7 +385,9 @@ async function loadFile() {{
     const first = cases.findIndex(c => !results[c.id]);
     goTo(first >= 0 ? first : 0);
   }} catch (e) {{
-    document.getElementById('loadErr').textContent = 'Error: ' + e.message;
+    errEl.textContent = 'Error: ' + e.message;
+  }} finally {{
+    btn.textContent = 'Load File'; btn.disabled = false;
   }}
 }}
 
