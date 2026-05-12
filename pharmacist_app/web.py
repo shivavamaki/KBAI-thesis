@@ -422,7 +422,7 @@ function splitDrugInfo(info) {{
   // Split first segment (name) from rest (instructions)
   const parts = info.split(/  +|\\r?\\n/);
   const name = parts[0].trim().slice(0, 100);
-  const rest = parts.slice(1).join('\n').trim();
+  const rest = parts.slice(1).join('\\n').trim();
   return {{name, rest}};
 }}
 
