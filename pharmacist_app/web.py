@@ -264,9 +264,10 @@ textarea:focus{{outline:none;border-color:#4c6ef5}}
           <label class="lbl">Input JSON file</label>
           <div style="display:flex;gap:6px;align-items:center">
             <input type="text" id="inPath" placeholder="Type path or click Browse..." style="flex:1">
-            <button class="btn btn-s" onclick="document.getElementById('filePick').click()" style="white-space:nowrap;flex-shrink:0;font-size:11px;padding:8px 11px">Browse...</button>
-            <input type="file" id="filePick" accept=".json" style="display:none" onchange="onFilePick(this)">
+            <label for="filePick" class="btn btn-s" style="white-space:nowrap;flex-shrink:0;font-size:11px;padding:8px 11px;cursor:pointer;display:inline-block">Browse...</label>
+            <input type="file" id="filePick" accept=".json" style="display:none">
           </div>
+          <div id="fileStatus" style="font-size:11px;color:#4caf6e;margin-top:4px;display:none"></div>
           <div style="font-size:10px;color:#3d4460;margin-top:4px">หรือพิมพ์ path โดยตรง (ไม่ต้องใส่เครื่องหมายคำพูด)</div>
         </div>
         <div class="fg">
@@ -339,11 +340,14 @@ let currentDrugs = [];
 let fileReadPromise = null;  // resolves with file text content
 
 // ── File picker ──────────────────────────────────────────────────────────────
-function onFilePick(input) {{
-  const file = input.files[0];
+document.getElementById('filePick').addEventListener('change', function() {{
+  const file = this.files[0];
   if (!file) return;
-  document.getElementById('inPath').value = '&#128462; ' + file.name;
+  document.getElementById('inPath').value = file.name;
   document.getElementById('loadErr').textContent = '';
+  const statusEl = document.getElementById('fileStatus');
+  statusEl.textContent = 'File selected: ' + file.name + ' (' + Math.round(file.size/1024) + ' KB)';
+  statusEl.style.display = '';
   // Wrap FileReader in a Promise so loadFile() can await it
   fileReadPromise = new Promise((resolve, reject) => {{
     const reader = new FileReader();
@@ -351,7 +355,7 @@ function onFilePick(input) {{
     reader.onerror = () => reject(new Error('Could not read file'));
     reader.readAsText(file, 'utf-8');
   }});
-}}
+}});
 
 // ── Load ─────────────────────────────────────────────────────────────────────
 async function loadFile() {{
@@ -405,10 +409,10 @@ function buildSidebar() {{
 // ── Drug parsing from DETAIL text ────────────────────────────────────────────
 function parseDrugs(text) {{
   if (!text) return [];
-  const drugs = [], re = /(\d{{10,}})\s+([\s\S]+?)(?=\s*\d{{10,}}|\s*Bed\s+Details?|$)/g;
+  const drugs = [], re = /(\\d{{10,}})\\s+([\\s\\S]+?)(?=\\s*\\d{{10,}}|\\s*Bed\\s+Details?|$)/g;
   let m;
   while ((m = re.exec(text)) !== null) {{
-    const info = m[2].replace(/\s+$/, '').trim();
+    const info = m[2].replace(/\\s+$/, '').trim();
     if (info) drugs.push({{code: m[1], info}});
   }}
   return drugs;
@@ -416,7 +420,7 @@ function parseDrugs(text) {{
 
 function splitDrugInfo(info) {{
   // Split first segment (name) from rest (instructions)
-  const parts = info.split(/  +|\r?\n/);
+  const parts = info.split(/  +|\\r?\\n/);
   const name = parts[0].trim().slice(0, 100);
   const rest = parts.slice(1).join('\n').trim();
   return {{name, rest}};
@@ -443,7 +447,7 @@ function renderScraped(c, cols, upper) {{
   for (const row of c.rows) {{
     const summary = SUMMARY ? String(row[SUMMARY] || '').trim() : '';
     const detail  = DETAIL  ? String(row[DETAIL]  || '').trim() : '';
-    const hasCodes = /\d{{10,}}/.test(detail);
+    const hasCodes = /\\d{{10,}}/.test(detail);
 
     if (!hasCodes) {{
       // Patient info / header row
