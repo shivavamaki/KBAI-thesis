@@ -93,21 +93,22 @@
     maxRouteWaitMs: 20000,
     maxDialogSettleMs: 12000,
     maxManualOverrideWaitMs: 180000,
-    settleAfterRowClickMs: 1000,
+    settleAfterRowClickMs: 400,      // reduced from 1000 — waitForDetailPaneText is the real gate
     settleAfterDialogCloseMs: 900,
     settleAfterActionClickMs: 1500,
     settleAfterSaveClickMs: 1800,
     settleAfterPaneCloseMs: 400,
-    loopDelayMs: 900,
+    loopDelayMs: 200,                // reduced from 900 — minimal yield between rows
     autoNoMatchIntervalMs: 30000,
     rowMatchTextLength: 240,
     maxRetriesPerRow: 2,
     scrapePaneWaitMs: 5000,
-    scrollLoadWaitMs: 900,
+    scrollLoadWaitMs: 500,           // reduced from 900 — less wait after scroll events
     maxEmptyScrollAttempts: 8,
     mouseWheelScrollSteps: 5,
     mouseWheelDeltaY: 650,
     milestoneSaveEvery: 50,
+    scrollTriggerThreshold: 3,       // trigger scroll only when fewer than N unseen rows remain
   };
 
   const PANEL_STORAGE_KEY = "arcusAutoPanelState";
@@ -760,7 +761,7 @@
       const pane = getDetailPane();
       const txt = textOf(pane);
       if (txt && txt.length > 5) return txt;
-      await sleep(300);
+      await sleep(100);   // reduced from 300 — catch ready pane up to 200ms sooner
     }
     return null;
   }

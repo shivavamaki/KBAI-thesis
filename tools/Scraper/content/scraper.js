@@ -124,7 +124,8 @@
     const paneText = (await waitForDetailPaneText()) || "";
     if (!paneText) panel().pushLog("info", "No detail pane text captured", meta);
 
-    await closeDetailPaneIfPresent();
+    // Do NOT close the pane here — the next row click overwrites it automatically,
+    // saving ~650ms per row. The finally block closes it after the last row.
     return {
       ok: true,
       item: { ID: String(index + 1), ROWTYPE: snapshot.rowType, SUMMARY: snapshot.text, DETAIL: paneText },
@@ -228,7 +229,12 @@
 
         panel().renderStats();
         syncScraperState();
-        await scrollMainContainerToLoadMore();
+
+        // Only scroll when the unseen queue is running low — avoids ~1800ms penalty on every row
+        const unseenCount = snapshots.filter((s) => !seenKeys.has(s.key || s.text)).length;
+        if (unseenCount < (CONFIG.scrollTriggerThreshold || 3)) {
+          await scrollMainContainerToLoadMore();
+        }
         await sleep(CONFIG.loopDelayMs);
       }
 
@@ -267,6 +273,7 @@
     } finally {
       state.scraperStopRequested = false;
       clearHighlight();
+      await closeDetailPaneIfPresent();   // close pane once at the very end
       panel().updateButtonState();
     }
   }
