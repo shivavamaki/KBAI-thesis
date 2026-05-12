@@ -204,6 +204,14 @@ td.td-long{{font-size:11px;color:#6878a0;max-width:250px;word-break:break-word;l
 .ropt{{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;cursor:pointer;padding:7px 8px;border-radius:6px;border:1px solid #dce3f0;background:#fff;font-size:11px;font-weight:600;transition:all .15s;user-select:none;text-align:center;line-height:1.3;color:#5a6a8a}}
 .ropt.sel-yes{{border-color:#e09090;background:#fde8e8;color:#a03030}}
 .ropt.sel-no{{border-color:#80c898;background:#e4f5ec;color:#1e6840}}
+.allergy-grid{{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:6px}}
+.aopt{{display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:7px 5px;border-radius:6px;border:1px solid #dce3f0;background:#fff;font-size:10.5px;font-weight:600;transition:all .15s;user-select:none;text-align:center;line-height:1.3;color:#5a6a8a}}
+.aopt.sel-nkda{{border-color:#80c898;background:#e4f5ec;color:#1e6840}}
+.aopt.sel-present{{border-color:#e09090;background:#fde8e8;color:#a03030}}
+.aopt.sel-unknown{{border-color:#e0c060;background:#fdf6e4;color:#7a5010}}
+.aopt.sel-notrec{{border-color:#b0b8c8;background:#f0f2f6;color:#4a5a78}}
+.allergy-input{{width:100%;box-sizing:border-box;padding:6px 9px;border-radius:6px;border:1px solid #e09090;background:#fff8f8;color:#2c3a5c;font-size:12px;font-family:inherit;line-height:1.5}}
+.allergy-input:focus{{outline:none;border-color:#c06060}}
 .cat-list{{display:flex;flex-direction:column;gap:3px}}
 .cat-item{{display:flex;align-items:center;gap:7px;cursor:pointer;padding:6px 9px;border-radius:5px;border:1px solid #dce3f0;background:#fff;font-size:11.5px;user-select:none;transition:background .1s,border-color .1s;color:#3a4a6a}}
 .cat-item:hover{{background:#eef2ff}}
@@ -234,6 +242,31 @@ textarea:focus{{outline:none;border-color:#7090d8}}
 /* ── Toast ── */
 .toast{{position:fixed;bottom:14px;right:14px;background:#d8f0e4;color:#1e7048;border:1px solid #90d0b0;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999}}
 .toast.show{{opacity:1}}
+
+/* ── Patient info tags ── */
+.ptag-wrap{{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}}
+.ptag{{display:inline-block;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600;border:1px solid transparent}}
+.ptag-blue{{background:#dce8ff;color:#2050a0;border-color:#b0c8f0}}
+.ptag-green{{background:#d8f5e8;color:#1a6040;border-color:#88ccaa}}
+.ptag-amber{{background:#fff4d8;color:#8a5010;border-color:#e0c070}}
+.ptag-red{{background:#ffe8e8;color:#a03030;border-color:#f0b0b0}}
+.ptag-gray{{background:#e8ecf5;color:#4a5a7a;border-color:#c8d0e0}}
+.info-raw{{font-size:11px;color:#5a7090;line-height:1.65;margin-top:6px;word-break:break-word}}
+
+/* ── Vital signs ── */
+.vitals-card{{background:#f0f8ff;border:1px solid #b8d4f0;border-radius:8px;padding:12px 13px;margin-top:6px}}
+.vitals-row{{display:grid;gap:6px;margin-bottom:6px}}
+.vitals-row:last-child{{margin-bottom:0}}
+.v4{{grid-template-columns:repeat(4,1fr)}}
+.v3{{grid-template-columns:repeat(3,1fr)}}
+.vital-cell{{background:#fff;border:1px solid #d0e4f8;border-radius:6px;padding:7px 5px;text-align:center}}
+.vital-cell.warn{{border-color:#f0c080;background:#fffbf0}}
+.vital-cell.alrt{{border-color:#f09090;background:#fff0f0}}
+.vital-lbl{{font-size:9px;color:#7090b0;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}}
+.vital-val{{font-size:15px;font-weight:700;color:#1a3a80;line-height:1}}
+.vital-cell.warn .vital-val{{color:#a06010}}
+.vital-cell.alrt .vital-val{{color:#c02020}}
+.vital-unit{{font-size:9px;color:#90a8c0;margin-left:1px}}
 
 ::-webkit-scrollbar{{width:4px}}
 ::-webkit-scrollbar-thumb{{background:#c8d0e0;border-radius:2px}}
@@ -320,6 +353,17 @@ textarea:focus{{outline:none;border-color:#7090d8}}
     </div>
 
     <div class="form-sect">
+      <div class="sect-title">Drug Allergy History</div>
+      <div class="allergy-grid">
+        <div class="aopt" id="aoptNKDA"    onclick="setAllergy('nkda')">NKDA<br><span style="font-size:9px;font-weight:400">ไม่แพ้ยา</span></div>
+        <div class="aopt" id="aoptPresent" onclick="setAllergy('present')">Has Allergy<br><span style="font-size:9px;font-weight:400">มีประวัติแพ้ยา</span></div>
+        <div class="aopt" id="aoptUnknown" onclick="setAllergy('unknown')">Unknown<br><span style="font-size:9px;font-weight:400">ไม่ทราบ</span></div>
+        <div class="aopt" id="aoptNotRec"  onclick="setAllergy('not_recorded')">Not Recorded<br><span style="font-size:9px;font-weight:400">ไม่มีข้อมูล</span></div>
+      </div>
+      <input type="text" id="allergyDrugs" class="allergy-input" placeholder="e.g. Penicillin, Sulfonamides, NSAIDs…" style="display:none">
+    </div>
+
+    <div class="form-sect">
       <div class="sect-title">Notes / Rationale</div>
       <textarea id="notes" rows="3" placeholder="บันทึกเหตุผลหรือข้อสังเกตของเภสัชกร..."></textarea>
     </div>
@@ -340,7 +384,21 @@ textarea:focus{{outline:none;border-color:#7090d8}}
 const CATS = {cat_json};
 let cases = [], results = {{}}, idx = 0, hasErr = false;
 let currentDrugs = [];
+let allergyStatus = 'not_recorded';
 let fileReadPromise = null;  // resolves with file text content
+
+const ALLERGY_IDS = {{nkda:'aoptNKDA', present:'aoptPresent', unknown:'aoptUnknown', not_recorded:'aoptNotRec'}};
+const ALLERGY_CLS = {{nkda:'sel-nkda', present:'sel-present', unknown:'sel-unknown', not_recorded:'sel-notrec'}};
+
+function setAllergy(status) {{
+  allergyStatus = status;
+  Object.keys(ALLERGY_IDS).forEach(s => {{
+    const el = document.getElementById(ALLERGY_IDS[s]);
+    if (el) el.className = 'aopt' + (s === status ? ' ' + ALLERGY_CLS[s] : '');
+  }});
+  const inp = document.getElementById('allergyDrugs');
+  if (inp) inp.style.display = status === 'present' ? '' : 'none';
+}}
 
 // ── File picker ──────────────────────────────────────────────────────────────
 document.getElementById('filePick').addEventListener('change', function() {{
@@ -429,6 +487,104 @@ function splitDrugInfo(info) {{
   return {{name, rest}};
 }}
 
+// ── Patient info tag parsing ─────────────────────────────────────────────────
+function parseSummaryTags(summary, rowtype) {{
+  const tags = [];
+  if (rowtype) {{
+    const rt = rowtype.toLowerCase();
+    if (rt.includes('daily'))   tags.push({{text:'Daily Order',      cls:'ptag-blue'}});
+    else if (rt.includes('con')) tags.push({{text:'Continuous Order', cls:'ptag-blue'}});
+    else if (rt.includes('dis')) tags.push({{text:'Discharge Meds',   cls:'ptag-amber'}});
+    else                         tags.push({{text:rowtype,            cls:'ptag-gray'}});
+  }}
+  if (/InPatient/i.test(summary))       tags.push({{text:'InPatient',  cls:'ptag-green'}});
+  else if (/OutPatient/i.test(summary)) tags.push({{text:'OutPatient', cls:'ptag-gray'}});
+  const sm = summary.match(/\\b(Dispensed|Allocated|Ordered)\\b/i);
+  if (sm) tags.push({{text:sm[1], cls:/Dispensed/i.test(sm[1])?'ptag-green':'ptag-amber'}});
+  if (/\\bStat\\b/i.test(summary)) tags.push({{text:'STAT', cls:'ptag-red'}});
+  return tags;
+}}
+
+// ── Vital signs parsing ───────────────────────────────────────────────────────
+// [key, label, unit, warnLo, warnHi, alertLo, alertHi]
+const VITALS_DEF = [
+  ['WT',  'Weight', 'kg',   null, null, null, null ],
+  ['HT',  'Height', 'cm',   null, null, null, null ],
+  ['BMI', 'BMI',    '',     18.5, 24.9, 15,   35   ],
+  ['BSA', 'BSA',    'm²', null, null, null, null ],
+  ['T',   'Temp',   '°C', 36.0, 37.5, 35.0, 38.5],
+  ['PR',  'Pulse',  '/min', 60,   100,  50,   130  ],
+  ['RR',  'Resp',   '/min', 12,   20,   8,    30   ],
+  ['SBP', 'SBP',    'mmHg', 90,   139,  80,   180  ],
+  ['DBP', 'DBP',    'mmHg', 60,   89,   50,   110  ],
+  ['MAP', 'MAP',    'mmHg', 70,   100,  60,   110  ],
+  ['O2',  'SpO2',   '%',    95,   100,  90,   100  ],
+];
+
+function parseVitals(text) {{
+  if (!text) return {{}};
+  const result = {{}};
+  const get = (re) => {{ const m = text.match(re); return m ? parseFloat(m[1]) : undefined; }};
+  result.WT  = get(/\\bWT\\s*:\\s*([\\d.]+)/i);
+  result.HT  = get(/\\bHT\\s*:\\s*([\\d.]+)/i);
+  result.BMI = get(/\\bBMI\\s*:\\s*([\\d.]+)/i);
+  result.BSA = get(/\\bBSA\\s*:\\s*([\\d.]+)/i);
+  result.T   = get(/\\bT\\s*:\\s*([\\d.]+)/);
+  result.PR  = get(/\\bPR\\s*:\\s*(\\d+)/);
+  result.RR  = get(/\\bRR\\s*:\\s*(\\d+)/);
+  result.SBP = get(/\\bSBP\\s*:\\s*(\\d+)/);
+  result.DBP = get(/\\bDBP\\s*:\\s*(\\d+)/);
+  result.MAP = get(/\\bMAP\\s*:\\s*(\\d+)/);
+  result.O2  = get(/\\bO2\\s*:\\s*(\\d+)/);
+  const eg = text.match(/\\beGFR\\s*:\\s*([^\\s,]+)/i);
+  if (eg) result.eGFR = eg[1];
+  Object.keys(result).forEach(k => {{ if (result[k] === undefined) delete result[k]; }});
+  return result;
+}}
+
+function vitalCls(key, val) {{
+  const n = parseFloat(val);
+  if (isNaN(n)) return '';
+  for (const [k,,, wL, wH, aL, aH] of VITALS_DEF) {{
+    if (k !== key) continue;
+    if ((aL !== null && n < aL) || (aH !== null && n > aH)) return 'alrt';
+    if ((wL !== null && n < wL) || (wH !== null && n > wH)) return 'warn';
+    return '';
+  }}
+  return '';
+}}
+
+function renderVitalsHtml(vitals) {{
+  const present = (keys) => keys.filter(k => vitals[k] !== undefined);
+  const rows = [
+    [present(['WT','HT','BMI','BSA']), 'v4'],
+    [present(['T','PR','RR','O2']),    'v4'],
+    [present(['SBP','DBP','MAP']),     'v3'],
+  ].filter(([keys]) => keys.length);
+  if (!rows.length && !vitals.eGFR) return '';
+
+  function cell(key) {{
+    const def = VITALS_DEF.find(d => d[0] === key) || [key, key, ''];
+    const [,label, unit] = def;
+    const val = vitals[key];
+    const cls = vitalCls(key, val);
+    return `<div class="vital-cell ${{cls}}">
+      <div class="vital-lbl">${{esc(label)}}</div>
+      <div class="vital-val">${{esc(String(val))}}<span class="vital-unit">${{esc(unit)}}</span></div>
+    </div>`;
+  }}
+
+  let h = '<div class="vitals-card">';
+  for (const [keys, cls] of rows) {{
+    h += `<div class="vitals-row ${{cls}}">${{keys.map(cell).join('')}}</div>`;
+  }}
+  if (vitals.eGFR !== undefined) {{
+    h += `<div style="margin-top:6px;font-size:11px;color:#4a6a8a">eGFR : <strong>${{esc(String(vitals.eGFR))}}</strong></div>`;
+  }}
+  h += '</div>';
+  return h;
+}}
+
 // ── Prescription renderer ────────────────────────────────────────────────────
 function renderRx(c) {{
   if (!c.rows || !c.rows.length) {{
@@ -443,48 +599,69 @@ function renderRx(c) {{
 }}
 
 function renderScraped(c, cols, upper) {{
-  const colOf = name => cols[upper.indexOf(name)] || null;
-  const SUMMARY = colOf('SUMMARY'), DETAIL = colOf('DETAIL');
+  const colOf    = name => cols[upper.indexOf(name)] || null;
+  const SUM_COL  = colOf('SUMMARY');
+  const DET_COL  = colOf('DETAIL');
+  const RT_COL   = colOf('ROWTYPE');
 
-  // Collect rows into two buckets
-  const patientTexts = [], drugCards = [];
+  let patientSummary = '', rowtypeVal = '', vitalsText = '';
+  const drugCards = [];
 
   for (const row of c.rows) {{
-    const summary = SUMMARY ? String(row[SUMMARY] || '').trim() : '';
-    const detail  = DETAIL  ? String(row[DETAIL]  || '').trim() : '';
-    const hasCodes = /\\d{{10,}}/.test(detail);
+    const summary = SUM_COL ? String(row[SUM_COL] || '').trim() : '';
+    const detail  = DET_COL ? String(row[DET_COL] || '').trim() : '';
+    const rowtype = RT_COL  ? String(row[RT_COL]  || '').trim() : '';
 
-    if (!hasCodes) {{
-      const text = summary || detail;
-      if (text) patientTexts.push(text);
-    }} else {{
+    if (summary)  patientSummary = summary;   // last non-empty wins
+    if (rowtype)  rowtypeVal     = rowtype;
+
+    const hasCodes = /\\d{{10,}}/.test(detail);
+    if (hasCodes) {{
+      // Extract vitals prefix (everything before first 10-digit code)
+      const pfx = detail.match(/^([\\s\\S]*?)(?=\\d{{10,}})/);
+      if (pfx && pfx[1].trim()) vitalsText = pfx[1].trim();
+      // Parse drug entries
       const drugs = parseDrugs(detail);
-      if (drugs.length) {{
-        for (const d of drugs) {{
-          const {{name, rest}} = splitDrugInfo(d.info);
-          drugCards.push({{code: d.code, name, rest}});
-        }}
-      }} else {{
-        const text = detail || summary;
-        if (text) drugCards.push({{code: '', name: text.slice(0, 80), rest: text.slice(80)}});
+      for (const d of drugs) {{
+        const {{name, rest}} = splitDrugInfo(d.info);
+        drugCards.push({{code: d.code, name, rest}});
       }}
+      if (!drugs.length && detail) {{
+        drugCards.push({{code:'', name: detail.slice(0,80), rest: detail.slice(80)}});
+      }}
+    }} else if (!summary && detail) {{
+      patientSummary = detail;   // pure info row
     }}
   }}
 
+  const vitals = parseVitals(vitalsText);
+  const tags   = parseSummaryTags(patientSummary, rowtypeVal);
   let html = '';
 
-  // ── Section 1: Patient / order info ──────────────────────────────────────
-  if (patientTexts.length) {{
-    html += `<div class="rx-section">
-      <div class="rx-section-title">&#128100; Patient / Order Info</div>
-      <div class="info-card">${{patientTexts.map(t => esc(t)).join('<br>')}}</div>
-    </div>`;
+  // ── Section 1 : Patient / Order Info ─────────────────────────────────────
+  html += '<div class="rx-section">';
+  html += '<div class="rx-section-title">&#128100; Patient / Order Info</div>';
+  html += '<div class="info-card">';
+  if (tags.length) {{
+    html += `<div class="ptag-wrap">${{tags.map(t=>`<span class="ptag ${{t.cls}}">${{esc(t.text)}}</span>`).join('')}}</div>`;
+  }}
+  if (patientSummary) {{
+    html += `<div class="info-raw">${{esc(patientSummary)}}</div>`;
+  }}
+  html += '</div></div>';
+
+  // ── Section 2 : Vital Signs ───────────────────────────────────────────────
+  const vitalsHtml = renderVitalsHtml(vitals);
+  if (vitalsHtml) {{
+    html += '<div class="rx-section">';
+    html += '<div class="rx-section-title">&#129658; Vital Signs</div>';
+    html += vitalsHtml;
+    html += '</div>';
   }}
 
-  // ── Section 2: Medicines ──────────────────────────────────────────────────
+  // ── Section 3 : Medicines ─────────────────────────────────────────────────
   if (drugCards.length) {{
-    html += `<div class="rx-section">
-      <div class="rx-section-title">&#128138; Medicines (${{drugCards.length}} item${{drugCards.length !== 1 ? 's' : ''}})</div>`;
+    html += `<div class="rx-section"><div class="rx-section-title">&#128138; Medicines (${{drugCards.length}} item${{drugCards.length!==1?'s':''}})</div>`;
     for (const d of drugCards) {{
       html += `<div class="drug-entry">
         ${{d.code ? `<div class="drug-code-badge"># ${{esc(d.code)}}</div>` : ''}}
@@ -577,11 +754,15 @@ function goTo(i) {{
       if (chip) chip.classList.toggle('ck', sv.implicated_drugs.includes(d));
     }});
     document.getElementById('notes').value = sv.overall_recommendation || '';
+    setAllergy(sv.drug_allergy_status || 'not_recorded');
+    document.getElementById('allergyDrugs').value = (sv.drug_allergies || []).join(', ');
   }} else {{
     setErr(false);
     document.querySelectorAll('#catGrid input').forEach(cb => {{ cb.checked = false; ckStyle(cb.parentElement); }});
     document.getElementById('sev').value = 'C';
     document.getElementById('notes').value = '';
+    setAllergy('not_recorded');
+    document.getElementById('allergyDrugs').value = '';
   }}
 
   document.getElementById('bPrev').disabled = i === 0;
@@ -624,6 +805,10 @@ async function save(advance) {{
     implicated_drugs: hasErr ? drugs : [],
     ncc_merp_severity_category: hasErr ? document.getElementById('sev').value : 'A',
     overall_recommendation: document.getElementById('notes').value,
+    drug_allergy_status: allergyStatus,
+    drug_allergies: allergyStatus === 'present'
+      ? document.getElementById('allergyDrugs').value.split(',').map(s => s.trim()).filter(Boolean)
+      : [],
     reviewed_at: new Date().toISOString()
   }};
   const r = await fetch('/api/save', {{
