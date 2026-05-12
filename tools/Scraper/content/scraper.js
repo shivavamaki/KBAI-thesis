@@ -163,7 +163,7 @@
     state.scraper.reason       = "";
     state.scraper.progressText = `0/${snapshots.length}`;
     state.scraperStopRequested = false;
-    state.stats = { processed: 0, success: 0, fail: 0 };
+    state.stats = { processed: 0, success: 0, fail: 0, skipped: 0 };
     syncScraperState();
     panel().renderStats();
     panel().updateButtonState();
@@ -197,20 +197,29 @@
         processedIndex += 1;
         state.scraper.progressText = `${processedIndex} processed • ${state.scraper.data.length} captured`;
         syncScraperState();
-        panel().setStatus(`Scraper\n${ORDER_FILTERS[state.settings.rowFilter]}\nRow ${processedIndex}: ${window.ArcusShared.shortText(nextSnapshot.text, 80)}`);
+        panel().setStatus(`Scraper\n${ORDER_FILTERS[state.settings.rowFilter]}\nRow ${processedIndex}: ${window.ArcusShared.shortText(nextSnapshot.text, 80)}\nCaptured: ${state.scraper.data.length} | Skipped: ${state.stats.skipped}`);
 
         const result = await scrapeSingleRow(nextSnapshot, processedIndex - 1, processedIndex);
         state.stats.processed += 1;
 
         if (result.ok) {
-          state.stats.success += 1;
-          state.scraper.data.push(result.item);
-          panel().pushLog("success", `[${nextSnapshot.rowType}] ${window.ArcusShared.shortText(nextSnapshot.text)}`, "Scraper");
-          panel().renderStats();
+          // Filter: only keep orders with ≥ 5 drug line items (10+ digit codes)
+          const itemCount = (result.item.DETAIL.match(/\d{10,}/g) || []).length;
+          if (itemCount < 5) {
+            state.stats.skipped += 1;
+            panel().pushLog("info",
+              `[${nextSnapshot.rowType}] ${window.ArcusShared.shortText(nextSnapshot.text)} — skipped (${itemCount} item${itemCount !== 1 ? "s" : ""}, need ≥5)`,
+              "Scraper • filter");
+          } else {
+            state.stats.success += 1;
+            state.scraper.data.push(result.item);
+            panel().pushLog("success", `[${nextSnapshot.rowType}] ${window.ArcusShared.shortText(nextSnapshot.text)} (${itemCount} items)`, "Scraper");
+            panel().renderStats();
 
-          const every = CONFIG.milestoneSaveEvery || 50;
-          if (state.scraper.data.length % every === 0) {
-            saveMilestone(state.scraper.data, `milestone_${state.scraper.data.length}`);
+            const every = CONFIG.milestoneSaveEvery || 50;
+            if (state.scraper.data.length % every === 0) {
+              saveMilestone(state.scraper.data, `milestone_${state.scraper.data.length}`);
+            }
           }
         } else {
           state.stats.fail += 1;
@@ -229,13 +238,13 @@
         state.scraper.reason = "Stopped by user.";
         syncScraperState();
         panel().pushLog("info", "Stopped by user", "Scraper");
-        panel().setStatus(`Scraper stopped.\n${state.scraper.data.length} rows captured.`);
+        panel().setStatus(`Scraper stopped.\n${state.scraper.data.length} captured | ${state.stats.skipped} skipped (<5 items).`);
       } else {
         state.scraper.state        = "done";
         state.scraper.progressText = `${state.scraper.data.length} captured`;
         syncScraperState();
-        panel().setStatus(`Scraper done.\n${state.scraper.data.length} rows captured.`);
-        panel().pushLog("info", `Completed – ${state.scraper.data.length} items`, "Scraper");
+        panel().setStatus(`Scraper done.\n${state.scraper.data.length} captured | ${state.stats.skipped} skipped (<5 items).`);
+        panel().pushLog("info", `Completed – ${state.scraper.data.length} captured, ${state.stats.skipped} skipped (filter <5 items)`, "Scraper");
       }
 
       // Final save (covers both stopped and done)
