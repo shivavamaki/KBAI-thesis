@@ -55,10 +55,10 @@
 
   function cleanseItem(item) {
     return {
-      index:   item.index,
-      rowType: item.rowType,
-      summary: cleanseSummary(item.summary),
-      detail:  cleanseDetail(item.detail),
+      ID:      item.ID,
+      ROWTYPE: item.ROWTYPE,
+      SUMMARY: cleanseSummary(item.SUMMARY),
+      DETAIL:  cleanseDetail(item.DETAIL),
     };
   }
 
@@ -127,7 +127,7 @@
     await closeDetailPaneIfPresent();
     return {
       ok: true,
-      item: { index: index + 1, rowType: snapshot.rowType, summary: snapshot.text, detail: paneText },
+      item: { ID: String(index + 1), ROWTYPE: snapshot.rowType, SUMMARY: snapshot.text, DETAIL: paneText },
     };
   }
 
