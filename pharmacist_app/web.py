@@ -273,6 +273,7 @@ textarea:focus{{outline:none;border-color:#7090d8}}
 .ptag-amber{{background:#fff4d8;color:#8a5010;border-color:#e0c070}}
 .ptag-red{{background:#ffe8e8;color:#a03030;border-color:#f0b0b0}}
 .ptag-gray{{background:#e8ecf5;color:#4a5a7a;border-color:#c8d0e0}}
+.ptag-purple{{background:#ede8ff;color:#5030a0;border-color:#b0a0e8}}
 .info-raw{{font-size:11px;color:#5a7090;line-height:1.65;margin-top:6px;word-break:break-word}}
 
 /* ── Vital signs ── */
@@ -763,8 +764,10 @@ function renderScraped(c, cols, upper) {{
   const SUM_COL  = colOf('SUMMARY');
   const DET_COL  = colOf('DETAIL');
   const RT_COL   = colOf('ROWTYPE');
+  const TAG_COL  = colOf('TAGS');
 
   let patientSummary = '', rowtypeVal = '', vitalsText = '', fullDetail = '';
+  let scrapedTags = [];
   const drugCards = [];
 
   for (const row of c.rows) {{
@@ -775,6 +778,10 @@ function renderScraped(c, cols, upper) {{
     if (summary)  patientSummary = summary;   // last non-empty wins
     if (rowtype)  rowtypeVal     = rowtype;
     if (detail)   fullDetail     = detail;
+    if (TAG_COL && row[TAG_COL]) {{
+      const raw = row[TAG_COL];
+      scrapedTags = Array.isArray(raw) ? raw : (typeof raw === 'string' && raw.startsWith('[') ? JSON.parse(raw) : []);
+    }}
 
     const hasCodes = /\\d{{10,}}/.test(detail);
     if (hasCodes) {{
@@ -807,6 +814,27 @@ function renderScraped(c, cols, upper) {{
   html += '<div class="info-card">';
   if (tags.length) {{
     html += `<div class="ptag-wrap">${{tags.map(t=>`<span class="ptag ${{t.cls}}">${{esc(t.text)}}</span>`).join('')}}</div>`;
+  }}
+  if (scrapedTags.length) {{
+    const TAG_MAP = {{
+      vitals:'ptag-blue', nkda:'ptag-green', allergy:'ptag-red', allergy_unknown:'ptag-gray',
+      dx:'ptag-purple', incomplete:'ptag-gray'
+    }};
+    const TAG_LABEL = {{
+      vitals:'Vitals', nkda:'NKDA', allergy:'Allergy', allergy_unknown:'Allergy?',
+      dx:'Diagnoses', incomplete:'Incomplete', patient_info:'Patient Info'
+    }};
+    const tagBadges = scrapedTags
+      .filter(t => t !== 'patient_info')
+      .map(t => {{
+        const key = t.startsWith('rx:') ? 'rx' : t;
+        const label = t.startsWith('rx:') ? `Rx: ${{t.slice(3)}}` : (TAG_LABEL[key] || t);
+        const cls = t.startsWith('rx:') ? 'ptag-amber' : (TAG_MAP[key] || 'ptag-gray');
+        return `<span class="ptag ${{cls}}">${{esc(label)}}</span>`;
+      }});
+    if (tagBadges.length) {{
+      html += `<div class="ptag-wrap" style="margin-top:4px">${{tagBadges.join('')}}</div>`;
+    }}
   }}
   if (patientSummary) {{
     html += `<div class="info-raw">${{esc(patientSummary)}}</div>`;
