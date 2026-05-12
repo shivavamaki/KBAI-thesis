@@ -126,114 +126,117 @@ def build_html():
 <title>MediCheck — Pharmacist Review</title>
 <style>
 *{{box-sizing:border-box;margin:0;padding:0}}
-body{{font-family:'Segoe UI',system-ui,sans-serif;background:#0d0f18;color:#dde1f0;height:100vh;display:flex;flex-direction:column;overflow:hidden}}
+body{{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f3fa;color:#2c3a5c;height:100vh;display:flex;flex-direction:column;overflow:hidden}}
 
 /* ── Top bar ── */
-.topbar{{background:#141720;border-bottom:1px solid #252a3d;padding:0 16px;display:flex;align-items:center;gap:12px;flex-shrink:0;height:44px}}
-.topbar-logo{{font-size:15px;font-weight:700;color:#7c9cf8;letter-spacing:-.3px}}
-.topbar-sub{{font-size:11px;color:#3d4460}}
+.topbar{{background:#fff;border-bottom:1px solid #dce3f0;padding:0 16px;display:flex;align-items:center;gap:12px;flex-shrink:0;height:44px;box-shadow:0 1px 4px rgba(80,100,160,.07)}}
+.topbar-logo{{font-size:15px;font-weight:700;color:#5272c8;letter-spacing:-.3px}}
+.topbar-sub{{font-size:11px;color:#a0aec8}}
 .prog-wrap{{margin-left:auto;display:flex;align-items:center;gap:10px}}
-.prog-bg{{width:130px;height:5px;background:#252a3d;border-radius:3px}}
-.prog-fill{{height:5px;background:#4caf6e;border-radius:3px;transition:width .3s}}
-.prog-txt{{font-size:11px;color:#7a8a9a}}
+.prog-bg{{width:130px;height:5px;background:#dce3f0;border-radius:3px}}
+.prog-fill{{height:5px;background:#60b88a;border-radius:3px;transition:width .3s}}
+.prog-txt{{font-size:11px;color:#8090b0}}
 
 /* ── Workspace ── */
 .workspace{{display:flex;flex:1;overflow:hidden}}
 
 /* ── Sidebar ── */
-.sidebar{{width:190px;background:#0f111a;border-right:1px solid #1e2235;overflow-y:auto;flex-shrink:0;padding:10px 8px}}
-.sb-hdr{{font-size:10px;color:#3d4460;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;padding:0 4px}}
-.ci{{display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:5px;cursor:pointer;font-size:12px;margin-bottom:1px;overflow:hidden}}
-.ci:hover{{background:#1a1e2e}}
-.ci.active{{background:#1a2d50;color:#82b4ff}}
+.sidebar{{width:190px;background:#e8ecf5;border-right:1px solid #dce3f0;overflow-y:auto;flex-shrink:0;padding:10px 8px}}
+.sb-hdr{{font-size:10px;color:#90a0bc;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;padding:0 4px}}
+.ci{{display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:5px;cursor:pointer;font-size:12px;margin-bottom:1px;overflow:hidden;color:#3a4a6a}}
+.ci:hover{{background:#d8e0f0}}
+.ci.active{{background:#c8d8f8;color:#304898}}
 .ci-label{{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}}
 .dot{{width:6px;height:6px;border-radius:50%;flex-shrink:0}}
-.dot-ok{{background:#4caf6e}}
-.dot-no{{background:#2a2e40}}
+.dot-ok{{background:#60b88a}}
+.dot-no{{background:#c8d0e0}}
 
 /* ── Load screen ── */
 .load-wrap{{max-width:440px;margin:50px auto;padding:20px;width:100%}}
-.load-title{{font-size:19px;font-weight:700;color:#7c9cf8;margin-bottom:16px}}
-.lcard{{background:#141720;border:1px solid #252a3d;border-radius:10px;padding:22px}}
+.load-title{{font-size:19px;font-weight:700;color:#5272c8;margin-bottom:16px}}
+.lcard{{background:#fff;border:1px solid #dce3f0;border-radius:10px;padding:22px;box-shadow:0 2px 8px rgba(80,100,160,.08)}}
 .fg{{margin-bottom:13px}}
-label.lbl{{display:block;font-size:11px;color:#8090a0;margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}}
-input[type=text]{{width:100%;padding:8px 10px;border-radius:6px;border:1px solid #252a3d;background:#0d0f18;color:#dde1f0;font-size:13px}}
-input[type=text]:focus{{outline:none;border-color:#4c6ef5}}
-.err{{color:#e05252;font-size:11px;margin-top:6px}}
+label.lbl{{display:block;font-size:11px;color:#7080a0;margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}}
+input[type=text]{{width:100%;padding:8px 10px;border-radius:6px;border:1px solid #dce3f0;background:#f8f9fd;color:#2c3a5c;font-size:13px}}
+input[type=text]:focus{{outline:none;border-color:#7090d8;box-shadow:0 0 0 2px rgba(112,144,216,.15)}}
+.err{{color:#c04040;font-size:11px;margin-top:6px}}
 
 /* ── RX panel (left) ── */
-.rx-panel{{flex:1;overflow-y:auto;padding:14px 16px;min-width:0}}
+.rx-panel{{flex:1;overflow-y:auto;padding:14px 16px;min-width:0;background:#f5f7fc}}
 
 /* ── Form panel (right) ── */
-.form-panel{{width:370px;flex-shrink:0;overflow-y:auto;padding:14px 16px;background:#0f111a;border-left:1px solid #1e2235}}
+.form-panel{{width:370px;flex-shrink:0;overflow-y:auto;padding:14px 16px;background:#eef1f9;border-left:1px solid #dce3f0}}
 
 /* ── Case header ── */
 .case-hdr{{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}}
-.case-id{{font-size:17px;font-weight:700;color:#fff}}
-.case-num{{font-size:11px;color:#3d4460}}
+.case-id{{font-size:17px;font-weight:700;color:#2c3a5c}}
+.case-num{{font-size:11px;color:#90a0bc}}
 .badge{{padding:2px 8px;border-radius:8px;font-size:11px;font-weight:600}}
-.b-done{{background:#0e2d1c;color:#4caf6e;border:1px solid #1a4a2e}}
-.b-pend{{background:#1e2030;color:#5a6070;border:1px solid #252a3d}}
+.b-done{{background:#d8f0e4;color:#1e7048;border:1px solid #a8dcc0}}
+.b-pend{{background:#e8ecf5;color:#7080a0;border:1px solid #c8d0e0}}
 
-/* ── Rx display — scraped cards ── */
-.rx-section{{margin-bottom:8px}}
-.info-card{{background:#141720;border:1px solid #252a3d;border-radius:7px;padding:10px 12px;margin-bottom:6px}}
-.info-label{{font-size:10px;color:#3d4460;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}}
-.info-text{{font-size:12px;color:#a0b0c8;line-height:1.5}}
-.drug-entry{{background:#161a28;border:1px solid #252a3d;border-left:3px solid #4c6ef5;border-radius:0 7px 7px 0;padding:9px 12px;margin-bottom:5px}}
-.drug-code-badge{{font-size:9px;color:#3d4460;margin-bottom:3px;font-family:monospace}}
-.drug-name-tag{{display:inline-block;background:#2d2600;color:#ffd766;font-size:12px;font-weight:700;padding:1px 7px;border-radius:3px;margin-bottom:5px;border:1px solid #5c4d00}}
-.drug-instructions{{font-size:11px;color:#7a9ab8;line-height:1.55;white-space:pre-wrap}}
-.rx-fallback{{background:#161a28;border:1px solid #252a3d;border-radius:7px;padding:9px 12px;margin-bottom:5px;font-size:12px;color:#8090a8}}
+/* ── Rx section labels ── */
+.rx-section{{margin-bottom:14px}}
+.rx-section-title{{font-size:10px;font-weight:700;color:#90a0bc;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;padding-left:2px}}
 
-/* ── Rx display — clean table ── */
-.rx-table-wrap{{background:#141720;border:1px solid #252a3d;border-radius:7px;overflow:hidden}}
+/* ── Patient info card ── */
+.info-card{{background:#e8f0ff;border:1px solid #b8ccf0;border-radius:8px;padding:11px 14px;font-size:12px;color:#304070;line-height:1.65}}
+
+/* ── Drug entry card ── */
+.drug-entry{{background:#fff;border:1px solid #e8ddb8;border-left:4px solid #e0a030;border-radius:0 8px 8px 0;padding:10px 13px;margin-bottom:6px;box-shadow:0 1px 3px rgba(180,140,40,.07)}}
+.drug-code-badge{{font-size:9px;color:#a8b0c0;margin-bottom:3px;font-family:monospace;letter-spacing:.3px}}
+.drug-name-tag{{font-size:13px;font-weight:700;color:#9a5010;margin-bottom:4px}}
+.drug-instructions{{font-size:11px;color:#607088;line-height:1.6;white-space:pre-wrap}}
+.rx-fallback{{background:#f0f4ff;border:1px solid #d0d8f0;border-radius:7px;padding:9px 12px;margin-bottom:5px;font-size:12px;color:#8090b0}}
+
+/* ── Clean table ── */
+.rx-table-wrap{{background:#fff;border:1px solid #dce3f0;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(80,100,160,.06)}}
 table{{width:100%;border-collapse:collapse;font-size:12px}}
-th{{text-align:left;color:#5a6a7a;font-weight:600;padding:7px 10px;border-bottom:1px solid #1e2235;font-size:10px;text-transform:uppercase;background:#0f111a}}
-td{{padding:7px 10px;border-bottom:1px solid #1a1e2e;vertical-align:top}}
+th{{text-align:left;color:#8090b0;font-weight:600;padding:7px 10px;border-bottom:1px solid #dce3f0;font-size:10px;text-transform:uppercase;background:#f5f7fc}}
+td{{padding:7px 10px;border-bottom:1px solid #eef1f8;vertical-align:top;color:#2c3a5c}}
 tr:last-child td{{border-bottom:none}}
-td.td-long{{font-size:11px;color:#8090a8;max-width:250px;word-break:break-word;line-height:1.4}}
+td.td-long{{font-size:11px;color:#6878a0;max-width:250px;word-break:break-word;line-height:1.4}}
 
 /* ── Form elements ── */
 .form-sect{{margin-bottom:14px}}
-.sect-title{{font-size:10px;color:#3d4460;text-transform:uppercase;letter-spacing:.6px;margin-bottom:7px;font-weight:700}}
+.sect-title{{font-size:10px;color:#8090b0;text-transform:uppercase;letter-spacing:.6px;margin-bottom:7px;font-weight:700}}
 .radio-row{{display:flex;gap:6px}}
-.ropt{{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;cursor:pointer;padding:7px 8px;border-radius:6px;border:1px solid #252a3d;background:#141720;font-size:11px;font-weight:600;transition:all .15s;user-select:none;text-align:center;line-height:1.3}}
-.ropt.sel-yes{{border-color:#c04040;background:#270f0f;color:#ff8888}}
-.ropt.sel-no{{border-color:#3a8a50;background:#0e2018;color:#60c878}}
+.ropt{{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;cursor:pointer;padding:7px 8px;border-radius:6px;border:1px solid #dce3f0;background:#fff;font-size:11px;font-weight:600;transition:all .15s;user-select:none;text-align:center;line-height:1.3;color:#5a6a8a}}
+.ropt.sel-yes{{border-color:#e09090;background:#fde8e8;color:#a03030}}
+.ropt.sel-no{{border-color:#80c898;background:#e4f5ec;color:#1e6840}}
 .cat-list{{display:flex;flex-direction:column;gap:3px}}
-.cat-item{{display:flex;align-items:center;gap:7px;cursor:pointer;padding:6px 9px;border-radius:5px;border:1px solid #1e2235;background:#141720;font-size:11.5px;user-select:none;transition:background .1s,border-color .1s}}
-.cat-item:hover{{background:#1a1e2e}}
-.cat-item.ck{{border-color:#4c6ef5;background:#141c38}}
-.cat-item.dis{{opacity:.28;pointer-events:none}}
-.cat-item input{{accent-color:#4c6ef5;width:12px;height:12px;pointer-events:none;flex-shrink:0}}
+.cat-item{{display:flex;align-items:center;gap:7px;cursor:pointer;padding:6px 9px;border-radius:5px;border:1px solid #dce3f0;background:#fff;font-size:11.5px;user-select:none;transition:background .1s,border-color .1s;color:#3a4a6a}}
+.cat-item:hover{{background:#eef2ff}}
+.cat-item.ck{{border-color:#90a8e8;background:#eef2ff;color:#304090}}
+.cat-item.dis{{opacity:.35;pointer-events:none}}
+.cat-item input{{accent-color:#7090d8;width:12px;height:12px;pointer-events:none;flex-shrink:0}}
 .dchip-wrap{{display:flex;flex-wrap:wrap;gap:5px}}
-.dchip{{padding:4px 10px;border-radius:10px;border:1px solid #252a3d;background:#141720;font-size:11px;cursor:pointer;user-select:none;transition:all .15s;color:#8090a8}}
-.dchip:hover{{background:#1a1e2e;color:#aab8cc}}
-.dchip.ck{{border-color:#ffd766;background:#2d2400;color:#ffd766}}
-.dchip.dis{{opacity:.25;pointer-events:none}}
-select{{width:100%;padding:7px 9px;border-radius:6px;border:1px solid #252a3d;background:#141720;color:#dde1f0;font-size:12px}}
-select:disabled{{opacity:.35}}
-select:focus{{outline:none;border-color:#4c6ef5}}
-textarea{{width:100%;padding:7px 9px;border-radius:6px;border:1px solid #252a3d;background:#141720;color:#dde1f0;font-size:12px;resize:vertical;font-family:inherit;line-height:1.5}}
-textarea:focus{{outline:none;border-color:#4c6ef5}}
+.dchip{{padding:4px 10px;border-radius:10px;border:1px solid #dce3f0;background:#fff;font-size:11px;cursor:pointer;user-select:none;transition:all .15s;color:#7080a0}}
+.dchip:hover{{background:#eef2ff;color:#304080}}
+.dchip.ck{{border-color:#e0a030;background:#fff4d8;color:#8a5010}}
+.dchip.dis{{opacity:.3;pointer-events:none}}
+select{{width:100%;padding:7px 9px;border-radius:6px;border:1px solid #dce3f0;background:#fff;color:#2c3a5c;font-size:12px}}
+select:disabled{{opacity:.4;background:#f0f3fa}}
+select:focus{{outline:none;border-color:#7090d8}}
+textarea{{width:100%;padding:7px 9px;border-radius:6px;border:1px solid #dce3f0;background:#fff;color:#2c3a5c;font-size:12px;resize:vertical;font-family:inherit;line-height:1.5}}
+textarea:focus{{outline:none;border-color:#7090d8}}
 
 /* ── Buttons ── */
 .btn{{padding:7px 13px;border-radius:6px;border:none;cursor:pointer;font-size:12px;font-weight:600;transition:all .15s}}
-.btn-p{{background:#3b5bdb;color:#fff}}
-.btn-p:hover{{background:#4c6ef5}}
-.btn-s{{background:#1e2235;color:#aab;border:1px solid #252a3d}}
-.btn-s:hover{{background:#252a3d}}
-.btn:disabled{{opacity:.35;cursor:not-allowed}}
+.btn-p{{background:#6080d8;color:#fff}}
+.btn-p:hover{{background:#4a68c8}}
+.btn-s{{background:#fff;color:#5a6a8a;border:1px solid #dce3f0}}
+.btn-s:hover{{background:#eef1f8}}
+.btn:disabled{{opacity:.4;cursor:not-allowed}}
 .nav{{display:flex;gap:5px;margin-top:8px}}
 .nav .btn{{flex:1;font-size:11px;padding:7px 6px}}
 
 /* ── Toast ── */
-.toast{{position:fixed;bottom:14px;right:14px;background:#1a4a2e;color:#6fcf8a;border:1px solid #2a6a42;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999}}
+.toast{{position:fixed;bottom:14px;right:14px;background:#d8f0e4;color:#1e7048;border:1px solid #90d0b0;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999}}
 .toast.show{{opacity:1}}
 
 ::-webkit-scrollbar{{width:4px}}
-::-webkit-scrollbar-thumb{{background:#252a3d;border-radius:2px}}
+::-webkit-scrollbar-thumb{{background:#c8d0e0;border-radius:2px}}
 </style>
 </head>
 <body>
@@ -443,40 +446,55 @@ function renderScraped(c, cols, upper) {{
   const colOf = name => cols[upper.indexOf(name)] || null;
   const SUMMARY = colOf('SUMMARY'), DETAIL = colOf('DETAIL');
 
-  let html = '';
+  // Collect rows into two buckets
+  const patientTexts = [], drugCards = [];
+
   for (const row of c.rows) {{
     const summary = SUMMARY ? String(row[SUMMARY] || '').trim() : '';
     const detail  = DETAIL  ? String(row[DETAIL]  || '').trim() : '';
     const hasCodes = /\\d{{10,}}/.test(detail);
 
     if (!hasCodes) {{
-      // Patient info / header row
       const text = summary || detail;
-      if (text) {{
-        html += `<div class="info-card">
-          <div class="info-label">&#128100; Patient / Order Info</div>
-          <div class="info-text">${{esc(text)}}</div>
-        </div>`;
-      }}
+      if (text) patientTexts.push(text);
     }} else {{
-      // Drug row: parse 10-digit codes
       const drugs = parseDrugs(detail);
       if (drugs.length) {{
         for (const d of drugs) {{
           const {{name, rest}} = splitDrugInfo(d.info);
-          html += `<div class="drug-entry">
-            <div class="drug-code-badge"># ${{esc(d.code)}}</div>
-            <div class="drug-name-tag">${{esc(name)}}</div>
-            ${{rest ? `<div class="drug-instructions">${{esc(rest)}}</div>` : ''}}
-          </div>`;
+          drugCards.push({{code: d.code, name, rest}});
         }}
       }} else {{
-        // Fallback: show raw text
         const text = detail || summary;
-        if (text) html += `<div class="rx-fallback">${{esc(text)}}</div>`;
+        if (text) drugCards.push({{code: '', name: text.slice(0, 80), rest: text.slice(80)}});
       }}
     }}
   }}
+
+  let html = '';
+
+  // ── Section 1: Patient / order info ──────────────────────────────────────
+  if (patientTexts.length) {{
+    html += `<div class="rx-section">
+      <div class="rx-section-title">&#128100; Patient / Order Info</div>
+      <div class="info-card">${{patientTexts.map(t => esc(t)).join('<br>')}}</div>
+    </div>`;
+  }}
+
+  // ── Section 2: Medicines ──────────────────────────────────────────────────
+  if (drugCards.length) {{
+    html += `<div class="rx-section">
+      <div class="rx-section-title">&#128138; Medicines (${{drugCards.length}} item${{drugCards.length !== 1 ? 's' : ''}})</div>`;
+    for (const d of drugCards) {{
+      html += `<div class="drug-entry">
+        ${{d.code ? `<div class="drug-code-badge"># ${{esc(d.code)}}</div>` : ''}}
+        <div class="drug-name-tag">${{esc(d.name)}}</div>
+        ${{d.rest ? `<div class="drug-instructions">${{esc(d.rest)}}</div>` : ''}}
+      </div>`;
+    }}
+    html += '</div>';
+  }}
+
   document.getElementById('rxContent').innerHTML = html ||
     '<div class="rx-fallback">No prescription entries found</div>';
 }}
