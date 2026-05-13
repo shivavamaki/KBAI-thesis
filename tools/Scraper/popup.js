@@ -64,6 +64,16 @@ function removeArcusIpFillPanel() {
   return { ok: true };
 }
 
+function showArcusScraperPanel() {
+  window.dispatchEvent(new CustomEvent("arcus-toolkit:show-scraper-panel"));
+  return { ok: true };
+}
+
+function removeArcusScraperPanel() {
+  window.dispatchEvent(new CustomEvent("arcus-toolkit:remove-scraper-panel"));
+  return { ok: true };
+}
+
 function triggerSharedScraper() {
   window.dispatchEvent(new CustomEvent("arcus-toolkit:start-scrape"));
   return { ok: true };
@@ -322,6 +332,31 @@ const manualScraper = {
     setStatus("scraperStatus", "Stopping…", "paused");
   },
 };
+
+// ── Scraper panel show/hide ────────────────────────────────────────────────
+document.getElementById("showScraperPanel")?.addEventListener("click", async () => {
+  const tab = await getActiveArcusTab();
+  if (!tab) { setStatus("scraperPanelStatus", "No active Arcus tab.", "error"); return; }
+  if (!tab.url?.includes("arcusair.bdms.co.th")) { setStatus("scraperPanelStatus", "Not an Arcus tab.", "error"); return; }
+  try {
+    await executeInTab(tab.id, showArcusScraperPanel);
+    setStatus("scraperPanelStatus", "Panel shown.", "done");
+  } catch (err) {
+    setStatus("scraperPanelStatus", `Error: ${err?.message || "unknown"}`, "error");
+  }
+});
+
+document.getElementById("hideScraperPanel")?.addEventListener("click", async () => {
+  const tab = await getActiveArcusTab();
+  if (!tab) { setStatus("scraperPanelStatus", "No active Arcus tab.", "error"); return; }
+  if (!tab.url?.includes("arcusair.bdms.co.th")) { setStatus("scraperPanelStatus", "Not an Arcus tab.", "error"); return; }
+  try {
+    await executeInTab(tab.id, removeArcusScraperPanel);
+    setStatus("scraperPanelStatus", "Panel hidden.", "done");
+  } catch (err) {
+    setStatus("scraperPanelStatus", `Error: ${err?.message || "unknown"}`, "error");
+  }
+});
 
 // ── Initialise both scrapers ───────────────────────────────────────────────
 autoScraper.init();
