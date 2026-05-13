@@ -148,19 +148,24 @@
     await sleep(350);
   }
 
-  // Find the currently visible floating calendar panel
+  // Find the currently visible floating calendar panel.
+  // Arcus uses a custom directive: <div class="dateselector-calendar"> with
+  // <li role="button"> day cells (not <td>).
   function findOpenCalendarPanel() {
-    // Generic: any absolutely/fixed-positioned element that contains ≥20 <td> cells
-    // (a typical calendar grid has 7 cols × 5-6 rows = 35-42 cells)
+    // Arcus-specific selector — fastest path
+    const arcusCal = document.querySelector('[class*="dateselector-calendar"]');
+    if (arcusCal && isVisible(arcusCal)) return arcusCal;
+
+    // Generic fallback: abs/fixed element containing ≥20 day cells
+    // Count <td>, gridcell roles, AND li[role='button'] to cover all picker types
     const candidates = Array.from(document.querySelectorAll("div, table, ul"))
       .filter((el) => {
         if (!isVisible(el)) return false;
         const pos = window.getComputedStyle(el).position;
         if (pos !== "absolute" && pos !== "fixed") return false;
-        return el.querySelectorAll("td, [role='gridcell']").length >= 20;
+        return el.querySelectorAll("td, [role='gridcell'], li[role='button']").length >= 20;
       })
       .sort((a, b) => {
-        // prefer smallest matching container (the innermost calendar grid)
         const area = (e) => { const r = e.getBoundingClientRect(); return r.width * r.height; };
         return area(a) - area(b);
       });
@@ -168,10 +173,28 @@
     return candidates[0] || null;
   }
 
-  // Parse the current month/year from any text node inside the calendar panel.
-  // Handles English ("March 2025"), Thai full ("มีนาคม 2568"), Thai short ("มี.ค. 2568"),
-  // and Buddhist Era years (> 2500 → subtract 543 to get CE year).
+  // Parse the current month/year from the calendar panel header.
+  // Arcus uses: <span class="dateselector-centered-heading">May 2026</span>
+  // Also handles Thai month names and Buddhist Era years (> 2500 → subtract 543).
   function parseCalendarMonthYear(panel) {
+    // Fast path: Arcus-specific heading element
+    const heading = panel.querySelector('[class*="centered-heading"], [class*="dateselector-head"]');
+    if (heading) {
+      const txt = (heading.textContent || "").trim();
+      const m = txt.match(/([A-Za-z]+)\s+(\d{4})/);
+      if (m) {
+        const idx = CAL_MONTH_NAMES.findIndex(
+          (n) => n.toLowerCase().startsWith(m[1].toLowerCase().slice(0, 3))
+        );
+        if (idx >= 0) {
+          let year = parseInt(m[2]);
+          if (year > 2500) year -= 543;
+          return { month: idx + 1, year };
+        }
+      }
+    }
+
+    // Generic fallback: scan all leaf-ish elements
     const els = Array.from(panel.querySelectorAll("*"));
     for (const el of els) {
       if (el.children.length > 3) continue;
@@ -185,7 +208,7 @@
         );
         if (idx >= 0) {
           let year = parseInt(engM[2]);
-          if (year > 2500) year -= 543; // Buddhist Era → Common Era
+          if (year > 2500) year -= 543;
           return { month: idx + 1, year };
         }
       }
@@ -248,36 +271,48 @@
     return false;
   }
 
-  // Click a specific day number inside the open calendar panel
+  // Click a specific day number inside the open calendar panel.
+  // Arcus uses <li role="button" class="…dateselector-enabled…"> for day cells.
   async function clickCalendarDay(panel, day) {
+    const dayStr = String(day);
+
+    // Collect all candidate day cells: Arcus li[role='button'] + generic td/gridcell
     const cells = Array.from(
-      panel.querySelectorAll("td, [role='gridcell'], [class*='day'], [class*='date']")
+      panel.querySelectorAll("li[role='button'], td, [role='gridcell']")
     );
 
+    // First pass: prefer cells that are explicitly enabled (Arcus class or no disabled flag)
     for (const cell of cells) {
       if (!isVisible(cell)) continue;
-      const txt = (cell.textContent || "").trim();
-      if (txt !== String(day)) continue;
+      if ((cell.textContent || "").trim() !== dayStr) continue;
       const cls = (cell.className || "").toLowerCase();
-      // Skip greyed-out adjacent-month or disabled cells
-      if (/disabled|old|new|muted|other.month|inactive/i.test(cls)) continue;
+
+      // Skip if explicitly disabled
+      if (/dateselector-disabled|disabled|inactive/i.test(cls)) continue;
+      if (/old|new|muted|other.month/i.test(cls)) continue;
       if (cell.getAttribute("disabled") !== null) continue;
       if (cell.getAttribute("aria-disabled") === "true") continue;
 
+      // For Arcus li cells: require dateselector-enabled
+      if (cell.tagName === "LI" && !/dateselector-enabled/i.test(cls)) continue;
+
       await clickLikeUser(cell);
-      await sleep(400);
+      await sleep(500);
       return true;
     }
 
-    // Last resort: click first visible matching cell regardless of class
+    // Fallback: first visible cell with matching text regardless of class
     const fallback = cells.find(
-      (c) => isVisible(c) && (c.textContent || "").trim() === String(day)
+      (c) => isVisible(c) && (c.textContent || "").trim() === dayStr
     );
     if (fallback) {
       await clickLikeUser(fallback);
-      await sleep(400);
+      await sleep(500);
       return true;
     }
+
+    console.warn("[Arcus] clickCalendarDay: day", day, "not found. cells:",
+      cells.map(c => (c.textContent || "").trim()).filter(Boolean));
     return false;
   }
 
