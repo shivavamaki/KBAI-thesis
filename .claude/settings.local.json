@@ -8,7 +8,8 @@
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
       "Bash(sed -i 's/Arcus Toolkit v3\\\\.8\\\\.0/Arcus Toolkit v3.10.0/' /workspaces/KBAI-thesis/tools/Scraper/content/shared.js)",
-      "Bash(sed -i 's/version: \"3\\\\.9\\\\.4\"/version: \"3.10.0\"/' /workspaces/KBAI-thesis/tools/Scraper/content/shared.js)"
+      "Bash(sed -i 's/version: \"3\\\\.9\\\\.4\"/version: \"3.10.0\"/' /workspaces/KBAI-thesis/tools/Scraper/content/shared.js)",
+      "Bash(zip -r arcus_toolkit_v3.10.0.zip Scraper/ -x \"*.DS_Store\")"
     ]
   }
 }
