@@ -132,8 +132,15 @@
     "January","February","March","April","May","June",
     "July","August","September","October","November","December",
   ];
+  // Thai month names (short and full) mapped to 1-12
+  const CAL_THAI_MONTHS = [
+    ["มกราคม","ม.ค."],["กุมภาพันธ์","ก.พ."],["มีนาคม","มี.ค."],
+    ["เมษายน","เม.ย."],["พฤษภาคม","พ.ค."],["มิถุนายน","มิ.ย."],
+    ["กรกฎาคม","ก.ค."],["สิงหาคม","ส.ค."],["กันยายน","ก.ย."],
+    ["ตุลาคม","ต.ค."],["พฤศจิกายน","พ.ย."],["ธันวาคม","ธ.ค."],
+  ];
 
-  // Dismiss any open calendar by pressing Escape
+  // Dismiss any open calendar by pressing Escape then a body click
   async function closeAnyOpenCalendar() {
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true, keyCode: 27 }));
     document.body.click();
@@ -142,20 +149,7 @@
 
   // Find the currently visible floating calendar panel
   function findOpenCalendarPanel() {
-    // Known Angular Material / common selectors
-    for (const sel of [
-      ".md-datepicker-calendar-pane",
-      ".picker__holder",
-      "[class*='calendar-pane']",
-      "[class*='datepicker-popup']",
-    ]) {
-      try {
-        const el = document.querySelector(sel);
-        if (el && isVisible(el)) return el;
-      } catch (_) {}
-    }
-
-    // Generic: any absolutely-positioned element that contains ≥20 <td> cells
+    // Generic: any absolutely/fixed-positioned element that contains ≥20 <td> cells
     // (a typical calendar grid has 7 cols × 5-6 rows = 35-42 cells)
     const candidates = Array.from(document.querySelectorAll("div, table, ul"))
       .filter((el) => {
@@ -165,73 +159,73 @@
         return el.querySelectorAll("td, [role='gridcell']").length >= 20;
       })
       .sort((a, b) => {
-        const area = (e) => {
-          const r = e.getBoundingClientRect();
-          return r.width * r.height;
-        };
-        return area(a) - area(b); // prefer smallest matching container
+        // prefer smallest matching container (the innermost calendar grid)
+        const area = (e) => { const r = e.getBoundingClientRect(); return r.width * r.height; };
+        return area(a) - area(b);
       });
 
     return candidates[0] || null;
   }
 
-  // Click the calendar trigger for a given input element
-  async function openCalendarForInput(inputEl) {
-    // Walk up the DOM tree looking for a sibling/parent button that opens calendar
-    let node = inputEl.parentElement;
-    for (let depth = 0; depth < 6 && node; depth++) {
-      const buttons = Array.from(node.querySelectorAll("button, [role='button']"));
-      const calBtn = buttons.find((b) => {
-        if (b === inputEl) return false;
-        const label = (b.getAttribute("aria-label") || "").toLowerCase();
-        const cls   = (b.className || "").toLowerCase();
-        return (
-          /calendar|date|picker|event/i.test(label + cls) ||
-          b.querySelector("md-icon, svg, [class*='calendar'], [class*='date']")
-        );
-      });
-      if (calBtn) {
-        await clickLikeUser(calBtn);
-        await sleep(500);
-        return;
-      }
-      node = node.parentElement;
-    }
-    // Fallback: click the input itself (many pickers open on input click)
-    await clickLikeUser(inputEl);
-    await sleep(500);
-  }
-
-  // Parse "Month YYYY" from any text element inside the calendar panel
+  // Parse the current month/year from any text node inside the calendar panel.
+  // Handles English ("March 2025"), Thai full ("มีนาคม 2568"), Thai short ("มี.ค. 2568"),
+  // and Buddhist Era years (> 2500 → subtract 543 to get CE year).
   function parseCalendarMonthYear(panel) {
     const els = Array.from(panel.querySelectorAll("*"));
     for (const el of els) {
-      if (el.children.length > 3) continue; // skip non-leaf containers
+      if (el.children.length > 3) continue;
       const txt = (el.textContent || "").trim();
-      const m = txt.match(/^([A-Za-z]+)\s+(\d{4})$/);
-      if (!m) continue;
-      const idx = CAL_MONTH_NAMES.findIndex(
-        (n) => n.toLowerCase().startsWith(m[1].toLowerCase().slice(0, 3))
-      );
-      if (idx >= 0) return { month: idx + 1, year: parseInt(m[2]) };
+
+      // English: "March 2025" or "March 2568"
+      const engM = txt.match(/^([A-Za-z]+)\s+(\d{4})$/);
+      if (engM) {
+        const idx = CAL_MONTH_NAMES.findIndex(
+          (n) => n.toLowerCase().startsWith(engM[1].toLowerCase().slice(0, 3))
+        );
+        if (idx >= 0) {
+          let year = parseInt(engM[2]);
+          if (year > 2500) year -= 543; // Buddhist Era → Common Era
+          return { month: idx + 1, year };
+        }
+      }
+
+      // Thai: "มีนาคม 2568" or "มี.ค. 2568"
+      const thaiM = txt.match(/^([฀-๿.]+)\s+(\d{4})$/);
+      if (thaiM) {
+        const idx = CAL_THAI_MONTHS.findIndex(
+          (pair) => pair[0] === thaiM[1] || pair[1] === thaiM[1]
+        );
+        if (idx >= 0) {
+          let year = parseInt(thaiM[2]);
+          if (year > 2500) year -= 543;
+          return { month: idx + 1, year };
+        }
+      }
     }
     return null;
   }
 
-  // Find prev (←) or next (→) navigation button inside the calendar panel
+  // Find prev (←) or next (→) navigation button inside the calendar panel.
+  // Handles text chars, aria-labels, glyphicon/fa icon classes, and sr-only text.
   function findCalNavBtn(panel, direction) {
-    const els = Array.from(panel.querySelectorAll("button, a, th, td, span"));
+    const els = Array.from(panel.querySelectorAll("button, a, th, td, span, i"));
     return (
       els.find((el) => {
         if (!isVisible(el)) return false;
-        const txt   = (el.textContent || "").trim();
+        const txt   = (el.textContent || "").trim().toLowerCase();
         const label = (el.getAttribute("aria-label") || "").toLowerCase();
+        const cls   = (el.className || "").toLowerCase();
+        const hasChildIcon = (pat) => el.querySelector(`[class*='${pat}']`) !== null;
         if (direction === "prev") {
-          return txt === "←" || txt === "<" || txt === "‹" || txt === "«" ||
-                 /prev|previous|back/i.test(label);
+          return txt === "←" || txt === "<" || txt === "‹" || txt === "«" || txt === "previous" ||
+                 /prev|previous|back/i.test(label) ||
+                 /chevron.left|arrow.left|angle.left/i.test(cls) ||
+                 hasChildIcon("chevron-left") || hasChildIcon("arrow-left") || hasChildIcon("angle-left");
         }
-        return txt === "→" || txt === ">" || txt === "›" || txt === "»" ||
-               /next|forward/i.test(label);
+        return txt === "→" || txt === ">" || txt === "›" || txt === "»" || txt === "next" ||
+               /next|forward/i.test(label) ||
+               /chevron.right|arrow.right|angle.right/i.test(cls) ||
+               hasChildIcon("chevron-right") || hasChildIcon("arrow-right") || hasChildIcon("angle-right");
       }) || null
     );
   }
@@ -286,21 +280,29 @@
     return false;
   }
 
-  // High-level: open calendar for inputSelector and pick dateStr (DD-MM-YYYY)
-  async function selectDateViaCalendar(inputSelector, dateStr) {
+  // High-level: click calBtnSelector to open calendar, then pick dateStr (DD-MM-YYYY)
+  // calBtnSelector is the explicit calendar icon button (e.g. "#inputRowElementId4 > button")
+  async function selectDateViaCalendar(calBtnSelector, dateStr) {
     const parts = dateStr.split("-");
     if (parts.length !== 3) return false;
     const targetDay   = parseInt(parts[0]);
     const targetMonth = parseInt(parts[1]);
     const targetYear  = parseInt(parts[2]);
 
-    const inputEl = document.querySelector(inputSelector);
-    if (!inputEl) return false;
+    const calBtn = document.querySelector(calBtnSelector);
+    if (!calBtn) {
+      panel().pushLog("fail", `Calendar button not found: ${calBtnSelector}`, "Date Scraper");
+      return false;
+    }
 
+    // Close any already-open calendar first
     await closeAnyOpenCalendar();
-    await openCalendarForInput(inputEl);
 
-    // Wait up to 5 s for the floating calendar to appear
+    // Click the calendar icon button
+    await clickLikeUser(calBtn);
+    await sleep(600);
+
+    // Wait up to 5 s for the floating calendar panel to appear
     let calPanel = null;
     const deadline = Date.now() + 5000;
     while (Date.now() < deadline) {
@@ -310,7 +312,7 @@
     }
 
     if (!calPanel) {
-      panel().pushLog("fail", `Calendar did not open for ${inputSelector}`, "Date Scraper");
+      panel().pushLog("fail", `Calendar did not open for ${calBtnSelector}`, "Date Scraper");
       return false;
     }
 
@@ -578,16 +580,16 @@
         panel().setStatus(`Date range scraper\nSetting date: ${dateInputStr}\n${daysDone}/${totalDays} days done`);
         panel().pushLog("info", `Setting date: ${dateInputStr}`, "Date Scraper");
 
-        // Select From date via calendar UI
-        const fromOk = await selectDateViaCalendar("#inputElementId4", dateInputStr);
+        // Select From date — click the calendar icon button for #inputElementId4
+        const fromOk = await selectDateViaCalendar("#inputRowElementId4 > button", dateInputStr);
         if (!fromOk) {
           panel().pushLog("fail", `Could not set From date ${dateInputStr}`, "Date Scraper");
           currentDate = addDays(currentDate, 1);
           continue;
         }
 
-        // Select To date via calendar UI (same date = single-day scrape)
-        const toOk = await selectDateViaCalendar("#inputElementId5", dateInputStr);
+        // Select To date — click the calendar icon button for #inputElementId5
+        const toOk = await selectDateViaCalendar("#inputRowElementId5 > button", dateInputStr);
         if (!toOk) {
           panel().pushLog("fail", `Could not set To date ${dateInputStr}`, "Date Scraper");
           currentDate = addDays(currentDate, 1);
