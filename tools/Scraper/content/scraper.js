@@ -55,12 +55,32 @@
     return s;
   }
 
+  // ── Content tagging ──────────────────────────────────────────────────────
+  function tagItem(detail, summary) {
+    const tags = [];
+    const d = detail || "";
+    if (d.length < 50) {
+      tags.push("incomplete");
+    } else {
+      if (/\[PATIENT INFO REDACTED\]/i.test(d)) tags.push("patient_info");
+      if (/\bWT\s*:\s*[\d.]+/.test(d)) tags.push("vitals");
+      if (/No Known Drug Allerg/i.test(d)) tags.push("nkda");
+      else if (/Allergy\b/i.test(d)) tags.push("allergy");
+      else if (/⚠️/.test(d)) tags.push("allergy_unknown");
+      if (/Primary Diagnosis|Comorbidity/i.test(d)) tags.push("dx");
+      const rxCount = (d.match(/\d{10,}/g) || []).length;
+      if (rxCount > 0) tags.push("rx:" + rxCount);
+    }
+    return tags;
+  }
+
   function cleanseItem(item) {
     return {
       ID:      item.ID,
       ROWTYPE: item.ROWTYPE,
       SUMMARY: cleanseSummary(item.SUMMARY),
       DETAIL:  cleanseDetail(item.DETAIL),
+      TAGS:    item.TAGS || [],
     };
   }
 
@@ -232,10 +252,11 @@
     const paneText = (await waitForDetailPaneText()) || "";
     if (!paneText) panel().pushLog("info", "No detail pane text captured", meta);
 
-    await closeDetailPaneIfPresent();
+    // Do NOT close the pane here — the next row click overwrites it automatically,
+    // saving ~650ms per row. The finally block closes it after the last row.
     return {
       ok: true,
-      item: { ID: String(index + 1), ROWTYPE: snapshot.rowType, SUMMARY: snapshot.text, DETAIL: paneText },
+      item: { ID: String(index + 1), ROWTYPE: snapshot.rowType, SUMMARY: snapshot.text, DETAIL: paneText, TAGS: tagItem(paneText, snapshot.text) },
     };
   }
 
@@ -472,7 +493,7 @@
     state.scraper.reason       = "";
     state.scraper.progressText = `0/${snapshots.length}`;
     state.scraperStopRequested = false;
-    state.stats = { processed: 0, success: 0, fail: 0 };
+    state.stats = { processed: 0, success: 0, fail: 0, skipped: 0 };
     syncScraperState();
     panel().renderStats();
     panel().updateButtonState();
@@ -506,7 +527,7 @@
         processedIndex += 1;
         state.scraper.progressText = `${processedIndex} processed • ${state.scraper.data.length} captured`;
         syncScraperState();
-        panel().setStatus(`Scraper\n${ORDER_FILTERS[state.settings.rowFilter]}\nRow ${processedIndex}: ${window.ArcusShared.shortText(nextSnapshot.text, 80)}`);
+        panel().setStatus(`Scraper\n${ORDER_FILTERS[state.settings.rowFilter]}\nRow ${processedIndex}: ${window.ArcusShared.shortText(nextSnapshot.text, 80)}\nCaptured: ${state.scraper.data.length}`);
 
         const result = await scrapeSingleRow(nextSnapshot, processedIndex - 1, processedIndex);
         state.stats.processed += 1;
@@ -514,7 +535,8 @@
         if (result.ok) {
           state.stats.success += 1;
           state.scraper.data.push(result.item);
-          panel().pushLog("success", `[${nextSnapshot.rowType}] ${window.ArcusShared.shortText(nextSnapshot.text)}`, "Scraper");
+          const tagStr = result.item.TAGS.join(" | ") || "—";
+          panel().pushLog("success", `[${nextSnapshot.rowType}] ${window.ArcusShared.shortText(nextSnapshot.text)} [${tagStr}]`, "Scraper");
           panel().renderStats();
 
           const every = CONFIG.milestoneSaveEvery || 50;
@@ -528,7 +550,12 @@
 
         panel().renderStats();
         syncScraperState();
-        await scrollMainContainerToLoadMore();
+
+        // Only scroll when the unseen queue is running low — avoids ~1800ms penalty on every row
+        const unseenCount = snapshots.filter((s) => !seenKeys.has(s.key || s.text)).length;
+        if (unseenCount < (CONFIG.scrollTriggerThreshold || 3)) {
+          await scrollMainContainerToLoadMore();
+        }
         await sleep(CONFIG.loopDelayMs);
       }
 
@@ -538,13 +565,13 @@
         state.scraper.reason = "Stopped by user.";
         syncScraperState();
         panel().pushLog("info", "Stopped by user", "Scraper");
-        panel().setStatus(`Scraper stopped.\n${state.scraper.data.length} rows captured.`);
+        panel().setStatus(`Scraper stopped.\n${state.scraper.data.length} captured.`);
       } else {
         state.scraper.state        = "done";
         state.scraper.progressText = `${state.scraper.data.length} captured`;
         syncScraperState();
-        panel().setStatus(`Scraper done.\n${state.scraper.data.length} rows captured.`);
-        panel().pushLog("info", `Completed – ${state.scraper.data.length} items`, "Scraper");
+        panel().setStatus(`Scraper done.\n${state.scraper.data.length} captured.`);
+        panel().pushLog("info", `Completed – ${state.scraper.data.length} captured`, "Scraper");
       }
 
       // Final save (covers both stopped and done)
@@ -567,6 +594,7 @@
     } finally {
       state.scraperStopRequested = false;
       clearHighlight();
+      await closeDetailPaneIfPresent();   // close pane once at the very end
       panel().updateButtonState();
     }
   }
