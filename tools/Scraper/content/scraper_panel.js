@@ -31,21 +31,30 @@
 
   function renderScrapePreview() {} // no-op, data is saved to file
 
+  function setDateProgress(text) {
+    const el = document.querySelector("#arcus-date-progress");
+    if (el) el.textContent = text || "—";
+  }
+
   function updateButtonState() {
     const scraperRunning = state.scraper.state === "running";
     const busy = scraperRunning || state.isRunning;
     const hasData = state.scraper.data.length > 0;
 
-    const runBtn      = document.querySelector("#arcus-scraper-run");
-    const stopBtn     = document.querySelector("#arcus-scraper-stop");
-    const saveNowBtn  = document.querySelector("#arcus-scraper-save-now");
-    const pdpaChk     = document.querySelector("#arcus-scraper-pdpa");
-    const typeChecks  = document.querySelectorAll(".arcus-scraper-type-check");
+    const runBtn        = document.querySelector("#arcus-scraper-run");
+    const stopBtn       = document.querySelector("#arcus-scraper-stop");
+    const saveNowBtn    = document.querySelector("#arcus-scraper-save-now");
+    const pdpaChk       = document.querySelector("#arcus-scraper-pdpa");
+    const typeChecks    = document.querySelectorAll(".arcus-scraper-type-check");
+    const dateRunBtn    = document.querySelector("#arcus-scraper-date-run");
+    const dateResumeBtn = document.querySelector("#arcus-scraper-date-resume");
 
-    if (runBtn)     runBtn.disabled     = busy;
-    if (stopBtn)    stopBtn.disabled    = !scraperRunning;
-    if (saveNowBtn) saveNowBtn.disabled = !hasData || scraperRunning;
-    if (pdpaChk)    pdpaChk.disabled    = scraperRunning;
+    if (runBtn)        runBtn.disabled        = busy;
+    if (stopBtn)       stopBtn.disabled       = !scraperRunning;
+    if (saveNowBtn)    saveNowBtn.disabled    = !hasData || scraperRunning;
+    if (pdpaChk)       pdpaChk.disabled       = scraperRunning;
+    if (dateRunBtn)    dateRunBtn.disabled    = busy;
+    if (dateResumeBtn) dateResumeBtn.disabled = busy;
     typeChecks.forEach((cb) => { cb.disabled = scraperRunning; });
   }
 
@@ -166,6 +175,25 @@
             <div id="arcus-scraper-captured" class="arcus-scraper-metric-value saved">0</div>
           </div>
         </div>
+
+        <hr class="arcus-scraper-divider">
+
+        <div class="arcus-scraper-section-title">Date range scrape</div>
+        <div class="arcus-scraper-date-grid">
+          <label class="arcus-scraper-date-label">
+            From
+            <input id="arcus-scraper-date-from" class="arcus-scraper-date-input" type="text" placeholder="01-03-2025" value="01-03-2025">
+          </label>
+          <label class="arcus-scraper-date-label">
+            To
+            <input id="arcus-scraper-date-to" class="arcus-scraper-date-input" type="text" placeholder="28-02-2026" value="28-02-2026">
+          </label>
+        </div>
+        <div id="arcus-date-progress" class="arcus-date-progress-text">—</div>
+        <div class="arcus-scraper-btn-row-2">
+          <button id="arcus-scraper-date-run"    class="arcus-scraper-btn arcus-scraper-btn-run">▶ Start</button>
+          <button id="arcus-scraper-date-resume" class="arcus-scraper-btn arcus-scraper-btn-save">⏎ Resume</button>
+        </div>
       </div>
     `;
 
@@ -255,6 +283,22 @@
       }
     });
 
+    // ── Date range: Start ───────────────────────────────────────────────────
+    panel.querySelector("#arcus-scraper-date-run")?.addEventListener("click", () => {
+      const from = panel.querySelector("#arcus-scraper-date-from")?.value?.trim() || "";
+      const to   = panel.querySelector("#arcus-scraper-date-to")?.value?.trim() || "";
+      const pdpa = panel.querySelector("#arcus-scraper-pdpa")?.checked ?? true;
+      window.ArcusScraper?.runDateRangeScraper({ startDateStr: from, endDateStr: to, pdpa, resume: false });
+    });
+
+    // ── Date range: Resume ──────────────────────────────────────────────────
+    panel.querySelector("#arcus-scraper-date-resume")?.addEventListener("click", () => {
+      const from = panel.querySelector("#arcus-scraper-date-from")?.value?.trim() || "";
+      const to   = panel.querySelector("#arcus-scraper-date-to")?.value?.trim() || "";
+      const pdpa = panel.querySelector("#arcus-scraper-pdpa")?.checked ?? true;
+      window.ArcusScraper?.runDateRangeScraper({ startDateStr: from, endDateStr: to, pdpa, resume: true });
+    });
+
     window.addEventListener("resize", () => {
       const rect = panel.getBoundingClientRect();
       panel.style.left = `${clamp(rect.left, 8, Math.max(8, window.innerWidth  - panel.offsetWidth  - 8))}px`;
@@ -321,6 +365,7 @@
     renderStats,
     renderScrapePreview,
     updateButtonState,
+    setDateProgress,
     createPanel,
     removePanel,
   };
