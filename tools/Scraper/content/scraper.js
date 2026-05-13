@@ -289,9 +289,18 @@
     const targetMonth = parseInt(parts[1]);
     const targetYear  = parseInt(parts[2]);
 
-    const calBtn = document.querySelector(calBtnSelector);
+    // Wait up to 8s for the button to be in the DOM and visible
+    // (Angular may not have rendered the form inputs yet)
+    let calBtn = await waitForSelectorVisible(calBtnSelector, 8000);
+    if (!calBtn) {
+      // Fallback: try without the direct-child combinator
+      const fallbackSel = calBtnSelector.replace(" > button", " button");
+      if (fallbackSel !== calBtnSelector) calBtn = await waitForSelectorVisible(fallbackSel, 3000);
+    }
     if (!calBtn) {
       panel().pushLog("fail", `Calendar button not found: ${calBtnSelector}`, "Date Scraper");
+      console.warn("[Arcus] calendar button not found for selector:", calBtnSelector,
+        "buttons in DOM:", document.querySelectorAll("button").length);
       return false;
     }
 
@@ -548,7 +557,29 @@
       }
     } else {
       await clearDateRangeProgress();
+      // Also reset state so a previous "done" run doesn't interfere
+      state.scraper.data = [];
     }
+
+    console.log("[Arcus] completedDates size:", completedDates.size, "totalDays:", totalDays);
+
+    // Wait for the workbench to be fully rendered before starting
+    panel().setStatus(`Waiting for workbench to be ready…`);
+    await waitForWorkbenchReady();
+    // Extra wait for Angular to finish rendering date inputs
+    await sleep(1000);
+
+    // Verify that the calendar buttons are actually present before starting the loop
+    const testBtn = document.querySelector("#inputRowElementId4 button") ||
+                    document.querySelector("#inputRowElementId4 > button");
+    if (!testBtn) {
+      const msg = "Date inputs not found on page. Open the workbench dispense page first.";
+      panel().setStatus(msg);
+      panel().pushLog("fail", msg, "Date Scraper");
+      console.error("[Arcus]", msg, "Buttons in DOM:", document.querySelectorAll("button").length);
+      return;
+    }
+    console.log("[Arcus] calendar button found:", testBtn, "selector matched");
 
     state.scraper.pdpa         = pdpa;
     state.scraper.state        = "running";
