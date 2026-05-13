@@ -951,3 +951,39 @@
   gap: 5px;
   margin-bottom: 4px;
 }
+
+/* ── Log viewer ── */
+.arcus-scraper-log-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+.arcus-scraper-log-clear-btn {
+  font-size: 9px;
+  padding: 1px 6px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background: #f5f5f5;
+  color: #666;
+  cursor: pointer;
+  line-height: 1.4;
+}
+.arcus-scraper-log-clear-btn:hover { background: #e0e0e0; }
+
+.arcus-scraper-log {
+  max-height: 120px;
+  overflow-y: auto;
+  font-size: 9.5px;
+  font-family: monospace;
+  background: #1a1a2e;
+  border-radius: 5px;
+  padding: 5px 7px;
+  color: #ccc;
+  word-break: break-all;
+}
+.arcus-log-entry { margin-bottom: 2px; line-height: 1.4; }
+.arcus-log-info    { color: #90caf9; }
+.arcus-log-success { color: #a5d6a7; }
+.arcus-log-fail    { color: #ef9a9a; }
+.arcus-log-warn    { color: #ffe082; }

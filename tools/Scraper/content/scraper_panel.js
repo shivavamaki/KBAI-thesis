@@ -18,6 +18,15 @@
     const time = new Date().toLocaleTimeString();
     state.logItems.unshift({ type, message, meta, time });
     state.logItems = state.logItems.slice(0, 250);
+
+    // Render to the visible log panel
+    const logEl = document.querySelector("#arcus-scraper-log");
+    if (!logEl) return;
+    const entry = document.createElement("div");
+    entry.className = `arcus-log-entry arcus-log-${type}`;
+    entry.textContent = `[${time}]${meta ? " " + meta + ":" : ""} ${message}`;
+    logEl.insertBefore(entry, logEl.firstChild);
+    while (logEl.children.length > 40) logEl.removeChild(logEl.lastChild);
   }
 
   function renderStats() {
@@ -194,6 +203,14 @@
           <button id="arcus-scraper-date-run"    class="arcus-scraper-btn arcus-scraper-btn-run">▶ Start</button>
           <button id="arcus-scraper-date-resume" class="arcus-scraper-btn arcus-scraper-btn-save">⏎ Resume</button>
         </div>
+
+        <hr class="arcus-scraper-divider">
+
+        <div class="arcus-scraper-log-header">
+          <span class="arcus-scraper-section-title" style="margin-bottom:0">Log</span>
+          <button id="arcus-scraper-clear-log" class="arcus-scraper-log-clear-btn">clear</button>
+        </div>
+        <div id="arcus-scraper-log" class="arcus-scraper-log"></div>
       </div>
     `;
 
@@ -288,7 +305,26 @@
       const from = panel.querySelector("#arcus-scraper-date-from")?.value?.trim() || "";
       const to   = panel.querySelector("#arcus-scraper-date-to")?.value?.trim() || "";
       const pdpa = panel.querySelector("#arcus-scraper-pdpa")?.checked ?? true;
-      window.ArcusScraper?.runDateRangeScraper({ startDateStr: from, endDateStr: to, pdpa, resume: false });
+      console.log("[Arcus] date-run clicked", { from, to, pdpa,
+        hasScraper: !!window.ArcusScraper,
+        hasRun: !!window.ArcusScraper?.runDateRangeScraper,
+      });
+      if (!window.ArcusScraper?.runDateRangeScraper) {
+        const msg = "ERROR: ArcusScraper module not loaded. Reload page.";
+        setStatus(msg);
+        pushLog("fail", msg, "date-run");
+        console.error("[Arcus]", msg);
+        return;
+      }
+      if (!from || !to) {
+        const msg = "Enter From and To dates (DD-MM-YYYY).";
+        setStatus(msg);
+        pushLog("fail", msg, "date-run");
+        return;
+      }
+      setStatus(`Starting: ${from} → ${to}`);
+      pushLog("info", `Start clicked: ${from} → ${to}`, "date-run");
+      window.ArcusScraper.runDateRangeScraper({ startDateStr: from, endDateStr: to, pdpa, resume: false });
     });
 
     // ── Date range: Resume ──────────────────────────────────────────────────
@@ -296,7 +332,25 @@
       const from = panel.querySelector("#arcus-scraper-date-from")?.value?.trim() || "";
       const to   = panel.querySelector("#arcus-scraper-date-to")?.value?.trim() || "";
       const pdpa = panel.querySelector("#arcus-scraper-pdpa")?.checked ?? true;
-      window.ArcusScraper?.runDateRangeScraper({ startDateStr: from, endDateStr: to, pdpa, resume: true });
+      console.log("[Arcus] date-resume clicked", { from, to, pdpa,
+        hasScraper: !!window.ArcusScraper,
+      });
+      if (!window.ArcusScraper?.runDateRangeScraper) {
+        const msg = "ERROR: ArcusScraper module not loaded. Reload page.";
+        setStatus(msg);
+        pushLog("fail", msg, "date-resume");
+        return;
+      }
+      setStatus(`Resuming: ${from} → ${to}`);
+      pushLog("info", `Resume clicked: ${from} → ${to}`, "date-resume");
+      window.ArcusScraper.runDateRangeScraper({ startDateStr: from, endDateStr: to, pdpa, resume: true });
+    });
+
+    // ── Clear log ───────────────────────────────────────────────────────────
+    panel.querySelector("#arcus-scraper-clear-log")?.addEventListener("click", () => {
+      const logEl = panel.querySelector("#arcus-scraper-log");
+      if (logEl) logEl.innerHTML = "";
+      state.logItems = [];
     });
 
     window.addEventListener("resize", () => {

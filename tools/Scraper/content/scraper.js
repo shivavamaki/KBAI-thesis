@@ -511,19 +511,29 @@
 
   // ── Date range scraper ────────────────────────────────────────────────────
   async function runDateRangeScraper({ startDateStr, endDateStr, pdpa = true, resume = false } = {}) {
-    if (!window.ArcusShared.isWorkbenchPage()) {
+    console.log("[Arcus] runDateRangeScraper called", { startDateStr, endDateStr, pdpa, resume });
+
+    const onWorkbench = window.ArcusShared.isWorkbenchPage();
+    console.log("[Arcus] isWorkbenchPage:", onWorkbench, "href:", location.href);
+    if (!onWorkbench) {
       panel().setStatus("Error: not on workbench page.");
+      panel().pushLog("fail", `Not on workbench page. URL: ${location.href}`, "Date Scraper");
       return;
     }
+
+    console.log("[Arcus] state.isRunning:", state.isRunning, "scraper.state:", state.scraper.state);
     if (state.isRunning || state.scraper.state === "running") {
       panel().setStatus("Another task is already running.");
+      panel().pushLog("fail", `Already running: isRunning=${state.isRunning} state=${state.scraper.state}`, "Date Scraper");
       return;
     }
 
     const startDate = parseDDMMYYYY(startDateStr);
     const endDate   = parseDDMMYYYY(endDateStr);
+    console.log("[Arcus] parsed dates:", startDate, "→", endDate);
     if (!startDate || !endDate || startDate > endDate) {
       panel().setStatus("Invalid date range. Use DD-MM-YYYY format.");
+      panel().pushLog("fail", `Invalid dates: "${startDateStr}" → "${endDateStr}"`, "Date Scraper");
       return;
     }
 
