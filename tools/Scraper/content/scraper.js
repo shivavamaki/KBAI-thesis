@@ -17,6 +17,8 @@
     closeAlertDialogIfPresent,
     waitForDetailPaneText,
     closeDetailPaneIfPresent,
+    waitForSelectorVisible,
+    waitForWorkbenchReady,
     sleep,
   } = window.ArcusShared;
 
@@ -62,6 +64,108 @@
     };
   }
 
+  // ── Date utilities ────────────────────────────────────────────────────────
+  function parseDDMMYYYY(str) {
+    const parts = String(str || "").split("-");
+    if (parts.length !== 3) return null;
+    const [d, m, y] = parts.map(Number);
+    if (!d || !m || !y) return null;
+    return new Date(y, m - 1, d);
+  }
+
+  function dateToDDMMYYYY(d) {
+    return [
+      String(d.getDate()).padStart(2, "0"),
+      String(d.getMonth() + 1).padStart(2, "0"),
+      String(d.getFullYear()),
+    ].join("-");
+  }
+
+  function dateToYYYYMMDD(d) {
+    return (
+      String(d.getFullYear()) +
+      String(d.getMonth() + 1).padStart(2, "0") +
+      String(d.getDate()).padStart(2, "0")
+    );
+  }
+
+  function addDays(d, n) {
+    const r = new Date(d);
+    r.setDate(r.getDate() + n);
+    return r;
+  }
+
+  function countDays(startDate, endDate) {
+    let count = 0;
+    let d = new Date(startDate);
+    while (d <= endDate) { count++; d = addDays(d, 1); }
+    return count;
+  }
+
+  // ── AngularJS-aware date input setter ─────────────────────────────────────
+  async function setAngularDateInput(selector, value) {
+    const el = document.querySelector(selector);
+    if (!el) return false;
+    try {
+      if (typeof angular !== "undefined") {
+        const $el = angular.element(el);
+        const ngModel = $el.controller("ngModel");
+        const scope = $el.scope();
+        if (ngModel && scope) {
+          ngModel.$setViewValue(value);
+          ngModel.$commitViewValue();
+          scope.$apply();
+          await sleep(150);
+          return true;
+        }
+      }
+    } catch (_) {}
+    const nativeSet = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set;
+    if (nativeSet) nativeSet.call(el, value); else el.value = value;
+    ["input", "change", "blur"].forEach((t) => el.dispatchEvent(new Event(t, { bubbles: true })));
+    await sleep(200);
+    return true;
+  }
+
+  // ── Date range progress storage ───────────────────────────────────────────
+  const DATE_RANGE_PROGRESS_KEY = "arcusDateRangeProgress";
+
+  function loadDateRangeProgress() {
+    return new Promise((resolve) => {
+      try {
+        chrome.storage?.local?.get(DATE_RANGE_PROGRESS_KEY, (data) =>
+          resolve(data?.[DATE_RANGE_PROGRESS_KEY] || null)
+        );
+      } catch (_) { resolve(null); }
+    });
+  }
+
+  function saveDateRangeProgress(startStr, endStr, completedDates) {
+    return new Promise((resolve) => {
+      try {
+        chrome.storage?.local?.set({
+          [DATE_RANGE_PROGRESS_KEY]: {
+            startDate: startStr,
+            endDate: endStr,
+            completedDates: Array.from(completedDates),
+            updatedAt: Date.now(),
+          },
+        }, resolve);
+      } catch (_) { resolve(); }
+    });
+  }
+
+  function clearDateRangeProgress() {
+    return new Promise((resolve) => {
+      try { chrome.storage?.local?.remove(DATE_RANGE_PROGRESS_KEY, resolve); }
+      catch (_) { resolve(); }
+    });
+  }
+
+  // ── Current date context for file naming ──────────────────────────────────
+  // Set to "YYYYMMDD" during date-range scraping, null otherwise
+  let currentScrapeDate = null;
+
   // ── Milestone save ────────────────────────────────────────────────────────
   function saveMilestone(data, label) {
     try {
@@ -72,12 +176,15 @@
       const url  = URL.createObjectURL(blob);
       const a    = document.createElement("a");
       a.href     = url;
-      a.download = `arcus_scrape_${label}${suffix}_${Date.now()}.json`;
+      const filename = currentScrapeDate
+        ? `${currentScrapeDate}_${toSave.length}${suffix}.json`
+        : `arcus_scrape_${label}${suffix}_${Date.now()}.json`;
+      a.download = filename;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       setTimeout(() => URL.revokeObjectURL(url), 5000);
-      panel().pushLog("info", `Saved ${toSave.length} rows (${label}${suffix})`, "Scraper • save");
+      panel().pushLog("info", `Saved ${toSave.length} rows → ${filename}`, "Scraper • save");
     } catch (err) {
       panel().pushLog("fail", `Save failed: ${err?.message || "unknown"}`, "Scraper • save");
     }
@@ -90,6 +197,7 @@
       pushLog:   () => {},
       renderStats: () => {},
       updateButtonState: () => {},
+      setDateProgress: () => {},
     };
   }
 
@@ -129,6 +237,207 @@
       ok: true,
       item: { ID: String(index + 1), ROWTYPE: snapshot.rowType, SUMMARY: snapshot.text, DETAIL: paneText },
     };
+  }
+
+  // ── Scrape all visible rows for one date (called by runDateRangeScraper) ───
+  async function scrapeDateRows(dateLabel) {
+    const dateData = [];
+    const seenKeys = new Set();
+    let processedIndex = 0;
+    let emptyScrollAttempts = 0;
+
+    while (!state.scraperStopRequested) {
+      const snapshots = getRowSnapshots();
+      const nextSnapshot = snapshots.find((s) => !seenKeys.has(s.key || s.text));
+
+      if (!nextSnapshot) {
+        if (emptyScrollAttempts >= CONFIG.maxEmptyScrollAttempts) break;
+        emptyScrollAttempts++;
+        panel().setStatus(
+          `Scraping ${dateLabel}\n${dateData.length} rows captured\nLoading more… ${emptyScrollAttempts}/${CONFIG.maxEmptyScrollAttempts}`
+        );
+        await scrollMainContainerToLoadMore();
+        await sleep(CONFIG.loopDelayMs);
+        continue;
+      }
+
+      emptyScrollAttempts = 0;
+      seenKeys.add(nextSnapshot.key || nextSnapshot.text);
+      processedIndex++;
+
+      panel().setStatus(
+        `Scraping ${dateLabel}\nRow ${processedIndex}: ${window.ArcusShared.shortText(nextSnapshot.text, 60)}`
+      );
+
+      const result = await scrapeSingleRow(nextSnapshot, processedIndex - 1, processedIndex);
+      state.stats.processed++;
+
+      if (result.ok) {
+        state.stats.success++;
+        dateData.push(result.item);
+        panel().pushLog("success", `[${nextSnapshot.rowType}] ${window.ArcusShared.shortText(nextSnapshot.text)}`, "Date Scraper");
+
+        const every = CONFIG.milestoneSaveEvery || 50;
+        if (dateData.length % every === 0) {
+          saveMilestone(dateData, `milestone_${dateData.length}`);
+        }
+      } else {
+        state.stats.fail++;
+        panel().pushLog(
+          "fail",
+          `[${nextSnapshot.rowType}] ${window.ArcusShared.shortText(nextSnapshot.text)}`,
+          `Date Scraper • ${result.reason}`
+        );
+      }
+
+      panel().renderStats();
+      syncScraperState();
+      await scrollMainContainerToLoadMore();
+      await sleep(CONFIG.loopDelayMs);
+    }
+
+    // Save final rows for this date (only if not stopped mid-date)
+    if (dateData.length > 0 && !state.scraperStopRequested) {
+      saveMilestone(dateData, `final_${dateData.length}`);
+    }
+
+    return state.scraperStopRequested ? null : dateData;
+  }
+
+  // ── Date range scraper ────────────────────────────────────────────────────
+  async function runDateRangeScraper({ startDateStr, endDateStr, pdpa = true, resume = false } = {}) {
+    if (!window.ArcusShared.isWorkbenchPage()) {
+      panel().setStatus("Error: not on workbench page.");
+      return;
+    }
+    if (state.isRunning || state.scraper.state === "running") {
+      panel().setStatus("Another task is already running.");
+      return;
+    }
+
+    const startDate = parseDDMMYYYY(startDateStr);
+    const endDate   = parseDDMMYYYY(endDateStr);
+    if (!startDate || !endDate || startDate > endDate) {
+      panel().setStatus("Invalid date range. Use DD-MM-YYYY format.");
+      return;
+    }
+
+    const totalDays = countDays(startDate, endDate);
+    let completedDates = new Set();
+
+    if (resume) {
+      const saved = await loadDateRangeProgress();
+      if (saved && saved.startDate === startDateStr && saved.endDate === endDateStr) {
+        completedDates = new Set(saved.completedDates || []);
+        panel().pushLog("info", `Resuming: ${completedDates.size}/${totalDays} dates already done`, "Date Scraper");
+      }
+    } else {
+      await clearDateRangeProgress();
+    }
+
+    state.scraper.pdpa         = pdpa;
+    state.scraper.state        = "running";
+    state.scraper.data         = [];
+    state.scraper.reason       = "";
+    state.scraper.progressText = `0/${totalDays} dates`;
+    state.scraperStopRequested = false;
+    state.isRunning            = true;
+    state.stats = { processed: 0, success: 0, fail: 0 };
+    syncScraperState();
+    panel().renderStats();
+    panel().updateButtonState();
+
+    const pdpaNote = pdpa ? " • PDPA ON" : " • PDPA OFF";
+    panel().setStatus(`Date range scraper\n${startDateStr} → ${endDateStr}${pdpaNote}`);
+    panel().pushLog(
+      "info",
+      `Start: ${startDateStr} → ${endDateStr}. ${completedDates.size} done, ${totalDays} total.${pdpaNote}`,
+      "Date Scraper"
+    );
+
+    let currentDate = new Date(startDate);
+
+    try {
+      while (currentDate <= endDate) {
+        if (state.scraperStopRequested) break;
+
+        const dateInputStr = dateToDDMMYYYY(currentDate);
+        const dateFileStr  = dateToYYYYMMDD(currentDate);
+        const daysDone     = completedDates.size;
+
+        panel().setDateProgress(`${daysDone}/${totalDays} days  •  Now: ${dateInputStr}`);
+
+        if (completedDates.has(dateFileStr)) {
+          currentDate = addDays(currentDate, 1);
+          continue;
+        }
+
+        panel().setStatus(`Date range scraper\nSetting date: ${dateInputStr}\n${daysDone}/${totalDays} days done`);
+        panel().pushLog("info", `Setting date: ${dateInputStr}`, "Date Scraper");
+
+        await setAngularDateInput("#inputElementId4", dateInputStr);
+        await setAngularDateInput("#inputElementId5", dateInputStr);
+        await sleep(400);
+
+        const searchBtn = await waitForSelectorVisible("#searchdispense", 8000);
+        if (!searchBtn) {
+          panel().pushLog("fail", `Search button not found for ${dateInputStr}`, "Date Scraper");
+          currentDate = addDays(currentDate, 1);
+          continue;
+        }
+
+        await clickLikeUser(searchBtn);
+        await sleep(1500);
+        await waitForWorkbenchReady();
+
+        currentScrapeDate = dateFileStr;
+        const dateData = await scrapeDateRows(dateInputStr);
+        currentScrapeDate = null;
+
+        if (dateData !== null) {
+          completedDates.add(dateFileStr);
+          await saveDateRangeProgress(startDateStr, endDateStr, completedDates);
+          panel().pushLog(
+            "info",
+            `Date ${dateInputStr}: ${dateData.length} rows saved. ${completedDates.size}/${totalDays} dates done.`,
+            "Date Scraper"
+          );
+        }
+
+        state.scraper.progressText = `${completedDates.size}/${totalDays} dates`;
+        syncScraperState();
+        currentDate = addDays(currentDate, 1);
+        await sleep(CONFIG.loopDelayMs);
+      }
+
+      if (state.scraperStopRequested) {
+        state.scraper.state  = "stopped";
+        state.scraper.reason = "Stopped by user.";
+        panel().setStatus(`Date scraper stopped.\n${completedDates.size}/${totalDays} dates done.`);
+        panel().pushLog("info", `Stopped by user. ${completedDates.size}/${totalDays} dates done.`, "Date Scraper");
+      } else {
+        state.scraper.state        = "done";
+        state.scraper.progressText = `${completedDates.size}/${totalDays} dates done`;
+        panel().setStatus(`Date scraper done.\n${completedDates.size}/${totalDays} dates completed.`);
+        panel().pushLog("info", `Completed. ${completedDates.size}/${totalDays} dates done.`, "Date Scraper");
+        await clearDateRangeProgress();
+      }
+    } catch (error) {
+      currentScrapeDate = null;
+      state.scraper.state  = "error";
+      state.scraper.reason = error?.message || "Unknown error";
+      syncScraperState();
+      panel().setStatus(`Date scraper error:\n${state.scraper.reason}`);
+      panel().pushLog("fail", state.scraper.reason, "Date Scraper • error");
+    } finally {
+      state.isRunning            = false;
+      state.scraperStopRequested = false;
+      currentScrapeDate          = null;
+      clearHighlight();
+      syncScraperState();
+      panel().updateButtonState();
+      panel().setDateProgress(`Done: ${completedDates.size}/${totalDays} days`);
+    }
   }
 
   // ── Main scraper loop ─────────────────────────────────────────────────────
@@ -262,5 +571,5 @@
     }
   }
 
-  window.ArcusScraper = { runSharedScraper, saveMilestone, cleanseItem };
+  window.ArcusScraper = { runSharedScraper, runDateRangeScraper, saveMilestone, cleanseItem };
 })();

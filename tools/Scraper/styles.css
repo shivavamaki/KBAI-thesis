@@ -889,3 +889,65 @@
 .arcus-scraper-metric-value.ok    { color: #2e7d32; }
 .arcus-scraper-metric-value.fail  { color: #c62828; }
 .arcus-scraper-metric-value.saved { color: #00695c; }
+
+.arcus-scraper-divider {
+  border: none;
+  border-top: 1px solid #e0f2f1;
+  margin: 9px 0 8px;
+}
+
+.arcus-scraper-date-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.arcus-scraper-date-label {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #00897b;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.arcus-scraper-date-input {
+  width: 100%;
+  padding: 4px 6px;
+  border: 1px solid #b2dfdb;
+  border-radius: 5px;
+  font-size: 10.5px;
+  color: #263238;
+  background: #f9fffe;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.arcus-scraper-date-input:focus {
+  border-color: #00897b;
+  box-shadow: 0 0 0 2px rgba(0, 137, 123, 0.15);
+}
+
+.arcus-date-progress-text {
+  font-size: 10px;
+  color: #00695c;
+  background: #e0f2f1;
+  border: 1px solid #b2dfdb;
+  border-radius: 5px;
+  padding: 4px 8px;
+  margin-bottom: 6px;
+  min-height: 22px;
+  line-height: 1.5;
+  white-space: pre-line;
+  word-break: break-word;
+}
+
+.arcus-scraper-btn-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  margin-bottom: 4px;
+}
