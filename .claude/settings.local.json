@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(powershell -Command \"\\(Get-Content knowledge_base\\\\medication_error_kb_chunked.jsonl | Measure-Object -Line\\).Lines\")"
+      "Bash(powershell -Command \"\\(Get-Content knowledge_base\\\\medication_error_kb_chunked.jsonl | Measure-Object -Line\\).Lines\")",
+      "Bash(git fetch *)",
+      "Bash(git merge *)",
+      "Bash(git push *)"
     ]
   }
 }
