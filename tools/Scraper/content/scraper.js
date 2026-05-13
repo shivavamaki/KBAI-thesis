@@ -280,34 +280,59 @@
     return false;
   }
 
-  // High-level: click calBtnSelector to open calendar, then pick dateStr (DD-MM-YYYY)
-  // calBtnSelector is the explicit calendar icon button (e.g. "#inputRowElementId4 > button")
-  async function selectDateViaCalendar(calBtnSelector, dateStr) {
+  // Find the calendar trigger button that belongs to a given date input.
+  // Searches by walking up the DOM from the input and finding a button whose
+  // aria-label or ng-click indicates it opens the date picker.
+  function findCalBtnNearInput(inputEl) {
+    let node = inputEl.parentElement;
+    for (let depth = 0; depth < 10 && node; depth++) {
+      const btn = Array.from(node.querySelectorAll("button")).find((b) => {
+        if (!isVisible(b)) return false;
+        const label   = (b.getAttribute("aria-label") || "").toLowerCase();
+        const ngClick = b.getAttribute("ng-click") || "";
+        return (
+          label.includes("selector") || label.includes("calendar") ||
+          ngClick.includes("showDateSelector") || ngClick.includes("showCalendar") ||
+          b.querySelector("[class*='calendar'], [class*='fa-calendar'], .fa-calendar")
+        );
+      });
+      if (btn) return btn;
+      node = node.parentElement;
+    }
+    return null;
+  }
+
+  // High-level: find the date input by aria-label ("From" or "To"), click its
+  // calendar trigger button, navigate to the target month, and click the day.
+  async function selectDateViaCalendar(inputAriaLabel, dateStr) {
     const parts = dateStr.split("-");
     if (parts.length !== 3) return false;
     const targetDay   = parseInt(parts[0]);
     const targetMonth = parseInt(parts[1]);
     const targetYear  = parseInt(parts[2]);
 
-    // Wait up to 8s for the button to be in the DOM and visible
-    // (Angular may not have rendered the form inputs yet)
-    let calBtn = await waitForSelectorVisible(calBtnSelector, 8000);
-    if (!calBtn) {
-      // Fallback: try without the direct-child combinator
-      const fallbackSel = calBtnSelector.replace(" > button", " button");
-      if (fallbackSel !== calBtnSelector) calBtn = await waitForSelectorVisible(fallbackSel, 3000);
-    }
-    if (!calBtn) {
-      panel().pushLog("fail", `Calendar button not found: ${calBtnSelector}`, "Date Scraper");
-      console.warn("[Arcus] calendar button not found for selector:", calBtnSelector,
-        "buttons in DOM:", document.querySelectorAll("button").length);
+    // Wait up to 8s for the input to be in the DOM (Angular lazy-renders)
+    const inputEl = await waitForSelectorVisible(`input[aria-label="${inputAriaLabel}"]`, 8000);
+    if (!inputEl) {
+      panel().pushLog("fail", `Date input "${inputAriaLabel}" not found in DOM`, "Date Scraper");
+      console.warn("[Arcus] input[aria-label='" + inputAriaLabel + "'] not found");
       return false;
     }
+
+    // Find the calendar icon button next to this input
+    const calBtn = findCalBtnNearInput(inputEl);
+    if (!calBtn) {
+      panel().pushLog("fail", `Calendar button not found near "${inputAriaLabel}" input`, "Date Scraper");
+      console.warn("[Arcus] calendar button not found. Input:", inputEl,
+        "parent HTML:", inputEl.parentElement?.outerHTML?.slice(0, 300));
+      return false;
+    }
+    console.log("[Arcus] calendar button found for", inputAriaLabel, ":", calBtn.outerHTML.slice(0, 120));
 
     // Close any already-open calendar first
     await closeAnyOpenCalendar();
 
-    // Click the calendar icon button
+    // Click the calendar icon button to open the picker
     await clickLikeUser(calBtn);
     await sleep(600);
 
@@ -321,7 +346,12 @@
     }
 
     if (!calPanel) {
-      panel().pushLog("fail", `Calendar did not open for ${calBtnSelector}`, "Date Scraper");
+      panel().pushLog("fail", `Calendar panel did not open for "${inputAriaLabel}"`, "Date Scraper");
+      console.warn("[Arcus] calendar panel not found after click. Visible abs/fixed divs:",
+        Array.from(document.querySelectorAll("div")).filter(e => {
+          const p = window.getComputedStyle(e).position;
+          return (p === "absolute" || p === "fixed") && e.offsetWidth > 50;
+        }).length);
       return false;
     }
 
@@ -335,7 +365,7 @@
       return false;
     }
 
-    // Allow the calendar to close and the model to update
+    // Allow the calendar to close and Angular model to update
     await sleep(500);
     return true;
   }
@@ -569,17 +599,25 @@
     // Extra wait for Angular to finish rendering date inputs
     await sleep(1000);
 
-    // Verify that the calendar buttons are actually present before starting the loop
-    const testBtn = document.querySelector("#inputRowElementId4 button") ||
-                    document.querySelector("#inputRowElementId4 > button");
-    if (!testBtn) {
-      const msg = "Date inputs not found on page. Open the workbench dispense page first.";
+    // Verify that the date inputs are present before starting the loop
+    const testInput = document.querySelector('input[aria-label="From"]');
+    if (!testInput) {
+      const msg = "Date input (From) not found on page. Open the workbench dispense page first.";
       panel().setStatus(msg);
       panel().pushLog("fail", msg, "Date Scraper");
-      console.error("[Arcus]", msg, "Buttons in DOM:", document.querySelectorAll("button").length);
+      console.error("[Arcus]", msg, "Total buttons:", document.querySelectorAll("button").length,
+        "All inputs:", Array.from(document.querySelectorAll("input")).map(i => i.getAttribute("aria-label")));
       return;
     }
-    console.log("[Arcus] calendar button found:", testBtn, "selector matched");
+    const testBtn = findCalBtnNearInput(testInput);
+    if (!testBtn) {
+      const msg = "Calendar button not found near From input. Page may not be fully loaded.";
+      panel().setStatus(msg);
+      panel().pushLog("fail", msg, "Date Scraper");
+      console.error("[Arcus]", msg, "From input parent HTML:", testInput.parentElement?.outerHTML?.slice(0, 400));
+      return;
+    }
+    console.log("[Arcus] pre-flight OK — From input:", testInput.id, "cal btn:", testBtn.getAttribute("aria-label"));
 
     state.scraper.pdpa         = pdpa;
     state.scraper.state        = "running";
@@ -621,16 +659,16 @@
         panel().setStatus(`Date range scraper\nSetting date: ${dateInputStr}\n${daysDone}/${totalDays} days done`);
         panel().pushLog("info", `Setting date: ${dateInputStr}`, "Date Scraper");
 
-        // Select From date — click the calendar icon button for #inputElementId4
-        const fromOk = await selectDateViaCalendar("#inputRowElementId4 > button", dateInputStr);
+        // Select From date via the calendar picker next to the "From" input
+        const fromOk = await selectDateViaCalendar("From", dateInputStr);
         if (!fromOk) {
           panel().pushLog("fail", `Could not set From date ${dateInputStr}`, "Date Scraper");
           currentDate = addDays(currentDate, 1);
           continue;
         }
 
-        // Select To date — click the calendar icon button for #inputElementId5
-        const toOk = await selectDateViaCalendar("#inputRowElementId5 > button", dateInputStr);
+        // Select To date via the calendar picker next to the "To" input
+        const toOk = await selectDateViaCalendar("To", dateInputStr);
         if (!toOk) {
           panel().pushLog("fail", `Could not set To date ${dateInputStr}`, "Date Scraper");
           currentDate = addDays(currentDate, 1);
