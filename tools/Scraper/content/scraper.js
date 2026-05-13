@@ -56,7 +56,7 @@
   }
 
   // ── Content tagging ──────────────────────────────────────────────────────
-  function tagItem(detail, summary) {
+  function tagItem(detail, _summary) {
     const tags = [];
     const d = detail || "";
     if (d.length < 50) {
@@ -122,63 +122,210 @@
     return count;
   }
 
-  // ── AngularJS-aware date input setter ─────────────────────────────────────
-  // The Arcus date picker uses ng-model="dateselector.displayDate" with a
-  // custom validate-date directive and ng-blur="ngBlur();showHint=false;".
-  // We must update the Angular scope AND fire native DOM events so the model
-  // is committed before #searchdispense is clicked.
-  async function setAngularDateInput(selector, value) {
-    const el = document.querySelector(selector);
-    if (!el) return false;
+  // ── Calendar UI date selection ────────────────────────────────────────────
+  // The Arcus date picker opens a floating calendar on click; typing into the
+  // input alone does not update the model. We must:
+  //   1. Click the calendar trigger to open the floating panel
+  //   2. Navigate prev/next to reach the target month/year
+  //   3. Click the target day cell
+  const CAL_MONTH_NAMES = [
+    "January","February","March","April","May","June",
+    "July","August","September","October","November","December",
+  ];
 
-    // Step 1: Click + focus so Angular marks the field as touched
-    el.click();
-    el.focus();
-    await sleep(100);
+  // Dismiss any open calendar by pressing Escape
+  async function closeAnyOpenCalendar() {
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true, keyCode: 27 }));
+    document.body.click();
+    await sleep(350);
+  }
 
-    // Step 2: Angular scope — walk up the $parent chain to find dateselector
-    try {
-      if (typeof angular !== "undefined") {
-        const $el = angular.element(el);
-        let scope = $el.scope();
+  // Find the currently visible floating calendar panel
+  function findOpenCalendarPanel() {
+    // Known Angular Material / common selectors
+    for (const sel of [
+      ".md-datepicker-calendar-pane",
+      ".picker__holder",
+      "[class*='calendar-pane']",
+      "[class*='datepicker-popup']",
+    ]) {
+      try {
+        const el = document.querySelector(sel);
+        if (el && isVisible(el)) return el;
+      } catch (_) {}
+    }
 
-        // Walk up max 8 levels to find the scope that owns dateselector
-        for (let depth = 0; depth < 8 && scope; depth++) {
-          if (scope.dateselector && typeof scope.dateselector.displayDate !== "undefined") {
-            scope.$apply(() => { scope.dateselector.displayDate = value; });
-            break;
-          }
-          scope = scope.$parent;
-        }
+    // Generic: any absolutely-positioned element that contains ≥20 <td> cells
+    // (a typical calendar grid has 7 cols × 5-6 rows = 35-42 cells)
+    const candidates = Array.from(document.querySelectorAll("div, table, ul"))
+      .filter((el) => {
+        if (!isVisible(el)) return false;
+        const pos = window.getComputedStyle(el).position;
+        if (pos !== "absolute" && pos !== "fixed") return false;
+        return el.querySelectorAll("td, [role='gridcell']").length >= 20;
+      })
+      .sort((a, b) => {
+        const area = (e) => {
+          const r = e.getBoundingClientRect();
+          return r.width * r.height;
+        };
+        return area(a) - area(b); // prefer smallest matching container
+      });
 
-        // Also update via ngModel controller so $validators/$parsers run
-        const ngModel = $el.controller("ngModel");
-        const nearScope = $el.scope();
-        if (ngModel && nearScope) {
-          nearScope.$apply(() => {
-            ngModel.$setViewValue(value);
-            ngModel.$commitViewValue();
-          });
-        }
+    return candidates[0] || null;
+  }
+
+  // Click the calendar trigger for a given input element
+  async function openCalendarForInput(inputEl) {
+    // Walk up the DOM tree looking for a sibling/parent button that opens calendar
+    let node = inputEl.parentElement;
+    for (let depth = 0; depth < 6 && node; depth++) {
+      const buttons = Array.from(node.querySelectorAll("button, [role='button']"));
+      const calBtn = buttons.find((b) => {
+        if (b === inputEl) return false;
+        const label = (b.getAttribute("aria-label") || "").toLowerCase();
+        const cls   = (b.className || "").toLowerCase();
+        return (
+          /calendar|date|picker|event/i.test(label + cls) ||
+          b.querySelector("md-icon, svg, [class*='calendar'], [class*='date']")
+        );
+      });
+      if (calBtn) {
+        await clickLikeUser(calBtn);
+        await sleep(500);
+        return;
       }
-    } catch (_) {}
+      node = node.parentElement;
+    }
+    // Fallback: click the input itself (many pickers open on input click)
+    await clickLikeUser(inputEl);
+    await sleep(500);
+  }
 
-    // Step 3: Override the DOM value with the native setter (bypasses Angular's
-    // change detection guard so the next "input" event reads the right value)
-    const nativeSet = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set;
-    if (nativeSet) nativeSet.call(el, value); else el.value = value;
+  // Parse "Month YYYY" from any text element inside the calendar panel
+  function parseCalendarMonthYear(panel) {
+    const els = Array.from(panel.querySelectorAll("*"));
+    for (const el of els) {
+      if (el.children.length > 3) continue; // skip non-leaf containers
+      const txt = (el.textContent || "").trim();
+      const m = txt.match(/^([A-Za-z]+)\s+(\d{4})$/);
+      if (!m) continue;
+      const idx = CAL_MONTH_NAMES.findIndex(
+        (n) => n.toLowerCase().startsWith(m[1].toLowerCase().slice(0, 3))
+      );
+      if (idx >= 0) return { month: idx + 1, year: parseInt(m[2]) };
+    }
+    return null;
+  }
 
-    // Step 4: Fire all events AngularJS and the validate-date directive listen to
-    ["input", "keyup", "change"].forEach((t) =>
-      el.dispatchEvent(new Event(t, { bubbles: true }))
+  // Find prev (←) or next (→) navigation button inside the calendar panel
+  function findCalNavBtn(panel, direction) {
+    const els = Array.from(panel.querySelectorAll("button, a, th, td, span"));
+    return (
+      els.find((el) => {
+        if (!isVisible(el)) return false;
+        const txt   = (el.textContent || "").trim();
+        const label = (el.getAttribute("aria-label") || "").toLowerCase();
+        if (direction === "prev") {
+          return txt === "←" || txt === "<" || txt === "‹" || txt === "«" ||
+                 /prev|previous|back/i.test(label);
+        }
+        return txt === "→" || txt === ">" || txt === "›" || txt === "»" ||
+               /next|forward/i.test(label);
+      }) || null
+    );
+  }
+
+  // Navigate the open calendar to the target month/year
+  async function navigateCalendarToMonth(panel, targetMonth, targetYear) {
+    for (let step = 0; step < 40; step++) {
+      const cur = parseCalendarMonthYear(panel);
+      if (!cur) return false;
+      if (cur.month === targetMonth && cur.year === targetYear) return true;
+
+      const diff = (targetYear - cur.year) * 12 + (targetMonth - cur.month);
+      const btn  = findCalNavBtn(panel, diff < 0 ? "prev" : "next");
+      if (!btn) return false;
+
+      await clickLikeUser(btn);
+      await sleep(350);
+    }
+    return false;
+  }
+
+  // Click a specific day number inside the open calendar panel
+  async function clickCalendarDay(panel, day) {
+    const cells = Array.from(
+      panel.querySelectorAll("td, [role='gridcell'], [class*='day'], [class*='date']")
     );
 
-    // Step 5: Blur triggers ng-blur="ngBlur();showHint=false;" which commits
-    // the date into the parent date-range controller
-    el.blur();
-    el.dispatchEvent(new FocusEvent("blur", { bubbles: true }));
+    for (const cell of cells) {
+      if (!isVisible(cell)) continue;
+      const txt = (cell.textContent || "").trim();
+      if (txt !== String(day)) continue;
+      const cls = (cell.className || "").toLowerCase();
+      // Skip greyed-out adjacent-month or disabled cells
+      if (/disabled|old|new|muted|other.month|inactive/i.test(cls)) continue;
+      if (cell.getAttribute("disabled") !== null) continue;
+      if (cell.getAttribute("aria-disabled") === "true") continue;
 
-    await sleep(400);
+      await clickLikeUser(cell);
+      await sleep(400);
+      return true;
+    }
+
+    // Last resort: click first visible matching cell regardless of class
+    const fallback = cells.find(
+      (c) => isVisible(c) && (c.textContent || "").trim() === String(day)
+    );
+    if (fallback) {
+      await clickLikeUser(fallback);
+      await sleep(400);
+      return true;
+    }
+    return false;
+  }
+
+  // High-level: open calendar for inputSelector and pick dateStr (DD-MM-YYYY)
+  async function selectDateViaCalendar(inputSelector, dateStr) {
+    const parts = dateStr.split("-");
+    if (parts.length !== 3) return false;
+    const targetDay   = parseInt(parts[0]);
+    const targetMonth = parseInt(parts[1]);
+    const targetYear  = parseInt(parts[2]);
+
+    const inputEl = document.querySelector(inputSelector);
+    if (!inputEl) return false;
+
+    await closeAnyOpenCalendar();
+    await openCalendarForInput(inputEl);
+
+    // Wait up to 5 s for the floating calendar to appear
+    let calPanel = null;
+    const deadline = Date.now() + 5000;
+    while (Date.now() < deadline) {
+      calPanel = findOpenCalendarPanel();
+      if (calPanel) break;
+      await sleep(200);
+    }
+
+    if (!calPanel) {
+      panel().pushLog("fail", `Calendar did not open for ${inputSelector}`, "Date Scraper");
+      return false;
+    }
+
+    // Navigate to target month/year
+    await navigateCalendarToMonth(calPanel, targetMonth, targetYear);
+
+    // Click the target day
+    const clicked = await clickCalendarDay(calPanel, targetDay);
+    if (!clicked) {
+      panel().pushLog("fail", `Could not click day ${targetDay} for ${dateStr}`, "Date Scraper");
+      return false;
+    }
+
+    // Allow the calendar to close and the model to update
+    await sleep(500);
     return true;
   }
 
@@ -431,20 +578,20 @@
         panel().setStatus(`Date range scraper\nSetting date: ${dateInputStr}\n${daysDone}/${totalDays} days done`);
         panel().pushLog("info", `Setting date: ${dateInputStr}`, "Date Scraper");
 
-        await setAngularDateInput("#inputElementId4", dateInputStr);
-        await setAngularDateInput("#inputElementId5", dateInputStr);
+        // Select From date via calendar UI
+        const fromOk = await selectDateViaCalendar("#inputElementId4", dateInputStr);
+        if (!fromOk) {
+          panel().pushLog("fail", `Could not set From date ${dateInputStr}`, "Date Scraper");
+          currentDate = addDays(currentDate, 1);
+          continue;
+        }
 
-        // Wait for Angular digest to settle after both date changes
-        await sleep(600);
-
-        // Verify the inputs actually show the new date; retry once if not
-        const fromEl = document.querySelector("#inputElementId4");
-        const toEl   = document.querySelector("#inputElementId5");
-        if (fromEl?.value !== dateInputStr || toEl?.value !== dateInputStr) {
-          panel().pushLog("info", `Date not reflected yet, retrying input for ${dateInputStr}`, "Date Scraper");
-          await setAngularDateInput("#inputElementId4", dateInputStr);
-          await setAngularDateInput("#inputElementId5", dateInputStr);
-          await sleep(600);
+        // Select To date via calendar UI (same date = single-day scrape)
+        const toOk = await selectDateViaCalendar("#inputElementId5", dateInputStr);
+        if (!toOk) {
+          panel().pushLog("fail", `Could not set To date ${dateInputStr}`, "Date Scraper");
+          currentDate = addDays(currentDate, 1);
+          continue;
         }
 
         const searchBtn = await waitForSelectorVisible("#searchdispense", 8000);
