@@ -520,7 +520,7 @@
   }
 
   // ── Scrape all visible rows for one date (called by runDateRangeScraper) ───
-  async function scrapeDateRows(dateLabel) {
+  async function scrapeDateRows(dateLabel, daysDone, totalDays) {
     const dateData = [];
     const seenKeys = new Set();
     let processedIndex = 0;
@@ -533,6 +533,7 @@
       if (!nextSnapshot) {
         if (emptyScrollAttempts >= CONFIG.maxEmptyScrollAttempts) break;
         emptyScrollAttempts++;
+        panel().setDateProgress(`Day ${daysDone}/${totalDays}  •  ${dateLabel}  •  ${dateData.length} rows  •  loading…`);
         panel().setStatus(
           `Scraping ${dateLabel}\n${dateData.length} rows captured\nLoading more… ${emptyScrollAttempts}/${CONFIG.maxEmptyScrollAttempts}`
         );
@@ -545,6 +546,7 @@
       seenKeys.add(nextSnapshot.key || nextSnapshot.text);
       processedIndex++;
 
+      panel().setDateProgress(`Day ${daysDone}/${totalDays}  •  ${dateLabel}  •  row ${dateData.length + 1}`);
       panel().setStatus(
         `Scraping ${dateLabel}\nRow ${processedIndex}: ${window.ArcusShared.shortText(nextSnapshot.text, 60)}`
       );
@@ -557,7 +559,7 @@
         dateData.push(result.item);
         panel().pushLog("success", `[${nextSnapshot.rowType}] ${window.ArcusShared.shortText(nextSnapshot.text)}`, "Date Scraper");
 
-        const every = CONFIG.milestoneSaveEvery || 50;
+        const every = CONFIG.milestoneSaveEvery || 100;
         if (dateData.length % every === 0) {
           saveMilestone(dateData, `milestone_${dateData.length}`);
         }
@@ -723,7 +725,7 @@
         await waitForWorkbenchReady();
 
         currentScrapeDate = dateFileStr;
-        const dateData = await scrapeDateRows(dateInputStr);
+        const dateData = await scrapeDateRows(dateInputStr, completedDates.size, totalDays);
         currentScrapeDate = null;
 
         if (dateData !== null) {
@@ -850,7 +852,7 @@
           panel().pushLog("success", `[${nextSnapshot.rowType}] ${window.ArcusShared.shortText(nextSnapshot.text)} [${tagStr}]`, "Scraper");
           panel().renderStats();
 
-          const every = CONFIG.milestoneSaveEvery || 50;
+          const every = CONFIG.milestoneSaveEvery || 100;
           if (state.scraper.data.length % every === 0) {
             saveMilestone(state.scraper.data, `milestone_${state.scraper.data.length}`);
           }
