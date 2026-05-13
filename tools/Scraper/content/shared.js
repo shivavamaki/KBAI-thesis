@@ -2,7 +2,7 @@
   if (window.__ARCUS_SHARED_LOADED__) return;
   window.__ARCUS_SHARED_LOADED__ = true;
 
-  // Arcus Toolkit v3.8.0
+  // Arcus Toolkit v3.10.0
   // Phase 1 upgrade: selector fallback helper, structured debug store, and safer click helpers.
 
   const CONFIG = {
@@ -255,7 +255,7 @@
   }
 
   window.ArcusStore = window.ArcusStore || {};
-  window.ArcusStore.core = { state, CONFIG, version: "3.9.4" };
+  window.ArcusStore.core = { state, CONFIG, version: "3.10.0" };
 
   function getMainContainer() {
     for (const selector of CONFIG.containerSelectors) {
