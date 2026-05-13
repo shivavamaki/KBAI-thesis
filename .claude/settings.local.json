@@ -4,7 +4,11 @@
       "Bash(powershell -Command \"\\(Get-Content knowledge_base\\\\medication_error_kb_chunked.jsonl | Measure-Object -Line\\).Lines\")",
       "Bash(git fetch *)",
       "Bash(git merge *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(sed -i 's/Arcus Toolkit v3\\\\.8\\\\.0/Arcus Toolkit v3.10.0/' /workspaces/KBAI-thesis/tools/Scraper/content/shared.js)",
+      "Bash(sed -i 's/version: \"3\\\\.9\\\\.4\"/version: \"3.10.0\"/' /workspaces/KBAI-thesis/tools/Scraper/content/shared.js)"
     ]
   }
 }
