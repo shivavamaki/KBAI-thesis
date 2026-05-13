@@ -123,27 +123,62 @@
   }
 
   // ── AngularJS-aware date input setter ─────────────────────────────────────
+  // The Arcus date picker uses ng-model="dateselector.displayDate" with a
+  // custom validate-date directive and ng-blur="ngBlur();showHint=false;".
+  // We must update the Angular scope AND fire native DOM events so the model
+  // is committed before #searchdispense is clicked.
   async function setAngularDateInput(selector, value) {
     const el = document.querySelector(selector);
     if (!el) return false;
+
+    // Step 1: Click + focus so Angular marks the field as touched
+    el.click();
+    el.focus();
+    await sleep(100);
+
+    // Step 2: Angular scope — walk up the $parent chain to find dateselector
     try {
       if (typeof angular !== "undefined") {
         const $el = angular.element(el);
+        let scope = $el.scope();
+
+        // Walk up max 8 levels to find the scope that owns dateselector
+        for (let depth = 0; depth < 8 && scope; depth++) {
+          if (scope.dateselector && typeof scope.dateselector.displayDate !== "undefined") {
+            scope.$apply(() => { scope.dateselector.displayDate = value; });
+            break;
+          }
+          scope = scope.$parent;
+        }
+
+        // Also update via ngModel controller so $validators/$parsers run
         const ngModel = $el.controller("ngModel");
-        const scope = $el.scope();
-        if (ngModel && scope) {
-          ngModel.$setViewValue(value);
-          ngModel.$commitViewValue();
-          scope.$apply();
-          await sleep(150);
-          return true;
+        const nearScope = $el.scope();
+        if (ngModel && nearScope) {
+          nearScope.$apply(() => {
+            ngModel.$setViewValue(value);
+            ngModel.$commitViewValue();
+          });
         }
       }
     } catch (_) {}
+
+    // Step 3: Override the DOM value with the native setter (bypasses Angular's
+    // change detection guard so the next "input" event reads the right value)
     const nativeSet = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set;
     if (nativeSet) nativeSet.call(el, value); else el.value = value;
-    ["input", "change", "blur"].forEach((t) => el.dispatchEvent(new Event(t, { bubbles: true })));
-    await sleep(200);
+
+    // Step 4: Fire all events AngularJS and the validate-date directive listen to
+    ["input", "keyup", "change"].forEach((t) =>
+      el.dispatchEvent(new Event(t, { bubbles: true }))
+    );
+
+    // Step 5: Blur triggers ng-blur="ngBlur();showHint=false;" which commits
+    // the date into the parent date-range controller
+    el.blur();
+    el.dispatchEvent(new FocusEvent("blur", { bubbles: true }));
+
+    await sleep(400);
     return true;
   }
 
@@ -398,7 +433,19 @@
 
         await setAngularDateInput("#inputElementId4", dateInputStr);
         await setAngularDateInput("#inputElementId5", dateInputStr);
-        await sleep(400);
+
+        // Wait for Angular digest to settle after both date changes
+        await sleep(600);
+
+        // Verify the inputs actually show the new date; retry once if not
+        const fromEl = document.querySelector("#inputElementId4");
+        const toEl   = document.querySelector("#inputElementId5");
+        if (fromEl?.value !== dateInputStr || toEl?.value !== dateInputStr) {
+          panel().pushLog("info", `Date not reflected yet, retrying input for ${dateInputStr}`, "Date Scraper");
+          await setAngularDateInput("#inputElementId4", dateInputStr);
+          await setAngularDateInput("#inputElementId5", dateInputStr);
+          await sleep(600);
+        }
 
         const searchBtn = await waitForSelectorVisible("#searchdispense", 8000);
         if (!searchBtn) {
@@ -408,7 +455,7 @@
         }
 
         await clickLikeUser(searchBtn);
-        await sleep(1500);
+        await sleep(1800);
         await waitForWorkbenchReady();
 
         currentScrapeDate = dateFileStr;
