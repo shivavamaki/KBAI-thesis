@@ -19,6 +19,7 @@
     closeDetailPaneIfPresent,
     waitForSelectorVisible,
     waitForWorkbenchReady,
+    isVisible,
     sleep,
   } = window.ArcusShared;
 
