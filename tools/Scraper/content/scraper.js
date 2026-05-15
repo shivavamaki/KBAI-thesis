@@ -363,8 +363,6 @@
         "parent HTML:", inputEl.parentElement?.outerHTML?.slice(0, 300));
       return false;
     }
-    console.log("[Arcus] calendar button found for", inputAriaLabel, ":", calBtn.outerHTML.slice(0, 120));
-
     // Close any already-open calendar first
     await closeAnyOpenCalendar();
 
@@ -572,9 +570,17 @@
         );
       }
 
-      panel().renderStats();
-      syncScraperState();
-      await scrollMainContainerToLoadMore();
+      // Throttle heavy DOM/state ops — every 5 rows is plenty for live feedback
+      if (processedIndex % 5 === 0) {
+        panel().renderStats();
+        syncScraperState();
+      }
+
+      // Only scroll when the visible unseen queue is nearly empty (avoids ~1200ms penalty every row)
+      const unseenCount = getRowSnapshots().filter((s) => !seenKeys.has(s.key || s.text)).length;
+      if (unseenCount < (CONFIG.scrollTriggerThreshold || 3)) {
+        await scrollMainContainerToLoadMore();
+      }
       await sleep(CONFIG.loopDelayMs);
     }
 
@@ -588,17 +594,13 @@
 
   // ── Date range scraper ────────────────────────────────────────────────────
   async function runDateRangeScraper({ startDateStr, endDateStr, pdpa = true, resume = false } = {}) {
-    console.log("[Arcus] runDateRangeScraper called", { startDateStr, endDateStr, pdpa, resume });
-
     const onWorkbench = window.ArcusShared.isWorkbenchPage();
-    console.log("[Arcus] isWorkbenchPage:", onWorkbench, "href:", location.href);
     if (!onWorkbench) {
       panel().setStatus("Error: not on workbench page.");
       panel().pushLog("fail", `Not on workbench page. URL: ${location.href}`, "Date Scraper");
       return;
     }
 
-    console.log("[Arcus] state.isRunning:", state.isRunning, "scraper.state:", state.scraper.state);
     if (state.isRunning || state.scraper.state === "running") {
       panel().setStatus("Another task is already running.");
       panel().pushLog("fail", `Already running: isRunning=${state.isRunning} state=${state.scraper.state}`, "Date Scraper");
@@ -607,7 +609,6 @@
 
     const startDate = parseDDMMYYYY(startDateStr);
     const endDate   = parseDDMMYYYY(endDateStr);
-    console.log("[Arcus] parsed dates:", startDate, "→", endDate);
     if (!startDate || !endDate || startDate > endDate) {
       panel().setStatus("Invalid date range. Use DD-MM-YYYY format.");
       panel().pushLog("fail", `Invalid dates: "${startDateStr}" → "${endDateStr}"`, "Date Scraper");
@@ -628,8 +629,6 @@
       // Also reset state so a previous "done" run doesn't interfere
       state.scraper.data = [];
     }
-
-    console.log("[Arcus] completedDates size:", completedDates.size, "totalDays:", totalDays);
 
     // Wait for the workbench to be fully rendered before starting
     panel().setStatus(`Waiting for workbench to be ready…`);
@@ -655,8 +654,6 @@
       console.error("[Arcus]", msg, "From input parent HTML:", testInput.parentElement?.outerHTML?.slice(0, 400));
       return;
     }
-    console.log("[Arcus] pre-flight OK — From input:", testInput.id, "cal btn:", testBtn.getAttribute("aria-label"));
-
     state.scraper.pdpa         = pdpa;
     state.scraper.state        = "running";
     state.scraper.data         = [];
