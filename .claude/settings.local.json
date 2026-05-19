@@ -1,7 +1,19 @@
 {
   "permissions": {
     "allow": [
-      "Bash(powershell -Command \"\\(Get-Content knowledge_base\\\\medication_error_kb_chunked.jsonl | Measure-Object -Line\\).Lines\")"
+      "Bash(powershell -Command \"\\(Get-Content knowledge_base\\\\medication_error_kb_chunked.jsonl | Measure-Object -Line\\).Lines\")",
+      "Bash(streamlit run *)",
+      "PowerShell(Get-Command streamlit -ErrorAction SilentlyContinue)",
+      "PowerShell(python -m streamlit --version 2>&1)",
+      "PowerShell(python -m pip list 2>&1)",
+      "PowerShell(C:\\\\Python312\\\\python.exe -m streamlit --version 2>&1)",
+      "PowerShell(C:\\\\Python311\\\\python.exe -m streamlit --version 2>&1)",
+      "PowerShell(& \"C:\\\\Program Files\\\\Python310\\\\python.exe\" -m streamlit --version 2>&1)",
+      "PowerShell(& \"f:\\\\Shared_folders\\\\KBAI-thesis\\\\venv\\\\Scripts\\\\pip.exe\" install streamlit 2>&1)",
+      "PowerShell(C:\\\\Python312\\\\python.exe -m ensurepip --upgrade 2>&1)",
+      "PowerShell(C:\\\\Python312\\\\python.exe -m pip install --target \"f:\\\\Shared_folders\\\\KBAI-thesis\\\\venv\\\\Lib\\\\site-packages\" streamlit 2>&1)",
+      "PowerShell(& \"f:\\\\Shared_folders\\\\KBAI-thesis\\\\venv\\\\Scripts\\\\python.exe\" -m streamlit run \"f:\\\\Shared_folders\\\\KBAI-thesis\\\\pharmacist_app\\\\app.py\")",
+      "PowerShell(& \"f:\\\\Shared_folders\\\\KBAI-thesis\\\\venv\\\\Scripts\\\\python.exe\" -m streamlit run \"f:\\\\Shared_folders\\\\KBAI-thesis\\\\pharmacist_app\\\\app.py\" --server.headless true --browser.gatherUsageStats false)"
     ]
   }
 }
