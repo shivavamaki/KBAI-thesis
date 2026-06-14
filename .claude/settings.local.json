@@ -13,7 +13,17 @@
       "PowerShell(C:\\\\Python312\\\\python.exe -m ensurepip --upgrade 2>&1)",
       "PowerShell(C:\\\\Python312\\\\python.exe -m pip install --target \"f:\\\\Shared_folders\\\\KBAI-thesis\\\\venv\\\\Lib\\\\site-packages\" streamlit 2>&1)",
       "PowerShell(& \"f:\\\\Shared_folders\\\\KBAI-thesis\\\\venv\\\\Scripts\\\\python.exe\" -m streamlit run \"f:\\\\Shared_folders\\\\KBAI-thesis\\\\pharmacist_app\\\\app.py\")",
-      "PowerShell(& \"f:\\\\Shared_folders\\\\KBAI-thesis\\\\venv\\\\Scripts\\\\python.exe\" -m streamlit run \"f:\\\\Shared_folders\\\\KBAI-thesis\\\\pharmacist_app\\\\app.py\" --server.headless true --browser.gatherUsageStats false)"
+      "PowerShell(& \"f:\\\\Shared_folders\\\\KBAI-thesis\\\\venv\\\\Scripts\\\\python.exe\" -m streamlit run \"f:\\\\Shared_folders\\\\KBAI-thesis\\\\pharmacist_app\\\\app.py\" --server.headless true --browser.gatherUsageStats false)",
+      "Bash(git checkout *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(dir \"F:\\\\Shared_folders\\\\KBAI-thesis\\\\docs\\\\thesis\\\\\" /b)",
+      "PowerShell(python -c \"import docx; print\\('python-docx ok'\\)\" 2>&1)",
+      "PowerShell(python -m pip install python-docx 2>&1)",
+      "PowerShell(python --version 2>&1)",
+      "PowerShell(C:\\\\Python312\\\\python.exe -m pip install python-docx 2>&1)",
+      "PowerShell(C:\\\\Python312\\\\python.exe -c \"import docx; print\\('python-docx ready'\\)\")",
+      "PowerShell(C:\\\\Python312\\\\python.exe \"F:\\\\Shared_folders\\\\KBAI-thesis\\\\docs\\\\thesis\\\\generate_revision.py\" 2>&1)"
     ]
   }
 }
