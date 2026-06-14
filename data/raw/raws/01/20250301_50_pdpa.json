@@ -1,0 +1,512 @@
+[
+  {
+    "ID": "1",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] น.ส. [NAME] FEMALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บมจ. ไทยประกันชีวิต , บมจ. เมืองไทยประกันชีวิต , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ , ผู้ป่วยชำระเอง(เงินสด/เครดิต)...",
+    "DETAIL": "Details / / 🏷️ ⚠️ e-Notes 🌐✨ Order Details ([ORDER]) DAILY ORDER ปิยกาญจน์ วัชเรนทร์วงศ์, พญ. Stat 01-03-2025 23:55 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51142001000033 Paracetamol 500 mg TABLET Take 1 Tablet Orally Once For 1 Days 1 Tablet Dispensed 01-03-2025 23:54 48-CI25004095 Bed Details Ward 8 809 28-02-2025 14:22 05-03-2025 20:39 ห้อง Deluxe Deluxe Normal",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "2",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] MR. [NAME] MALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บมจ. ไทยประกันชีวิต , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 23:29 ลลิตา เสียงล้ำ, RN. Ward 5",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER ไกรสร อนุตรพงษ์พันธ์, นพ. Stat 01-03-2025 23:29 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51121752000002 Hydralazine 25 mg TABLET Take 1 Tablet Orally Take Now For 1 Days 1 Tablet Checked In 01-03-2025 23:27 Hydralazine 25 mg 1 tab oral stat if SBP> 160 mmHg",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "3",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] นาย [NAME] MALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บจก. เอไอเอ , บจก. เอไอเอ , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 21:22 วนัสนันท์ พรรณานนท์, RN. Ward 6",
+    "DETAIL": "[PATIENT INFO REDACTED] WT : 100.0 kg BW : - HT : 175.0 Cms BMI : 32.65 Kg/m2 BSA : 2.23 HC : - CC : - T : 36.1 * C PR : 79 /Min RR : 18 /Min SBP : 141 mm Hg DBP : 82 mm Hg MAP : 101.66 mm Hg O2 : 97 % Recorded At: 10:00 Alert 🏷️ ⚠️ amoxicillin sodium, clavulanate potassium, potassium clavulanate Acute pharyngitis, Volume depletion, Influenza due to identified influenza virus, Acute bronchitis, ไข้หวัดใหญ่สายพันธุ์ บี amoxicillin sodium, clavulanate potassium, potassium clavulanate Allergy หน้าบวมตึง ผื่นลมพิษขึ้นบริเวณหน้าอก Acute pharyngitis Primary Diagnosis Volume depletion Primary Diagnosis Influenza due to identified influenza virus Primary Diagnosis Acute bronchitis Comorbidity ไข้หวัดใหญ่สายพันธุ์ บี 🌐✨ Order Details ([ORDER]) DAILY ORDER ปิยกาญจน์ วัชเรนทร์วงศ์, พญ. Stat 01-03-2025 21:22 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51141916000001 Lorazepam 1 mg TABLET # Take 1 Tablet Orally Once For 1 Days 1 Tablet Checked In 01-03-2025 21:22 48-RI25002703 Bed Details Ward 6 WT601 04-03-2025 00:16 07-03-2025 10:53 ห้อง TEMP Temporary",
+    "TAGS": [
+      "vitals",
+      "allergy",
+      "dx",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "4",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] นาย [NAME] MALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บจก. เอไอเอ , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 20:42 สุนิสา มีเงิน, RN. Cardiac Care Unit (DEPARTMENT)",
+    "DETAIL": "Details / / 🏷️ ⚠️ No Known Drug Allergies Heart failure, unspecified, Mitral (valve) insufficiency, Non-insulin-dependent diabetes mellitus, with renal complications, Congestive heart failure, Aortic (valve) stenosis with insufficiency, Mitral (valve) insufficiency, Non-insulin-dependent diabetes mellitus, with renal complications, Hyperlipidaemia, unspecified, Chronic kidney disease, stage 4 Heart failure, unspecified Primary Diagnosis Pre-operative Mitral (valve) insufficiency Primary Diagnosis Pre-operative Non-insulin-dependent diabetes mellitus, with renal complications Primary Diagnosis Pre-operative Congestive heart failure Primary Diagnosis Pre-operative Aortic (valve) stenosis with insufficiency Comorbidity Pre-operative Mitral (valve) insufficiency Comorbidity Non-insulin-dependent diabetes mellitus, with renal complications Comorbidity Hyperlipidaemia, unspecified Comorbidity Pre-operative Chronic kidney disease, stage 4 Comorbidity Pre-operative 🌐✨ Order Details ([ORDER]) DAILY ORDER เอธัส จิรเศวตกุล, นพ. Stat 01-03-2025 20:42 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51101504000001 Clindamycin 300 mg CAPSULE Take 2 Capsule Orally Once For 1 Days 2 Capsule Checked In 01-03-2025 20:41 48-RI25002654 51101577000001 Cefdinir 100 mg CAPSULE Take 2 Capsule Orally Once For 1 Days 2 Capsule Checked In 01-03-2025 20:41 Bed Details Cardiac Care Unit CCUT02 05-03-2025 16:57 06-03-2025 20:31 ห้อง TEMP Temporary Primary Bed",
+    "TAGS": [
+      "nkda",
+      "dx",
+      "rx:3"
+    ]
+  },
+  {
+    "ID": "5",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] นาย [NAME] MALE [DOB] InPatient Stat Cancelled DAILY ORDER [ORDER] บจก. เอไอเอ , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 20:39 สุนิสา มีเงิน, RN. Cardiac Care Unit (DEPARTMENT)",
+    "DETAIL": "Details / / 🏷️ ⚠️ No Known Drug Allergies Heart failure, unspecified, Mitral (valve) insufficiency, Non-insulin-dependent diabetes mellitus, with renal complications, Congestive heart failure, Aortic (valve) stenosis with insufficiency, Mitral (valve) insufficiency, Non-insulin-dependent diabetes mellitus, with renal complications, Hyperlipidaemia, unspecified, Chronic kidney disease, stage 4 Heart failure, unspecified Primary Diagnosis Pre-operative Mitral (valve) insufficiency Primary Diagnosis Pre-operative Non-insulin-dependent diabetes mellitus, with renal complications Primary Diagnosis Pre-operative Congestive heart failure Primary Diagnosis Pre-operative Aortic (valve) stenosis with insufficiency Comorbidity Pre-operative Mitral (valve) insufficiency Comorbidity Non-insulin-dependent diabetes mellitus, with renal complications Comorbidity Hyperlipidaemia, unspecified Comorbidity Pre-operative Chronic kidney disease, stage 4 Comorbidity Pre-operative 🌐✨ Order Details ([ORDER]) DAILY ORDER เอธัส จิรเศวตกุล, นพ. Stat 01-03-2025 20:39 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51101504000001 Clindamycin 300 mg CAPSULE Take 1 Capsule Orally Once For 1 Days 1 Capsule Cancelled 01-03-2025 20:38 51101577000001 Cefdinir 100 mg CAPSULE Take 3 Capsule Orally Once For 1 Days 3 Capsule Cancelled 01-03-2025 20:38 Bed Details Cardiac Care Unit CCUT02 05-03-2025 16:57 06-03-2025 20:31 ห้อง TEMP Temporary Primary Bed",
+    "TAGS": [
+      "nkda",
+      "dx",
+      "rx:3"
+    ]
+  },
+  {
+    "ID": "6",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] น.ส. [NAME] FEMALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บมจ. วิริยะประกันภัย_สาขาที่ 00001-I_TPA , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 20:26 ญณากร ม่วงคุ้ม, RN. Intensive C...",
+    "DETAIL": "[PATIENT INFO REDACTED] WT : 59.0 kg BW : - HT : 163.0 Cms BMI : 22.20 Kg/m2 BSA : 1.63 HC : - CC : - T : 36.9 * C PR : 91 /Min RR : 20 /Min SBP : 114 mm Hg DBP : 63 mm Hg MAP : 80.00 mm Hg O2 : 99 % Recorded At: 14:07 Alert 🏷️ ⚠️ No Known Drug Allergies Allergic contact dermatitis due to food in contact with the skin, Anaphylactic shock due to adverse food reaction, Anaphylaxis (Skin +RS+CVS) with food allergy, ผื่นแพ้รุนแรง Allergic contact dermatitis due to food in contact with the skin Primary Diagnosis Anaphylactic shock due to adverse food reaction Comorbidity Anaphylaxis (Skin +RS+CVS) with food allergy, ผื่นแพ้รุนแรง 🌐✨ Order Details ([ORDER]) DAILY ORDER พิตรพิบูล เดี่ยวตระกูลชัย, นพ. Stat 01-03-2025 20:26 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51181704000007 Dexamethasone 5 mg/mL INJ Amp Inject 8 Milligram Intravenous Bolus Take Now For 1 Days 2 Amp Checked In 01-03-2025 20:25 48-CI25003951 51151703000001 Adrenaline 1 mg/mL INJ Amp As Directed 0.5 Milligram IntraMuscularly Take Now For 1 Days 1 Amp Checked In 01-03-2025 20:25 Bed Details Ward 8 808 02-03-2025 11:55 03-03-2025 18:08 ห้อง Standard Standard Normal Primary Bed",
+    "TAGS": [
+      "vitals",
+      "nkda",
+      "dx",
+      "rx:3"
+    ]
+  },
+  {
+    "ID": "7",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] น.ส. [NAME] FEMALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บจก. ริโก้ เซอร์วิสเซส (ประเทศไทย)_สาขาที่ 00003 , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 19:03 ปิยกาญจน์ วัชเรนทร...",
+    "DETAIL": "[PATIENT INFO REDACTED] WT : 64.2 kg BW : - HT : 158.5 Cms BMI : 25.55 Kg/m2 BSA : 1.69 HC : - CC : - T : 36.4 * C PR : 90 /Min RR : 20 /Min SBP : 141 mm Hg DBP : 85 mm Hg MAP : 103.66 mm Hg O2 : 98 % Recorded At: 10:00 Alert 🏷️ ⚠️ No Known Drug Allergies Acute bronchitis, Acute bronchitis, Volume depletion, ไข้หลอดลมอักเสบติดเชื้อเฉียบพลัน Acute bronchitis Primary Diagnosis Acute bronchitis Primary Diagnosis Volume depletion Comorbidity ไข้หลอดลมอักเสบติดเชื้อเฉียบพลัน 🌐✨ Order Details ([ORDER]) DAILY ORDER ปิยกาญจน์ วัชเรนทร์วงศ์, พญ. Stat 01-03-2025 19:03 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51101538000009 Levofloxacin 750 mg/150 mL INF Vial Infuse 750 Milligram IntraVenously Once For 1 Days 1 Vial Checked In 01-03-2025 19:02 48-CI25003921 Bed Details Ward 8 814 01-03-2025 18:20 03-03-2025 13:07 ห้อง Standard Standard Normal",
+    "TAGS": [
+      "vitals",
+      "nkda",
+      "dx",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "8",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] ด.ช. [NAME] MALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บจก. เอไอเอ , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ , สิทธิ์ส่วนลดพิเศษ 01-03-2025 18:40 ชลดา คุณารักษ์, RN. Ward 4",
+    "DETAIL": "[PATIENT INFO REDACTED] WT : 11.5 kg BW : - HT : - BMI : - BSA : - HC : - CC : - T : 37.0 * C PR : 128 /Min RR : 28 /Min SBP : 90 mm Hg DBP : 53 mm Hg MAP : 65.33 mm Hg O2 : 98 % Recorded At: 10:00 Alert 🏷️ ⚠️ นมวัว (cow milk), No Known Drug Allergies Fever with chills, Acute bronchiolitis, unspecified, Volume depletion, หลอดลมส่วนปลายอักเสบจากการติดเชื้อไวรัสและมีภาวะขาดน้ำร่วมด้วย diarrhea due to infectious process นมวัว (cow milk) สกุลรัตน์ Fever with chills Primary Diagnosis Acute bronchiolitis, unspecified Primary Diagnosis Volume depletion Comorbidity หลอดลมส่วนปลายอักเสบจากการติดเชื้อไวรัสและมีภาวะขาดน้ำร่วมด้วย diarrhea due to infectious process 🌐✨ Order Details ([ORDER]) DAILY ORDER กนกวรรณ ชูสกุล แก้วเขียว, พญ. Stat 01-03-2025 18:40 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51161515000006 Singulair **ซอง** GRANULE (4 mg) Sachet Take 1 Pack Orally Once For 1 Days 1 Pack Checked In 01-03-2025 18:38 ผู้ป่วยอาเจียน 48-CI25003966 51171923000004 Hidrasec Children POWDER **30 mg** Take 1 Pack Orally Once For 1 Days 1 Pack Checked In 01-03-2025 18:38 ผู้ป่วยอาเจียน Bed Details Ward 7 707 26-02-2025 08:05 04-03-2025 13:22 ห้อง Standard Standard Normal",
+    "TAGS": [
+      "vitals",
+      "nkda",
+      "dx",
+      "rx:3"
+    ]
+  },
+  {
+    "ID": "9",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] นาย [NAME] MALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บจก. เอไอเอ , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 18:03 อภิญญา รินไธสง, RN. Ward 8",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER ปิยกาญจน์ วัชเรนทร์วงศ์, พญ. Stat 01-03-2025 18:03 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51172107000005 Hyoscine 20 mg/mL INJ Amp Inject 20 Milligram Intravenous Bolus Take Now For 1 Days 1 Amp Checked In 01-03-2025 18:03 48-CI25003907 Bed Details Ward 8 819 01-03-2025 16:03 02-03-2025 17:45 ห้อง Standard Standard Normal",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "10",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] น.ส. [NAME] FEMALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] ผู้ป่วยชำระเอง(เงินสด/เครดิต) , บจก. เอไอเอ , สิทธิ์ส่วนลดพิเศษ 01-03-2025 18:01 ปิยกาญจน์ วัชเรนทร์วงศ์, พญ.",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER ปิยกาญจน์ วัชเรนทร์วงศ์, พญ. Stat 01-03-2025 18:01 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51142138000002 Ketolac 30 mg/mL INJ Amp Inject 30 Milligram IntraVenously Take Now For 1 Days 1 Amp Checked In 01-03-2025 17:52 48-RI25002529 Bed Details Ward 6 618 01-03-2025 16:50 02-03-2025 15:25 ห้อง Deluxe Deluxe Normal",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "11",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] นาย [NAME] MALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บจก. เอไอเอ , บมจ. ไทยประกันชีวิต , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ , สิทธิ์ส่วนลดพิเศษ 01-03-2025 18:01 อภิชาติ พิริยการนนท์...",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER อภิชาติ พิริยการนนท์, นพ. Stat 01-03-2025 18:01 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51014020207002 Acupan INJ (20 mg/2 mL) Amp Inject 20 Milligram Intermittent Take Now For 1 Days 1 Amp Checked In 01-03-2025 18:00 Should be given by slow IV infusion 30-60 mins 48-CI25003929 Bed Details Ward 5 520 02-03-2025 08:39 03-03-2025 13:42 ห้อง Standard Standard Normal",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "12",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] นาง [NAME] FEMALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ , สิทธิ์ส่วนลดพิเศษ , สำนักงานหลักประกันสุขภาพแห่งชาติ (สปสช.) 01-03-2025 17:24 วรรณน...",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER บุญส่ง พัจนสุนทร, รศ. นพ. Stat 01-03-2025 17:24 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51142219000016 Fentanyl INJ (50 mcg/5 mL)PFS >< # Inject 30 MCG IntraVenously Once For 1 Days 1 Set Checked In 01-03-2025 17:23 ก่อนทำ thoracostomy drainage",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "13",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] นาง [NAME] FEMALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ , สิทธิ์ส่วนลดพิเศษ , สำนักงานหลักประกันสุขภาพแห่งชาติ (สปสช.) 01-03-2025 17:17 วรรณน...",
+    "DETAIL": "Details / / 🏷️ ⚠️ e-Notes 🌐✨ Order Details ([ORDER]) DAILY ORDER บุญส่ง พัจนสุนทร, รศ. นพ. Stat 01-03-2025 17:17 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51142205000001 Pethidine 50 mg INJ Amp Inject 20 Milligram IntraVenously Once For 1 Days 1 Amp Checked In 01-03-2025 17:17 ระหว่างทำ thoracostomy drainage 48-RI25002680 Bed Details Ward 6 WT603 06-03-2025 15:37 06-03-2025 15:49 ห้อง TEMP Temporary Primary Bed",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "14",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] นาง [NAME] FEMALE [DOB] InPatient Stat Cancelled DAILY ORDER [ORDER] ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ , สิทธิ์ส่วนลดพิเศษ , สำนักงานหลักประกันสุขภาพแห่งชาติ (สปสช.) 01-03-2025 17:00 สัณห์...",
+    "DETAIL": "Details / / 🏷️ ⚠️ e-Notes 🌐✨ Order Details ([ORDER]) DAILY ORDER บุญส่ง พัจนสุนทร, รศ. นพ. Stat 01-03-2025 17:00 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51142219000016 Fentanyl INJ (50 mcg/5 mL)PFS >< # Inject 50 MCG IntraVenously Once For 1 Days 1 Set Cancelled 01-03-2025 16:59 ให้ Fentanyl 30 mcg IV ก่อน Bed Details Ward 6 WT603 06-03-2025 15:37 06-03-2025 15:49 ห้อง TEMP Temporary Primary Bed",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "15",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] MR. [NAME] MALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 16:29 วีรจิตต์ โชติมงคล, ศ. นพ.",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER วีรจิตต์ โชติมงคล, ศ. นพ. Stat 01-03-2025 16:29 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51142153000003 Arcoxia (90 mg) Tablet Take 1 Tablet Orally Once For 1 Days 1 Tablet Checked In 01-03-2025 16:28 48-RI25002764 Bed Details Ward 6 WT604 08-03-2025 18:58 08-03-2025 21:21 ห้อง TEMP Temporary Primary Bed",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "16",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] น.ส. [NAME] FEMALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บมจ. ไทยประกันชีวิต , บมจ. เมืองไทยประกันชีวิต , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ , ผู้ป่วยชำระเอง(เงินสด/เครดิต)...",
+    "DETAIL": "Details / / 🏷️ ⚠️ e-Notes 🌐✨ Order Details ([ORDER]) DAILY ORDER พิมพ์วิมล จันทร์แสง, พญ. Stat 01-03-2025 15:17 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51013010108001 Dynastat (Im/Iv) 40 Mg Inj @ Inject 40 Milligram Intravenous Bolus Every 12 Hours When have Symptom For 1 Days 2 Amp Checked In 01-03-2025 15:16 with stat dose 48-CI25004095 Bed Details Ward 8 809 28-02-2025 14:22 05-03-2025 20:39 ห้อง Deluxe Deluxe Normal",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "17",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] น.ส. [NAME] FEMALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บจก. เอไอเอ , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 15:06 วรรณนิภา ชมภูชา, RN. Ward 6",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER สุพัตรา ศรีขจรจิต, พญ. Stat 01-03-2025 15:06 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51171631000003 Niflec (pack) Take 1 Pack Orally Once For 1 Days 1 Pack Checked In 01-03-2025 20:00 Niflec ชองที่2 ผสมน้ำ 2 ลิตร กินให้หมดใน 2 ชม. เวลา 20:00น.",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "18",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] นาย [NAME] MALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บมจ. เมืองไทยประกันชีวิต , บจก. เอไอเอ , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ , ผู้ป่วยชำระเอง(เงินสด/เครดิต) 01-03-2025 1...",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER อรอุมา รุ่งวิริยะวณิช, พญ. Stat 01-03-2025 14:36 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51171909000001 omePRAzole (20 mg) capsule # Take 1 Capsule Orally Take Now For 1 Days 1 Capsule Checked In 01-03-2025 14:36 today dose 48-CI25003914 Bed Details Ward 8 805 28-02-2025 10:37 02-03-2025 20:30 ห้อง Standard Standard Normal",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "19",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] น.ส. [NAME] FEMALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บจก. เอไอเอ , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 14:29 สุพัตรา ศรีขจรจิต, พญ.",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER สุพัตรา ศรีขจรจิต, พญ. Stat 01-03-2025 14:29 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51171806000001 Metoclopramide 10 mg TABLET Take 1 Tablet Orally Take Now For 1 Days 1 Tablet Checked In 01-03-2025 14:28 51171631000003 Niflec (pack) Take 1 Pack Orally Take Now For 1 Days 1 Pack Checked In 01-03-2025 14:28",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:3"
+    ]
+  },
+  {
+    "ID": "20",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] MRS. [NAME] FEMALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 14:25 ณัฐวิภา พิมโคตร, RN. Ward 6",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER พิมพ์วิมล จันทร์แสง, พญ. Stat 01-03-2025 14:25 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51014070301001 Flunarizine 5 mg CAPSULE Take 1 Capsule Orally Once For 1 Days 1 Capsule Checked In 01-03-2025 14:23",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "21",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] นาย [NAME] MALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] กรมบัญชีกลาง , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 13:56 อรวรรณ...",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER Stat 01-03-2025 13:56 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status PKG 51142937000018 Xylocaine 2% (20 Ml) Inj Intra-Articular 20 MilliLitre Injection Intra-Op For 1 Days 1 Vial Dispensed 01-03-2025 13:40 OR",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "22",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] ด.ญ. [NAME] FEMALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บมจ. เจนเนอราลี่ ประกันชีวิต(ไทยแลนด์)-I (ประกันกลุ่ม) , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ , สิทธิ์ส่วนลดพิเศษ , ผู้ป่วยชำร...",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER รัฐพล อุปลา, ศ. นพ. Stat 01-03-2025 13:45 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51010050124024 Xofluza FC TABLET (20 mg) Take 2 Tablet Orally Once For 1 Days 2 Tablet Checked In 01-03-2025 13:45",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "23",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] นาย [NAME] MALE [DOB] InPatient Stat Cancelled DAILY ORDER [ORDER] สำนักงานหลักประกันสุขภาพแห่งชาติ (สปสช.) , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 13:39 ไอย์รดา แพร่เมือง, RN. Cardiac C...",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER วิชเยนทร์ โชติวนิช, นพ. Stat 01-03-2025 13:39 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51191802000006 Kaylyte SOLUTION (20 mEq/15mL)(60mL) Take 15 MilliLitre Orally Once For 1 Days 1 Bottle Cancelled 01-03-2025 13:38 K 4.01",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "24",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] MRS. [NAME] FEMALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 13:04 อคิราภ์ วีรภัทรสกุล, ภญ.",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER บุญส่ง พัจนสุนทร, รศ. นพ. Stat 01-03-2025 13:04 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51161606000001 Loratadine 10 mg TABLET Take 1 Tablet Orally Take Now For 1 Days 1 Tablet Checked In 01-03-2025 13:04",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "25",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] น.ส. [NAME] FEMALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บมจ. เอฟดับบลิวดี ประกันชีวิต (ประกันส่วนบุคคล) , บมจ. กรุงไทย-แอกซ่า ประกันชีวิต-I , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศ...",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER อรอุมา รุ่งวิริยะวณิช, พญ. Stat 01-03-2025 12:39 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51018060124004 Bilaxten TABLET (20 mg) @ Take 1 Tablet Orally Take Now For 1 Days 1 Tablet Checked In 01-03-2025 12:38 for today dose",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "26",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] นาง [NAME] FEMALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 12:19 ยุทธนา ชารีพร, RN. Intensive Care Unit",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER เก่งกาจ วินัยโกศล, นพ. Stat 01-03-2025 12:19 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status PKG 51171806000004 metoCLOPRAmide (10Mg/2Ml) Inj # Inject 10 Milligram IntraVenously Take Now For 1 Days 1 Amp Checked In 01-03-2025 12:16",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "27",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] น.ส. [NAME] FEMALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บมจ. ไทยประกันชีวิต , บมจ. ฟิลลิปประกันชีวิต , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 12:18 ณัฐวิภา พิมโคตร, RN. W...",
+    "DETAIL": "Details / / 🏷️ ⚠️ e-Notes 🌐✨ Order Details ([ORDER]) DAILY ORDER อรอุมา รุ่งวิริยะวณิช, พญ. Stat 01-03-2025 12:18 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51171906000003 Prevacid Fdt-30 Mg Tablet Take 1 Tablet Orally Once For 1 Days 1 Tablet Checked In 01-03-2025 12:17 today dose 48-CI25003946 Bed Details Ward 6 WT604 03-03-2025 18:29 03-03-2025 23:46 ห้อง TEMP Temporary Primary Bed",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "28",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] นาง [NAME] FEMALE [DOB] InPatient Stat Cancelled DAILY ORDER [ORDER] ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 12:16 ยุทธนา ชารีพร, RN. Intensive Care Unit",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER เก่งกาจ วินัยโกศล, นพ. Stat 01-03-2025 12:16 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51171806000004 metoCLOPRAmide (10Mg/2Ml) Inj # Inject 10 Milligram IntraVenously Take Now For 1 Days 1 Amp Cancelled 01-03-2025 12:15",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "29",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] นาย [NAME] MALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] สำนักงานหลักประกันสุขภาพแห่งชาติ (สปสช.) , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ , สิทธิ์ส่วนลดพิเศษ 01-03-2025 12:03 ไอย์...",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER วิชเยนทร์ โชติวนิช, นพ. Stat 01-03-2025 12:03 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51171605000001 Duphalac Syr 100 Ml Take 30 MilliLitre Orally Once For 1 Days 1 Bottle Checked In 01-03-2025 12:02",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "30",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] ด.ญ. [NAME] FEMALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บมจ. ไทยประกันชีวิต , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ , สิทธิ์ส่วนลดพิเศษ , ส่วนลด BES Project 01-03-2025 11:47 ชลดา ค...",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER กนกวรรณ ชูสกุล แก้วเขียว, พญ. Stat 01-03-2025 11:47 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51161629000002 Zyrtec **10 Mg** Tablet// Take 1 Tablet Orally Once For 1 Days 1 Tablet Checked In 01-03-2025 11:45 ยาหก 51161805000001 Flemex (375 mg) Tablet Take 1 Tablet Orally Once For 1 Days 1 Tablet Checked In 01-03-2025 11:45 ยาหก",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:3"
+    ]
+  },
+  {
+    "ID": "31",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] MR. [NAME] MALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บจก. เอพริล แอสซิสแตนซ์ (ไทยแลนด์)_LMG , บจก. เอพริล แอสซิสแตนซ์ (ไทยแลนด์)_LMG , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ , Self...",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER บุญส่ง พัจนสุนทร, รศ. นพ. Stat 01-03-2025 11:45 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51161606000001 Loratadine 10 mg TABLET Take 1 Tablet Orally Take Now For 1 Days 1 Tablet Checked In 01-03-2025 11:43 เริ่มทานเย็นนี้",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "32",
+    "ROWTYPE": "continuous",
+    "SUMMARY": "[HN] ด.ญ. [NAME] FEMALE [DOB] InPatient Stat Dispensed CONTINUOUS ORDER [ORDER] บมจ. อลิอันซ์ อยุธยา ประกันภัย-I , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สำนัก...",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) CONTINUOUS ORDER รัฐพล อุปลา, ศ. นพ. Stat 01-03-2025 11:11 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51191602000020 NSS 0.9 % (P) INJ 500 mL Infuse 1 Bag IntraVenously 1 ml/hr 500 Hour Once For 1 1 Bag Dispensed 01-03-2025 11:10 For Clindamycin preparation",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "33",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] นาย [NAME] MALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บจก. เอไอเอ , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ , สิทธิ์ส่วนลดพิเศษ 01-03-2025 11:01 อรอุมา รุ่งวิริยะวณิช, พญ.",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER อรอุมา รุ่งวิริยะวณิช, พญ. Stat 01-03-2025 11:01 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51142138000002 Ketolac 30 mg/mL INJ Amp Inject 30 Milligram IntraVenously Take Now For 1 Days 1 Amp Checked In 01-03-2025 11:01",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "34",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] MR. [NAME] MALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] MD MEDICUS ASSISTANCE SERVICE , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 10:58 ปฬาภ...",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER สุกัญญา ศรีขจรจิต, พญ. Stat 01-03-2025 10:58 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51191602000033 NSS 0.9 % (P) INJ 100 mL Infuse 1 Bag IntraVenously Once For 1 Days 1 Bag Checked In 01-03-2025 10:57 For Amikacin For Amikacin",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "35",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] น.ส. [NAME] FEMALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บมจ. เอฟดับบลิวดี ประกันชีวิต (ประกันส่วนบุคคล) , บมจ. กรุงไทย-แอกซ่า ประกันชีวิต-I , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศ...",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER อรอุมา รุ่งวิริยะวณิช, พญ. Stat 01-03-2025 10:51 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51171906000004 INJECTION Prevacid (30 mg) Inject 30 Milligram IntraVenously Take Now For 1 Days 1 Vial Checked In 01-03-2025 10:50",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "36",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] นาง [NAME] FEMALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บจก. เอไอเอ , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 10:44 สุกัญญา ศรีขจรจิต, พญ.",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER สุกัญญา ศรีขจรจิต, พญ. Stat 01-03-2025 10:44 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51013010108001 Dynastat (Im/Iv) 40 Mg Inj @ Inject 40 Milligram Intravenous Bolus Take Now For 1 Days 1 Amp Checked In 01-03-2025 10:42",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "37",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] นาย [NAME] MALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บมจ. เมืองไทยประกันชีวิต , บจก. เอไอเอ , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ , ผู้ป่วยชำระเอง(เงินสด/เครดิต) 01-03-2025 1...",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER อรอุมา รุ่งวิริยะวณิช, พญ. Stat 01-03-2025 10:38 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51142138000002 Ketolac 30 mg/mL INJ Amp Inject 30 Milligram IntraVenously Take Now For 1 Days 1 Amp Checked In 01-03-2025 10:32",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "38",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] MR. [NAME] MALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] MD MEDICUS ASSISTANCE SERVICE , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 10:38 สุกั...",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER สุกัญญา ศรีขจรจิต, พญ. Stat 01-03-2025 10:38 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51101586000008 Amikacin 500 Mg Inj Inject 1000 Milligram IntraVenously Take Now For 1 Days 2 Vial Checked In 01-03-2025 10:33 IV drip in 1 hr. 48-CI25004557 Bed Details Ward 8 WT802 11-03-2025 14:19 12-03-2025 16:29 ห้อง TEMP Temporary Primary Bed",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "39",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] นาย [NAME] MALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บจก. เอไอเอ , บจก. เอไอเอ , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 10:35 อรอุมา รุ่งวิริยะวณิช, พญ.",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER อรอุมา รุ่งวิริยะวณิช, พญ. Stat 01-03-2025 10:35 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51142138000002 Ketolac 30 mg/mL INJ Amp Inject 30 Milligram IntraVenously Take Now For 1 Days 1 Amp Checked In 01-03-2025 10:34",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "40",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] ด.ช. [NAME] MALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บจก. เอไอเอ , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ , สิทธิ์ส่วนลดพิเศษ 01-03-2025 09:58 อัปสร วัฒนาอุดมชัย, ภญ.",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER ศศิกานต์ ซื่อศิริสวัสดิ์, พญ. Stat 01-03-2025 09:58 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51191602000015 NSS 0.9 % (P) INJ 250 mL in 500 mL Inject 1 Bag IntraVenously Once For 1 Days 1 Bag Dispensed 01-03-2025 09:57 For Azithromycin preparation",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "41",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] MR. [NAME] MALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บจก. เอพริล แอสซิสแตนซ์ (ไทยแลนด์)_LMG , บจก. เอพริล แอสซิสแตนซ์ (ไทยแลนด์)_LMG , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ , Self...",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER สันติพงษ์ ธรรมราช, นพ. Stat 01-03-2025 09:55 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51102713000021 Betamed SOLUTION 30 mL Apply on the Wound External Once For 1 Days 1 Bottle Dispensed 01-03-2025 09:51",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "42",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] น.ส. [NAME] FEMALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บจก. เอไอเอ , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ , สิทธิ์ส่วนลดพิเศษ 01-03-2025 09:42 วาชินี แสนวิเศษ, RN. Ward 7",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER ศศิกานต์ ซื่อศิริสวัสดิ์, พญ. Stat 01-03-2025 09:42 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51181704000007 Dexamethasone 5 mg/mL INJ Amp Inject 5 Milligram Intravenous Bolus Once For 1 Days 1 Amp Checked In 01-03-2025 09:41",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "43",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] ด.ญ. [NAME] FEMALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] บมจ. เมืองไทยประกันชีวิต , ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ , สิทธิ์ส่วนลดพิเศษ , ผู้ป่วยชำระเอง(เงินสด/เครดิต) 01-03-2...",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER ศศิกานต์ ซื่อศิริสวัสดิ์, พญ. Stat 01-03-2025 09:34 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51181726000003 Hydrocortisone 100 mg/2 mL INJ Vial Inject 60 Milligram IntraVenously Take Now For 1 Days 1 Vial Checked In 01-03-2025 09:34",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "44",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] นาง [NAME] FEMALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 09:33 พรทิพา พิมพ์ดี, RN. Ward 5",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER วันวิสาข์ สินธุประสิทธิ์, พญ. Stat 01-03-2025 09:33 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status PKG 51142206000018 Morphine Inj (3 Mg/3 Ml)Prefilled Syringe>< # Inject 3 Milligram IntraVenously Take Now For 1 Days 1 Set Checked In 01-03-2025 09:33",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "45",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] นาง [NAME] FEMALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 09:14 อรวรรณ ท่าหาญ, PN. .Operation Room",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER Stat 01-03-2025 09:14 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status PKG 51142001000044 Paracetamol 10 mg/mL INF Vial 100 mL Inject 1000 Milligram IntraVenously Intra-Op For 1 Days 1 Vial Dispensed 01-03-2025 08:54 OR PKG 51131811000010 Transamin INJection (250 mg/5 mL) Inject 250 Milligram IntraVenously Intra-Op For 2 Days 2 Amp Dispensed 01-03-2025 08:54 AK PKG 51131811000010 Transamin INJection (250 mg/5 mL) Inject 250 Milligram IntraVenously Intra-Op For 2 Days 2 Amp Dispensed 01-03-2025 08:54 OR PKG 51182202000001 Methylergometrine 0.2 mg/mL INJ Amp Inject 0.2 Milligram IntraVenously Intra-Op For 1 Days 1 Amp Dispensed 01-03-2025 08:54 AK PKG 51008010303003 Duratocin INJ (100 mcg/mL) Vial Infuse 1 Amp IntraVenously Intra-Op For 1 Days 1 Vial Dispensed 01-03-2025 08:54 AK PKG 51013010108001 Dynastat (Im/Iv) 40 Mg Inj @ Inject 40 Milligram Intravenous Bolus Intra-Op For 1 Days 1 Amp Dispensed 01-03-2025 08:54 AK",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:7"
+    ]
+  },
+  {
+    "ID": "46",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] ด.ช. [NAME] MALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 08:14 กัญญาภัทร พลโกษฐ์, RN. Nursery",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER กนกวรรณ ชูสกุล แก้วเขียว, พญ. Stat 01-03-2025 08:14 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51022060406070 Enfalac A+ Mind Pro 1 with 2FL PWD 400 g Mix milk Powder with water and drink Orally Once For 1 Days 1 Tin Checked In 01-03-2025 08:12 ส่ง nicu ชั้น 3 Bed Details Nursery Nsy01 01-03-2025 07:10 04-03-2025 11:07 ห้อง NURSERY Nursery",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "47",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] นาง [NAME] FEMALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 07:54 ฤทัยรัตน์ ตั้งมั่นสกุลชัย, พญ.",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER ฤทัยรัตน์ ตั้งมั่นสกุลชัย, พญ. Stat 01-03-2025 07:54 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status PKG 51131811000010 Transamin INJection (250 mg/5 mL) Inject 500 Milligram IntraVenously Every 8 Hours For 1 Days 6 Amp Checked In 01-03-2025 07:50 ให้ต่อจาก dose ใน OR อีก 3 dose PKG 51013010108001 Dynastat (Im/Iv) 40 Mg Inj @ Inject 40 Milligram Intravenous Bolus Every 12 Hours For 1 Days 2 Amp Checked In 01-03-2025 07:50 ให้ต่อจาก dose ใน OR อีก 2 dose",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:3"
+    ]
+  },
+  {
+    "ID": "48",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] ด.ช. [NAME] MALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 07:32 กัญญาภัทร พลโกษฐ์, RN. Nursery",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER กนกวรรณ ชูสกุล แก้วเขียว, พญ. Stat 01-03-2025 07:32 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status PKG 51102710000005 Alcohol 70% Sol (60Ml) Apply on the Wound (Topical) 2 Times Daily Morning and Evening For 1 Days 1 Bottle Checked In 01-03-2025 07:26 PKG 51191905000094 Vitamin K1 1 mg/0.5 mL INJ Amp Inject 1 Milligram IntraMuscularly Once For 1 Days 1 Amp Checked In 01-03-2025 07:26 PKG 51102714000027 Saline Eye (K-K) Solution As Directed (Topical) 2 Times Daily Morning and Evening For 1 Days 1 Bottle Checked In 01-03-2025 07:26 PKG 51101510000004 Terramycin Eye Oint 3.5 Gm $$ Apply to the Affected Area Into Affected Eye Once Daily Before Bedtime For 1 Days 1 Tube Checked In 01-03-2025 07:26 PKG 51201607000012 Heberbiovac HB 10 mcg/0.5 mL INJ Vial Inject 1 Syringe IntraMuscularly Take Now For 1 Days 1 Vial Checked In 01-03-2025 07:26",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:6"
+    ]
+  },
+  {
+    "ID": "49",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] นาง [NAME] FEMALE [DOB] InPatient Stat Dispensed DAILY ORDER [ORDER] ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 05:51 วิไลวรรณ แนวกันยา, RN. Labour Room (DEPARTMENT)",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER ชินดล วานิชพงษ์พันธุ์, ผศ. นพ. Stat 01-03-2025 05:51 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status 51211609000001 Protamine Sulphate INJ (50 mg/ 5 mL) Amp Infuse 20 Milligram IntraVenously Once For 1 Days 1 Amp Checked In 01-03-2025 05:50 ผสมใน NSS 50 ml IV drip in 15 min",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  },
+  {
+    "ID": "50",
+    "ROWTYPE": "daily",
+    "SUMMARY": "[HN] นาง [NAME] FEMALE [DOB] InPatient Stat Cancelled DAILY ORDER [ORDER] ผู้ป่วยชำระเอง(เงินสด/เครดิต) , สิทธิ์ส่วนลดพิเศษ 01-03-2025 05:43 วิไลวรรณ แนวกันยา, RN. Labour Room (DEPARTMENT)",
+    "DETAIL": "Details / / 🏷️ ⚠️ 🌐✨ Order Details ([ORDER]) DAILY ORDER ฤทัยรัตน์ ตั้งมั่นสกุลชัย, พญ. Stat 01-03-2025 05:43 Alerts Code Order Item Medicine Details Quantity Status Start Date Administration Instruction Comments Bill Status PKG 51211609000001 Protamine Sulphate INJ (50 mg/ 5 mL) Amp Infuse 20 Milligram IntraVenously Once For 1 Days 1 Amp Cancelled 01-03-2025 05:42 ผสม NSS 50 MI IV Drip in 15 min",
+    "TAGS": [
+      "allergy_unknown",
+      "rx:2"
+    ]
+  }
+]
