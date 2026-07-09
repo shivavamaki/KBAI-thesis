@@ -34,6 +34,12 @@
   const THAI_NAME_RE = /(ด\.ช\.|ด\.ญ\.|นาย|นางสาว|น\.ส\.|นาง|นพ\.|พญ\.|ทพ\.|ทพญ\.|ภก\.|ภญ\.)\s*[฀-๿]+(?:\s+[฀-๿]+)*/g;
   // English patient title + UPPERCASE name (stops before MALE/FEMALE/digits)
   const ENG_NAME_RE  = /(MR\.|MRS\.|MISS|MS\.)\s+[A-Z][A-Z\s\-\.]+?(?=\s+(?:MALE|FEMALE|\d{2}-\d{2}))/g;
+  // Insurance/payer names: between [ORDER] and datetime, or to end-of-line if truncated
+  const PAYER_RE     = /(\[ORDER\])\s+(?:.+?(?=\s+\d{2}-\d{2}-\d{4}\s+\d{2}:\d{2})|.+$)/gm;
+  // Staff (nurse/doctor) name in summary: Thai name after datetime, before ward/location
+  const STAFF_RE     = /(\d{2}-\d{2}-\d{4}\s+\d{2}:\d{2})\s+[฀-๿][^,\n]+(?:,\s*(?:RN\.|PN\.|พญ\.|นพ\.|MD\.|(?:ผศ\.|รศ\.|อ\.)\s+นพ\.))?/g;
+  // Doctor/nurse name in detail Order Details: after DAILY/CONTINUOUS/DISCHARGE ORDER|MEDICATION
+  const DOCTOR_RE    = /((?:DAILY|CONTINUOUS|DISCHARGE)\s+(?:ORDER|MEDICATION))\s+[฀-๿][^,]+,\s*(?:(?:ผศ\.|รศ\.|อ\.)\s+)?(?:พญ\.|นพ\.|RN\.|PN\.|MD\.)/g;
 
   function cleanseSummary(text) {
     if (!text) return text;
@@ -43,7 +49,9 @@
       .replace(HN_RE,        "[HN]")
       .replace(ENC_RE,       "[ENC]")
       .replace(ORDER_ID_RE,  "[ORDER]")
-      .replace(DOB_GENDER_RE, (_, gender) => gender + " [DOB]");
+      .replace(DOB_GENDER_RE, (_, gender) => gender + " [DOB]")
+      .replace(PAYER_RE,     (_, ord) => ord + " [PAYER]")
+      .replace(STAFF_RE,     (_, dt)  => dt  + " [STAFF]");
   }
 
   function cleanseDetail(text) {
@@ -53,6 +61,8 @@
     let s = text.replace(/^Details[\s\S]*?(?=WT\s*:)/, "[PATIENT INFO REDACTED] ");
     // Redact any order/encounter IDs remaining in medication / Order Details section
     s = s.replace(ENC_RE, "[ENC]").replace(ORDER_ID_RE, "[ORDER]");
+    // Redact doctor name in Order Details (DAILY/CONTINUOUS/DISCHARGE ORDER <name>, <title>.)
+    s = s.replace(DOCTOR_RE, (_, orderType) => orderType + " [DOCTOR]");
     return s;
   }
 
