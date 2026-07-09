@@ -15,7 +15,26 @@
       "Bash(chmod +x /tmp/medicheck_app/start_mac_linux.sh)",
       "Bash(zip -r medicheck_pharmacist_app.zip medicheck_app/)",
       "Bash(unzip -l medicheck_pharmacist_app.zip)",
-      "Bash(zip -r arcus_toolkit_v3.10.0.zip Scraper/)"
+      "Bash(zip -r arcus_toolkit_v3.10.0.zip Scraper/)",
+      "Skill(artifact-design)",
+      "Skill(artifact-design:*)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" --max-time 5 https://fonts.gstatic.com/s/ibmplexserif/v14/uU9NCBsR6Z2vfE9aq3bh3dSD3g.woff2)",
+      "Bash(awk '/IBM Plex Sans'\"'\"'/{f=1} f{print} /}/{if\\(f\\){print \"---\"; f=0}}' plex.css)",
+      "Bash(python3)",
+      "Bash(awk 'BEGIN{RS=\"}\"} /IBM Plex Sans/ && /U\\\\+0000-00FF/ {print $0\"\\\\n----\"}' plex.css)",
+      "Bash(ls /tmp/claude-1000/-workspaces-KBAI-thesis/ 2>&1; pwd)",
+      "Read(//tmp/claude-1000/-workspaces-KBAI-thesis/**)",
+      "Bash(mkdir -p /tmp/claude-1000/-workspaces-KBAI-thesis/8e03c8be-e060-4cd8-b58c-1317c49cc2b0/scratchpad/fonts)",
+      "Bash(mv /workspaces/KBAI-thesis/mono400.woff2 /workspaces/KBAI-thesis/mono500.woff2 /workspaces/KBAI-thesis/serif600.woff2 /workspaces/KBAI-thesis/serif700.woff2 /workspaces/KBAI-thesis/mono.css /workspaces/KBAI-thesis/serif.css /tmp/claude-1000/-workspaces-KBAI-thesis/8e03c8be-e060-4cd8-b58c-1317c49cc2b0/scratchpad/fonts/)",
+      "Bash(python3 -c \"import PyPDF2\")",
+      "Bash(python3 -c \"import pypdf\")",
+      "Bash(mkdir -p /tmp/claude-1000/-workspaces-KBAI-thesis/8e03c8be-e060-4cd8-b58c-1317c49cc2b0/scratchpad/build)",
+      "Bash(python3 -c ' *)",
+      "Bash(mkdir -p /workspaces/KBAI-thesis/docs/thesis)",
+      "Bash(cp /tmp/claude-1000/-workspaces-KBAI-thesis/8e03c8be-e060-4cd8-b58c-1317c49cc2b0/scratchpad/build/thesis-deck-th.html /workspaces/KBAI-thesis/docs/thesis/presentation_th.html)",
+      "Bash(git -C /workspaces/KBAI-thesis status --short)",
+      "Bash(git -C /workspaces/KBAI-thesis status --short -uall)",
+      "Bash(git -C /workspaces/KBAI-thesis log --oneline -5)"
     ],
     "additionalDirectories": [
       "/tmp"
