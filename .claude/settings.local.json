@@ -34,7 +34,8 @@
       "Bash(cp /tmp/claude-1000/-workspaces-KBAI-thesis/8e03c8be-e060-4cd8-b58c-1317c49cc2b0/scratchpad/build/thesis-deck-th.html /workspaces/KBAI-thesis/docs/thesis/presentation_th.html)",
       "Bash(git -C /workspaces/KBAI-thesis status --short)",
       "Bash(git -C /workspaces/KBAI-thesis status --short -uall)",
-      "Bash(git -C /workspaces/KBAI-thesis log --oneline -5)"
+      "Bash(git -C /workspaces/KBAI-thesis log --oneline -5)",
+      "Bash(git rev-list *)"
     ],
     "additionalDirectories": [
       "/tmp"
