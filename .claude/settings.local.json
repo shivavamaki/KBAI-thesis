@@ -2,11 +2,28 @@
   "permissions": {
     "allow": [
       "Bash(powershell -Command \"\\(Get-Content knowledge_base\\\\medication_error_kb_chunked.jsonl | Measure-Object -Line\\).Lines\")",
-      "Bash(git fetch *)",
-      "Bash(git merge *)",
-      "Bash(git push *)",
+      "Bash(streamlit run *)",
+      "PowerShell(Get-Command streamlit -ErrorAction SilentlyContinue)",
+      "PowerShell(python -m streamlit --version 2>&1)",
+      "PowerShell(python -m pip list 2>&1)",
+      "PowerShell(C:\\\\Python312\\\\python.exe -m streamlit --version 2>&1)",
+      "PowerShell(C:\\\\Python311\\\\python.exe -m streamlit --version 2>&1)",
+      "PowerShell(& \"C:\\\\Program Files\\\\Python310\\\\python.exe\" -m streamlit --version 2>&1)",
+      "PowerShell(& \"f:\\\\Shared_folders\\\\KBAI-thesis\\\\venv\\\\Scripts\\\\pip.exe\" install streamlit 2>&1)",
+      "PowerShell(C:\\\\Python312\\\\python.exe -m ensurepip --upgrade 2>&1)",
+      "PowerShell(C:\\\\Python312\\\\python.exe -m pip install --target \"f:\\\\Shared_folders\\\\KBAI-thesis\\\\venv\\\\Lib\\\\site-packages\" streamlit 2>&1)",
+      "PowerShell(& \"f:\\\\Shared_folders\\\\KBAI-thesis\\\\venv\\\\Scripts\\\\python.exe\" -m streamlit run \"f:\\\\Shared_folders\\\\KBAI-thesis\\\\pharmacist_app\\\\app.py\")",
+      "PowerShell(& \"f:\\\\Shared_folders\\\\KBAI-thesis\\\\venv\\\\Scripts\\\\python.exe\" -m streamlit run \"f:\\\\Shared_folders\\\\KBAI-thesis\\\\pharmacist_app\\\\app.py\" --server.headless true --browser.gatherUsageStats false)",
+      "Bash(git checkout *)",
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
+      "Bash(dir \"F:\\\\Shared_folders\\\\KBAI-thesis\\\\docs\\\\thesis\\\\\" /b)",
+      "PowerShell(python -c \"import docx; print\\('python-docx ok'\\)\" 2>&1)",
+      "PowerShell(python -m pip install python-docx 2>&1)",
+      "PowerShell(python --version 2>&1)",
+      "PowerShell(C:\\\\Python312\\\\python.exe -m pip install python-docx 2>&1)",
+      "PowerShell(C:\\\\Python312\\\\python.exe -c \"import docx; print\\('python-docx ready'\\)\")",
+      "PowerShell(C:\\\\Python312\\\\python.exe \"F:\\\\Shared_folders\\\\KBAI-thesis\\\\docs\\\\thesis\\\\generate_revision.py\" 2>&1)",
       "Bash(sed -i 's/Arcus Toolkit v3\\\\.8\\\\.0/Arcus Toolkit v3.10.0/' /workspaces/KBAI-thesis/tools/Scraper/content/shared.js)",
       "Bash(sed -i 's/version: \"3\\\\.9\\\\.4\"/version: \"3.10.0\"/' /workspaces/KBAI-thesis/tools/Scraper/content/shared.js)",
       "Bash(zip -r arcus_toolkit_v3.10.0.zip Scraper/ -x \"*.DS_Store\")",
@@ -35,7 +52,8 @@
       "Bash(git -C /workspaces/KBAI-thesis status --short)",
       "Bash(git -C /workspaces/KBAI-thesis status --short -uall)",
       "Bash(git -C /workspaces/KBAI-thesis log --oneline -5)",
-      "Bash(git rev-list *)"
+      "Bash(git rev-list *)",
+      "Bash(python3 -c \"import json; json.load\\(open\\('.claude/settings.local.json'\\)\\)\")"
     ],
     "additionalDirectories": [
       "/tmp"
