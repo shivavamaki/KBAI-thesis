@@ -53,7 +53,9 @@
       "Bash(git -C /workspaces/KBAI-thesis status --short -uall)",
       "Bash(git -C /workspaces/KBAI-thesis log --oneline -5)",
       "Bash(git rev-list *)",
-      "Bash(python3 -c \"import json; json.load\\(open\\('.claude/settings.local.json'\\)\\)\")"
+      "Bash(python3 -c \"import json; json.load\\(open\\('.claude/settings.local.json'\\)\\)\")",
+      "Bash(git commit *)",
+      "Bash(git push *)"
     ],
     "additionalDirectories": [
       "/tmp"
