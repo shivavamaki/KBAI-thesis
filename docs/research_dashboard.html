@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research Dashboard · KBGI Thesis · ศิวาวุธ มงคล</title>
+<style>
+/* ── RESET ──────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+/* ── TOKENS ─────────────────────────────────────────────────── */
+:root{
+  --bg:#f5f7fa;
+  --surface:#ffffff;
+  --border:#e2e8f0;
+  --borderh:#cbd5e1;
+
+  --c1:#0891b2; --c1l:#e0f7fb;
+  --c2:#7c3aed; --c2l:#ede9fe;
+  --c3:#d97706; --c3l:#fef3c7;
+  --c4:#059669; --c4l:#d1fae5;
+  --c5:#db2777; --c5l:#fce7f3;
+
+  --done:#059669;
+  --active:#d97706;
+
+  --t1:#0f172a;
+  --t2:#475569;
+  --t3:#94a3b8;
+
+  --r:10px;
+  --shadow:0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.05);
+  --shadow-md:0 4px 12px rgba(0,0,0,.09);
+  --font:'TH Sarabun New','Sarabun','Noto Sans Thai','Segoe UI',sans-serif;
+}
+
+/* ── BASE ───────────────────────────────────────────────────── */
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--t1);
+  min-height:100vh;
+  font-size:17px;
+  line-height:1.65;
+  overflow-x:hidden;
+}
+
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+
+/* ── SCROLLBAR ──────────────────────────────────────────────── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--borderh);border-radius:3px}
+
+/* ── HEADER ─────────────────────────────────────────────────── */
+.hdr{
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  padding:32px 0 28px;
+}
+
+.hdr-inner{display:flex;gap:24px;align-items:flex-start;justify-content:space-between}
+.hdr-left{flex:1;min-width:0}
+
+.badge-univ{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--c1l);border:1px solid #a5f3fc;
+  border-radius:99px;padding:4px 16px 4px 12px;
+  font-size:14px;color:var(--c1);margin-bottom:16px;font-weight:600;
+}
+.badge-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--c1);
+  animation:livepulse 2.2s ease-in-out infinite;
+}
+@keyframes livepulse{
+  0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(8,145,178,.5)}
+  50%{opacity:.7;box-shadow:0 0 0 5px rgba(8,145,178,0)}
+}
+
+.title-th{font-size:26px;font-weight:800;line-height:1.4;color:var(--t1);margin-bottom:6px}
+.title-en{font-size:16px;color:var(--t2);font-style:italic;margin-bottom:20px}
+
+.meta-row{display:flex;flex-wrap:wrap;gap:6px 28px;font-size:15px}
+.meta-item{color:var(--t2)}
+.meta-item strong{color:var(--t1);font-weight:600}
+
+/* date card */
+.date-card{
+  flex-shrink:0;background:var(--bg);border:1px solid var(--border);
+  border-radius:var(--r);padding:16px 24px;text-align:center;min-width:140px;
+  box-shadow:var(--shadow);
+}
+.dc-label{font-size:12px;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;font-weight:600}
+.dc-date{font-size:30px;font-weight:800;color:var(--t1);margin:6px 0 4px}
+.dc-year{font-size:15px;color:var(--t2);font-weight:500}
+.dc-day{font-size:13px;color:var(--t3);margin-top:3px}
+
+/* ── STATS ──────────────────────────────────────────────────── */
+.stats{padding:28px 0}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+
+.sc{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:22px 20px;position:relative;overflow:hidden;
+  box-shadow:var(--shadow);transition:box-shadow .2s,transform .15s;
+}
+.sc:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.sc-bar{position:absolute;top:0;left:0;right:0;height:3px;border-radius:3px 3px 0 0}
+
+/* ring stat */
+.ring-stat{display:flex;align-items:center;gap:16px}
+.ring-wrap{position:relative;width:84px;height:84px;flex-shrink:0}
+.ring-wrap svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.ring-track{fill:none;stroke:#e2e8f0;stroke-width:7}
+.ring-fill{
+  fill:none;stroke:var(--c1);stroke-width:7;stroke-linecap:round;
+  stroke-dasharray:197;stroke-dashoffset:197;
+  transition:stroke-dashoffset 2s cubic-bezier(.4,0,.2,1);
+}
+.ring-pct{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:19px;font-weight:800;color:var(--c1);
+}
+.ring-info .ri-main{font-size:16px;font-weight:700;color:var(--t1)}
+.ring-info .ri-sub{font-size:13px;color:var(--t3);margin-top:3px}
+
+.sc-icon{font-size:28px;margin-bottom:12px}
+.sc-val{font-size:38px;font-weight:800;color:var(--t1);line-height:1}
+.sc-val sub{font-size:18px;font-weight:500;color:var(--t2);vertical-align:baseline}
+.sc-label{font-size:15px;color:var(--t2);margin-top:6px;font-weight:500}
+.sc-note{font-size:13px;color:var(--t3);margin-top:4px}
+
+/* ── SECTION LABEL ──────────────────────────────────────────── */
+.sec-lbl{
+  display:flex;align-items:center;gap:12px;
+  font-size:13px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:1.2px;
+  margin-bottom:18px;
+}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── GANTT ──────────────────────────────────────────────────── */
+.gantt-section{padding-bottom:32px}
+.gantt-box{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:24px 24px 18px;
+  box-shadow:var(--shadow);
+}
+.gantt-months{
+  display:flex;justify-content:space-between;
+  padding-left:132px;margin-bottom:16px;
+}
+.gm{font-size:12px;color:var(--t3);font-weight:500}
+
+.gantt-row{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.gantt-row:last-of-type{margin-bottom:0}
+
+.gr-lbl{
+  width:130px;flex-shrink:0;
+  font-size:13px;color:var(--t2);text-align:right;line-height:1.3;font-weight:500;
+}
+
+.gr-track{
+  flex:1;height:22px;position:relative;
+  background:#f1f5f9;border-radius:5px;overflow:visible;
+  border:1px solid var(--border);
+}
+
+.gr-seg{
+  position:absolute;top:0;bottom:0;border-radius:4px;
+  display:flex;align-items:center;overflow:hidden;
+}
+
+.today-vline{
+  position:absolute;top:-18px;bottom:-4px;width:2px;
+  background:#d97706;
+  border-radius:1px;z-index:10;
+}
+.today-vline::before{
+  content:'วันนี้';position:absolute;top:-16px;left:50%;
+  transform:translateX(-50%);font-size:11px;color:var(--active);
+  white-space:nowrap;font-weight:700;font-family:var(--font);
+}
+
+.gantt-legend{
+  display:flex;flex-wrap:wrap;gap:18px;
+  margin-top:16px;padding-top:14px;border-top:1px solid var(--border);
+}
+.gl-item{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--t2)}
+.gl-swatch{width:18px;height:9px;border-radius:3px;flex-shrink:0}
+
+/* ── TIMELINE ───────────────────────────────────────────────── */
+.timeline-section{padding-bottom:60px}
+.phase-block{margin-bottom:48px}
+
+.phase-head{
+  display:flex;align-items:center;gap:14px;
+  padding:16px 20px;border-radius:var(--r);
+  margin-bottom:18px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-left-width:4px;
+  box-shadow:var(--shadow);
+}
+
+.ph-num{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:800;color:#fff;flex-shrink:0;
+}
+.ph-text{flex:1}
+.ph-th{font-size:17px;font-weight:700;color:var(--t1)}
+.ph-en{font-size:13px;color:var(--t2);margin-top:2px}
+.ph-right{text-align:right;flex-shrink:0}
+.ph-done{font-size:22px;font-weight:800}
+.ph-total{font-size:13px;color:var(--t3)}
+
+/* milestone list */
+.m-list{
+  display:flex;flex-direction:column;gap:10px;
+  padding-left:24px;border-left:2px solid var(--border);
+  position:relative;
+}
+
+.mc{
+  position:relative;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  overflow:hidden;cursor:pointer;
+  box-shadow:var(--shadow);
+  transition:box-shadow .2s,transform .12s,border-color .2s;
+}
+.mc:hover{box-shadow:var(--shadow-md);transform:translateX(3px)}
+
+.mc::before{
+  content:'';position:absolute;
+  left:-28px;top:22px;
+  width:12px;height:12px;border-radius:50%;
+  border:2px solid var(--bg);z-index:2;
+}
+.mc.s-done::before{background:var(--done)}
+.mc.s-active::before{
+  background:var(--active);
+  box-shadow:0 0 0 4px rgba(217,119,6,.2);
+  animation:nodepulse 2s ease-in-out infinite;
+}
+.mc.s-pending::before{background:var(--borderh)}
+
+@keyframes nodepulse{
+  0%,100%{box-shadow:0 0 0 4px rgba(217,119,6,.2)}
+  50%{box-shadow:0 0 0 7px rgba(217,119,6,.05)}
+}
+
+.mc.s-done{border-color:#a7f3d0}
+.mc.s-active{border-color:#fde68a;box-shadow:0 2px 12px rgba(217,119,6,.12)}
+
+/* top row */
+.mc-top{display:flex;align-items:center;gap:14px;padding:16px 18px}
+.mc-icon{font-size:26px;flex-shrink:0;line-height:1}
+.mc-mid{flex:1;min-width:0}
+.mc-name{font-size:17px;font-weight:700;color:var(--t1);line-height:1.35}
+.mc-sub{font-size:14px;color:var(--t2);margin-top:3px}
+
+.mc-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
+
+.tag{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 12px;border-radius:99px;
+  font-size:12px;font-weight:700;letter-spacing:.2px;white-space:nowrap;
+}
+.tag.done{background:var(--c4l);color:var(--done)}
+.tag.active{background:var(--c3l);color:var(--active)}
+.tag.pending{background:#f1f5f9;color:var(--t3)}
+
+.mc-date{font-size:13px;color:var(--t3);white-space:nowrap}
+.mc-pct{font-size:14px;font-weight:700}
+
+.mc-chevron{font-size:13px;color:var(--t3);transition:transform .25s;flex-shrink:0}
+.mc.open .mc-chevron{transform:rotate(180deg)}
+
+/* progress strip */
+.mc-prog{height:4px;background:#f1f5f9}
+.mc-fill{height:100%;border-radius:0 2px 2px 0;width:0;transition:width 1.4s cubic-bezier(.4,0,.2,1)}
+
+/* detail panel */
+.mc-detail{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1)}
+.mc-detail.open{max-height:500px}
+.mc-detail-in{
+  border-top:1px solid var(--border);padding:18px 18px 20px;
+  display:grid;grid-template-columns:1fr 1fr;gap:0 28px;
+  background:#fafbfc;
+}
+.dl{font-size:12px;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;font-weight:700;margin:14px 0 8px}
+.dl:first-child{margin-top:0}
+.dt{font-size:15px;color:var(--t2);line-height:1.7}
+.dlist{list-style:none}
+.dlist li{
+  font-size:15px;color:var(--t2);padding:3px 0;
+  display:flex;align-items:flex-start;gap:8px;
+}
+.dlist li::before{content:'▸';flex-shrink:0;margin-top:2px;font-size:12px}
+
+/* ── FOOTER ─────────────────────────────────────────────────── */
+footer{
+  border-top:1px solid var(--border);background:var(--surface);
+  padding:20px 0;text-align:center;font-size:14px;color:var(--t3);
+}
+
+/* ── RESPONSIVE ─────────────────────────────────────────────── */
+@media(max-width:800px){
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .hdr-inner{flex-direction:column}
+  .mc-detail-in{grid-template-columns:1fr}
+  .gantt-months{display:none}
+  .title-th{font-size:22px}
+}
+@media(max-width:520px){
+  .stats-grid{grid-template-columns:1fr}
+  .mc-right{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ── HEADER ─────────────────────────────────────────────── -->
+<header class="hdr">
+  <div class="hdr-inner">
+    <div class="hdr-left">
+      <div class="badge-univ">
+        <span class="badge-dot"></span>
+        มหาวิทยาลัยศิลปากร &nbsp;·&nbsp; คณะเภสัชศาสตร์
+      </div>
+      <h1 class="title-th">
+        การจำแนกประเภทความผิดพลาดของใบสั่งยาแบบหลายป้ายกำกับ<br>ด้วย Knowledge Base Generative AI
+      </h1>
+      <p class="title-en">Prescription Error Multi-label Classification with Knowledge Base Generative AI</p>
+      <div class="meta-row">
+        <span class="meta-item">🧑‍🎓 <strong>ผู้วิจัย:</strong> ภก.ศิวาวุธ มงคล &nbsp;(660820006)</span>
+        <span class="meta-item">🎓 <strong>ที่ปรึกษา:</strong> รศ. ดร. ภก.วีรยุทธ์ เลิศนที</span>
+        <span class="meta-item">📅 <strong>ช่วงวิจัย:</strong> มี.ค. 2568 – ก.พ. 2569</span>
+        <span class="meta-item">🏥 <strong>โรงพยาบาล:</strong> กรุงเทพขอนแก่น</span>
+      </div>
+    </div>
+    <div class="date-card">
+      <div class="dc-label">วันที่ปัจจุบัน</div>
+      <div class="dc-date" id="dc-date">—</div>
+      <div class="dc-year" id="dc-year">—</div>
+      <div class="dc-day" id="dc-day">—</div>
+    </div>
+  </div>
+</header>
+
+<!-- ── STATS ──────────────────────────────────────────────── -->
+<section class="stats">
+  <div class="stats-grid">
+
+    <div class="sc">
+      <div class="sc-bar" style="background:var(--c1)"></div>
+      <div class="ring-stat">
+        <div class="ring-wrap">
+          <svg viewBox="0 0 76 76" width="76" height="76">
+            <circle class="ring-track" cx="38" cy="38" r="31"/>
+            <circle class="ring-fill" id="ring" cx="38" cy="38" r="31"
+              stroke-dasharray="194.8" stroke-dashoffset="194.8"/>
+          </svg>
+          <div class="ring-pct" id="ring-pct">0%</div>
+        </div>
+        <div class="ring-info">
+          <div class="ri-main">ความก้าวหน้า</div>
+          <div class="ri-sub">Overall Progress</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sc">
+      <div class="sc-bar" style="background:var(--c4)"></div>
+      <div class="sc-icon">🎯</div>
+      <div class="sc-val" id="s-done">0<sub id="s-total">/17</sub></div>
+      <div class="sc-label">Milestones สำเร็จแล้ว</div>
+      <div class="sc-note" id="s-active">— กำลังดำเนินการ</div>
+    </div>
+
+    <div class="sc">
+      <div class="sc-bar" style="background:var(--c2)"></div>
+      <div class="sc-icon">⚡</div>
+      <div class="sc-val" id="s-phase" style="font-size:20px;margin-top:2px">—</div>
+      <div class="sc-label">ระยะปัจจุบัน (Current Phase)</div>
+      <div class="sc-note" id="s-phase-en">—</div>
+    </div>
+
+    <div class="sc">
+      <div class="sc-bar" style="background:var(--c5)"></div>
+      <div class="sc-icon">🏁</div>
+      <div class="sc-val">มี.ค.<sub>&nbsp;70</sub></div>
+      <div class="sc-label">เป้าหมายสอบวิทยานิพนธ์</div>
+      <div class="sc-note" id="s-days">—</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── GANTT ──────────────────────────────────────────────── -->
+<section class="gantt-section">
+  <div class="sec-lbl">ภาพรวมระยะเวลาดำเนินการ</div>
+  <div class="gantt-box" id="gantt-box"></div>
+</section>
+
+<!-- ── TIMELINE ───────────────────────────────────────────── -->
+<section class="timeline-section">
+  <div class="sec-lbl">Milestone Timeline</div>
+  <div id="timeline"></div>
+</section>
+
+</div><!-- /wrap -->
+
+<footer>
+  <div class="wrap">
+    สาขาภาควิชาชีวการแพทย์และสารสนเทศศาสตร์ทางสุขภาพ · คณะเภสัชศาสตร์ · มหาวิทยาลัยศิลปากร · พ.ศ. 2569
+    &nbsp;|&nbsp; Dashboard v1.0
+  </div>
+</footer>
+
+<!-- ── SCRIPT ─────────────────────────────────────────────── -->
+<script>
+/* ═══════════════════════════════════════════════════════════
+   DATA
+═══════════════════════════════════════════════════════════ */
+const PHASES = [
+  {
+    id:1,
+    th:'ระยะที่ 1: การเตรียมการและนำเสนอโครงร่าง',
+    en:'Preparation & Proposal',
+    color:'#22d3ee',
+    /* gantt: % along 18-month bar (Sep 2025 → Mar 2027) */
+    gs:0, gw:48,
+    ms:[
+      {
+        id:'M1',icon:'📚',
+        th:'ทบทวนวรรณกรรม',en:'Literature Review',
+        status:'done',pct:100,
+        date:'ก.ย. 2568 – ม.ค. 2569',
+        desc:'ทบทวนวรรณกรรมที่เกี่ยวข้องกับ Medication Error, Knowledge-Based AI, Generative AI และ Multi-label Classification ครอบคลุม 35 รายการบรรณานุกรม',
+        items:['ตารางสรุปวรรณกรรม (Literature Review Table)','วิเคราะห์ช่องว่างงานวิจัย (Research Gap Analysis)','บทที่ 2: วรรณกรรมที่เกี่ยวข้อง ฉบับสมบูรณ์ (32 หน้า)']
+      },
+      {
+        id:'M2',icon:'✍️',
+        th:'เขียนโครงร่างวิทยานิพนธ์',en:'Thesis Proposal Writing',
+        status:'done',pct:100,
+        date:'ม.ค. – มี.ค. 2569',
+        desc:'เขียนโครงร่างวิทยานิพนธ์ครบทั้ง 3 บท: บทนำ วรรณกรรมที่เกี่ยวข้อง และวิธีดำเนินการวิจัย รวม 52 หน้า',
+        items:['โครงร่างวิทยานิพนธ์ 52 หน้า (PDF)','กรอบแนวคิดการวิจัย (Conceptual Framework)','เอกสารประกอบการนำเสนอ']
+      },
+      {
+        id:'M3',icon:'🎤',
+        th:'นำเสนอโครงร่างต่อคณะกรรมการ',en:'Proposal Defense',
+        status:'done',pct:100,
+        date:'17 มี.ค. 2569',
+        desc:'นำเสนอโครงร่างวิทยานิพนธ์ต่อคณะกรรมการสาขาฯ และรับข้อเสนอแนะ 8 ประเด็น เพื่อนำไปปรับปรุง',
+        items:['Presentation Slides (นำเสนอสำเร็จ)','บันทึกข้อเสนอแนะจากคณะกรรมการ 8 ข้อ','ผ่านการอนุมัติให้ดำเนินการต่อ (หลังแก้ไข)']
+      },
+      {
+        id:'M4',icon:'🔧',
+        th:'แก้ไขโครงร่างตามข้อเสนอแนะ 8 ข้อ',en:'Proposal Revision (8 Points)',
+        status:'active',pct:80,
+        date:'มี.ค. – มิ.ย. 2569',
+        desc:'แก้ไขโครงร่างตามข้อเสนอแนะ 8 ประเด็น: ปรับชื่อวิทยานิพนธ์ ขยาย KBGI ชี้แจง HIS/Prescription Error เพิ่มวิธีสุ่มตัวอย่าง ระบุ AI ทดสอบ เพิ่มการเปรียบเทียบกับเภสัชกร และลบ Reference ซ้ำ',
+        items:['Thesis_Proposal_Revised_660820006.docx (สร้างแล้ว)','ส่งอาจารย์ที่ปรึกษาตรวจสอบ (รอดำเนินการ)','รับอนุมัติฉบับแก้ไข (รอดำเนินการ)']
+      }
+    ]
+  },
+  {
+    id:2,
+    th:'ระยะที่ 2: จริยธรรมการวิจัยและพัฒนาระบบ',
+    en:'Ethics Approval & System Development',
+    color:'#a78bfa',
+    gs:44, gw:30,
+    ms:[
+      {
+        id:'M5',icon:'📋',
+        th:'ยื่นขอจริยธรรมการวิจัย (IRB)',en:'Ethics / IRB Application',
+        status:'pending',pct:0,
+        date:'ก.ค. 2569',
+        desc:'เตรียมและยื่นเอกสารขอจริยธรรมการวิจัยต่อคณะกรรมการจริยธรรม (IRB) ของโรงพยาบาลและมหาวิทยาลัย พร้อมแผนคุ้มครองข้อมูลส่วนบุคคล (PDPA)',
+        items:['แบบฟอร์มขอจริยธรรมการวิจัย','เอกสารชี้แจงผู้เข้าร่วมวิจัย','แผนการคุ้มครองข้อมูลส่วนบุคคล (PDPA Compliance)']
+      },
+      {
+        id:'M6',icon:'✅',
+        th:'รับอนุมัติจริยธรรมการวิจัย',en:'Ethics Approval Received',
+        status:'pending',pct:0,
+        date:'ส.ค. 2569',
+        desc:'รับใบรับรองจาก IRB และรับหนังสืออนุญาตจากโรงพยาบาลเพื่อดึงข้อมูลจากระบบ HIS',
+        items:['ใบรับรองจริยธรรมการวิจัย (COA)','หนังสืออนุญาตเก็บข้อมูลจากโรงพยาบาล']
+      },
+      {
+        id:'M7',icon:'🧠',
+        th:'สร้างฐานความรู้ (Knowledge Base)',en:'Knowledge Base Construction',
+        status:'pending',pct:0,
+        date:'ก.ค. – ก.ย. 2569',
+        desc:'รวบรวม จัดโครงสร้าง และตรวจสอบองค์ความรู้ทางคลินิกเกี่ยวกับ Prescription Error จาก UpToDate, Medscape, สมาคมเภสัชกรรมโรงพยาบาล (ประเทศไทย) และวรรณกรรมวิชาการ',
+        items:['Knowledge Base ฉบับสมบูรณ์ (JSON-LD + Vector Embeddings)','ผลการตรวจสอบโดยเภสัชกรผู้เชี่ยวชาญ 2 คน','Knowledge Validation Report']
+      },
+      {
+        id:'M8',icon:'⚙️',
+        th:'พัฒนาระบบ KBGI',en:'KBGI System Development',
+        status:'pending',pct:0,
+        date:'ส.ค. – ต.ค. 2569',
+        desc:'พัฒนาระบบ KBGI โดยผสาน GPT-4o กับ Knowledge Base ผ่านเทคนิค RAG (Retrieval-Augmented Generation) พร้อม Prompt Engineering และ Output Processing Module (Python + OpenAI API)',
+        items:['ระบบ KBGI พร้อมใช้งาน (Python + OpenAI API)','Data Pipeline สำหรับประมวลผลข้อมูลใบสั่งยา','Unit Test & Integration Test Report']
+      },
+      {
+        id:'M9',icon:'🧪',
+        th:'ทดสอบระบบนำร่อง (Pilot Testing)',en:'Pilot System Testing',
+        status:'pending',pct:0,
+        date:'ต.ค. 2569',
+        desc:'ทดสอบระบบ KBGI กับใบสั่งยาตัวอย่าง 30 ใบ ที่เภสัชกรประเมินแล้ว เพื่อปรับ Prompt Template และ RAG Parameters ให้ระบบมีประสิทธิภาพ Precision ≥ 0.70',
+        items:['Pilot Test Results (30 ใบสั่งยา)','Calibrated Prompt Template','System Performance Report (Pre-deployment)']
+      }
+    ]
+  },
+  {
+    id:3,
+    th:'ระยะที่ 3: การเก็บรวบรวมข้อมูล',
+    en:'Data Collection',
+    color:'#fbbf24',
+    gs:61, gw:11,
+    ms:[
+      {
+        id:'M10',icon:'🏥',
+        th:'ดึงข้อมูลจาก HIS & De-identification',en:'HIS Data Export & Anonymization',
+        status:'pending',pct:0,
+        date:'พ.ย. 2569',
+        desc:'ดึงข้อมูลใบสั่งยา ≥ 270 ใบ ย้อนหลัง (มี.ค. 2568 – ก.พ. 2569) จากระบบ HIS โดยใช้ Systematic Random Sampling จากนั้น De-identify ข้อมูลผู้ป่วยก่อนส่งเข้าระบบ AI',
+        items:['ชุดข้อมูลใบสั่งยา ≥ 270 ใบ (Anonymized CSV)','Data Export Log','รายงานการ De-identification (PDPA Compliant)']
+      },
+      {
+        id:'M11',icon:'🧹',
+        th:'ทำความสะอาดและเตรียมข้อมูล',en:'Data Cleaning & Preparation',
+        status:'pending',pct:0,
+        date:'พ.ย. 2569',
+        desc:'ประมวลผลด้วย Python (pandas): ตรวจสอบความครบถ้วน ลบข้อมูลซ้ำ แปลงรูปแบบ และเตรียม Multi-label Binary Matrix สำหรับวิเคราะห์',
+        items:['Clean Dataset พร้อม Multi-label Matrix','Data Quality Report','Python Data Pipeline Script (บน GitHub)']
+      }
+    ]
+  },
+  {
+    id:4,
+    th:'ระยะที่ 4: การวิเคราะห์และประเมินผล',
+    en:'Analysis & Evaluation',
+    color:'#34d399',
+    gs:67, gw:17,
+    ms:[
+      {
+        id:'M12',icon:'🤖',
+        th:'วิเคราะห์ด้วยระบบ AI (Main Study)',en:'AI Analysis – Main Study',
+        status:'pending',pct:0,
+        date:'ธ.ค. 2569',
+        desc:'รัน KBGI กับชุดข้อมูลทั้งหมด เปรียบเทียบ 3 เงื่อนไข: GPT-4o+KB vs GPT-4o-only vs Baseline (no KB) บันทึก Input/Output Log ทุก Case',
+        items:['ผลการจำแนก AI ครบทุกใบสั่งยา','Input/Output Log (JSON)','Comparison Table (KBGI vs LLM-Only vs Pharmacist)']
+      },
+      {
+        id:'M13',icon:'👨‍⚕️',
+        th:'เภสัชกรประเมินผล (Reference Standard)',en:'Pharmacist Reference Evaluation',
+        status:'pending',pct:0,
+        date:'ธ.ค. 2569 – ม.ค. 2570',
+        desc:'เภสัชกรผู้เชี่ยวชาญ 2 คน ประเมินใบสั่งยาอิสระ (Blind to AI Results) คำนวณ IRR และ Adjudication สำหรับกรณีไม่ตรงกัน',
+        items:['Pharmacist Evaluation Scores','Cohen\'s Kappa for Inter-Rater Reliability','Adjudicated Reference Standard Dataset']
+      },
+      {
+        id:'M14',icon:'📊',
+        th:'วิเคราะห์ทางสถิติและแปลผล',en:'Statistical Analysis & Results',
+        status:'pending',pct:0,
+        date:'ม.ค. 2570',
+        desc:'คำนวณ Precision, Recall, F1-Score (Micro/Macro), Cohen\'s Kappa, ROC-AUC วิเคราะห์ Discordant Cases และทดสอบนัยสำคัญด้วย McNemar\'s Test',
+        items:['Performance Metrics Report (Precision / Recall / F1 / AUC)','ROC Curves & Confusion Matrix (per label)','Discordant Case Analysis Report','Statistical Significance Test Results']
+      }
+    ]
+  },
+  {
+    id:5,
+    th:'ระยะที่ 5: การเขียนและสอบวิทยานิพนธ์',
+    en:'Thesis Writing & Defense',
+    color:'#f472b6',
+    gs:78, gw:22,
+    ms:[
+      {
+        id:'M15',icon:'📝',
+        th:'เขียนวิทยานิพนธ์ฉบับสมบูรณ์',en:'Full Thesis Writing',
+        status:'pending',pct:0,
+        date:'ก.พ. 2570',
+        desc:'เขียนวิทยานิพนธ์ฉบับสมบูรณ์ครบทุกบท รวมบทที่ 4 (ผลการวิจัย) และบทที่ 5 (อภิปรายผลและสรุป) ตามรูปแบบมหาวิทยาลัยศิลปากร',
+        items:['วิทยานิพนธ์ฉบับสมบูรณ์ (ร่างแรก)','Abstract ภาษาไทยและอังกฤษ','รายการภาพ ตาราง และบรรณานุกรมครบถ้วน']
+      },
+      {
+        id:'M16',icon:'📨',
+        th:'ส่งวิทยานิพนธ์เพื่อตรวจสอบ',en:'Thesis Submission for Review',
+        status:'pending',pct:0,
+        date:'มี.ค. 2570',
+        desc:'ส่งวิทยานิพนธ์ให้อาจารย์ที่ปรึกษาและคณะกรรมการตรวจสอบ แก้ไขตามข้อเสนอแนะก่อนสอบ',
+        items:['วิทยานิพนธ์ฉบับแก้ไขสมบูรณ์','อนุมัติให้สอบจากอาจารย์ที่ปรึกษา']
+      },
+      {
+        id:'M17',icon:'🏆',
+        th:'สอบวิทยานิพนธ์',en:'Thesis Defense',
+        status:'pending',pct:0,
+        date:'มี.ค. – เม.ย. 2570',
+        desc:'นำเสนอวิทยานิพนธ์ฉบับสมบูรณ์ต่อคณะกรรมการสอบ แก้ไขตามข้อเสนอแนะขั้นสุดท้าย และส่งฉบับสมบูรณ์',
+        items:['ผ่านการสอบวิทยานิพนธ์','วิทยานิพนธ์ฉบับสมบูรณ์ที่ได้รับการอนุมัติ','บทความวิชาการเพื่อตีพิมพ์ (เป้าหมาย Q1/Q2)']
+      }
+    ]
+  }
+];
+
+/* ═══════════════════════════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════════════════════════ */
+const allMs = () => PHASES.flatMap(p => p.ms);
+const countBy = s => allMs().filter(m => m.status === s).length;
+const totalMs = () => allMs().length;
+const sumPct = () => allMs().reduce((a, m) => a + m.pct, 0);
+const overallPct = () => Math.round(sumPct() / totalMs());
+
+function currentPhase() {
+  for (const p of PHASES) if (p.ms.some(m => m.status === 'active')) return p;
+  for (const p of PHASES) if (p.ms.some(m => m.status === 'pending')) return p;
+  return PHASES[PHASES.length - 1];
+}
+
+function todayStr() {
+  const now = new Date();
+  const m = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  const d = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+  const be = now.getFullYear() + 543;
+  return {
+    date: `${now.getDate()} ${m[now.getMonth()]}`,
+    year: `พ.ศ. ${be}`,
+    day: `วัน${d[now.getDay()]}`
+  };
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CLOCK
+═══════════════════════════════════════════════════════════ */
+function initClock() {
+  function tick() {
+    const t = todayStr();
+    document.getElementById('dc-date').textContent = t.date;
+    document.getElementById('dc-year').textContent = t.year;
+    document.getElementById('dc-day').textContent  = t.day;
+  }
+  tick();
+  setInterval(tick, 60000);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   STATS
+═══════════════════════════════════════════════════════════ */
+function buildStats() {
+  const pct   = overallPct();
+  const done  = countBy('done');
+  const act   = countBy('active');
+  const total = totalMs();
+  const cp    = currentPhase();
+
+  /* ring */
+  const circ = 194.8;
+  const offset = circ - (pct / 100) * circ;
+  setTimeout(() => {
+    document.getElementById('ring').style.strokeDashoffset = offset;
+    document.getElementById('ring-pct').textContent = pct + '%';
+  }, 400);
+
+  document.getElementById('s-done').innerHTML = `${done}<sub>/${total}</sub>`;
+  document.getElementById('s-active').textContent = `${act} กำลังดำเนินการอยู่`;
+  document.getElementById('s-phase').textContent  = `Phase ${cp.id}`;
+  document.getElementById('s-phase-en').textContent = cp.en.split('&')[0].trim();
+
+  const defense = new Date('2027-03-31');
+  const days = Math.max(0, Math.round((defense - new Date()) / 86400000));
+  document.getElementById('s-days').textContent = `เหลือประมาณ ${days.toLocaleString()} วัน`;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   GANTT
+═══════════════════════════════════════════════════════════ */
+function buildGantt() {
+  /* Timeline: Sep 2025 (0%) → Mar 2027 (100%) = 18 months
+     Today = Jun 2026 = month 9 → 9/18 = 50% */
+  const todayPct = 50;
+
+  const labels = ['ก.ย. 68','ธ.ค. 68','มี.ค. 69','มิ.ย. 69','ก.ย. 69','ธ.ค. 69','มี.ค. 70'];
+
+  let html = `<div class="gantt-months">${labels.map(l=>`<span class="gm">${l}</span>`).join('')}</div>`;
+
+  PHASES.forEach(p => {
+    const done  = p.ms.filter(m => m.status === 'done').length / p.ms.length;
+    const act   = p.ms.filter(m => m.status === 'active').length / p.ms.length;
+    const doneW = (done * p.gw).toFixed(1);
+    const actW  = (act  * p.gw).toFixed(1);
+    const remW  = (p.gw - +doneW - +actW).toFixed(1);
+    const c = p.color;
+
+    html += `
+      <div class="gantt-row">
+        <div class="gr-lbl">${p.en.replace('&','&amp;').split('&')[0].trim()}</div>
+        <div class="gr-track">
+          <!-- done segment -->
+          <div class="gr-seg" style="left:${p.gs}%;width:${doneW}%;background:${c};opacity:.95"></div>
+          <!-- active segment (striped) -->
+          <div class="gr-seg" style="left:${p.gs + +doneW}%;width:${actW}%;
+            background:repeating-linear-gradient(45deg,${c}66,${c}66 3px,${c}22 3px,${c}22 6px)"></div>
+          <!-- remaining segment -->
+          <div class="gr-seg" style="left:${p.gs + +doneW + +actW}%;width:${remW}%;
+            background:${c}18;border-radius:0 4px 4px 0"></div>
+          <!-- today line -->
+          <div class="today-vline" style="left:${todayPct}%"></div>
+        </div>
+      </div>`;
+  });
+
+  html += `
+    <div class="gantt-legend">
+      <div class="gl-item"><div class="gl-swatch" style="background:var(--done)"></div>สำเร็จแล้ว</div>
+      <div class="gl-item"><div class="gl-swatch" style="background:repeating-linear-gradient(45deg,#fbbf2466,#fbbf2466 3px,#fbbf2422 3px,#fbbf2422 6px)"></div>กำลังดำเนินการ</div>
+      <div class="gl-item"><div class="gl-swatch" style="background:rgba(255,255,255,.07)"></div>ยังไม่เริ่ม</div>
+      <div class="gl-item" style="margin-left:auto">
+        <div class="gl-swatch" style="width:2px;height:12px;border-radius:1px;background:var(--active)"></div>วันนี้ (มิ.ย. 2569)
+      </div>
+    </div>`;
+
+  document.getElementById('gantt-box').innerHTML = html;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TIMELINE
+═══════════════════════════════════════════════════════════ */
+function buildTimeline() {
+  const tl = document.getElementById('timeline');
+  let html = '';
+
+  PHASES.forEach(p => {
+    const done  = p.ms.filter(m => m.status === 'done').length;
+    const total = p.ms.length;
+    const c     = p.color;
+    const tagDone  = 'done';
+    const tagMap   = { done:'done', active:'active', pending:'pending' };
+    const tagLabel = { done:'✓ สำเร็จ', active:'● กำลังดำเนิน', pending:'○ รอดำเนิน' };
+
+    html += `
+      <div class="phase-block" data-phase="${p.id}">
+        <div class="phase-head" style="border-left-color:${c}">
+          <div class="ph-num" style="background:${c};color:#fff">${p.id}</div>
+          <div class="ph-text">
+            <div class="ph-th">${p.th}</div>
+            <div class="ph-en">${p.en}</div>
+          </div>
+          <div class="ph-right">
+            <div class="ph-done" style="color:${c}">${done}/${total}</div>
+            <div class="ph-total">Milestones</div>
+          </div>
+        </div>
+        <div class="m-list" style="border-color:${c}28">`;
+
+    p.ms.forEach(m => {
+      const sc   = `s-${m.status}`;
+      const tCls = tagMap[m.status];
+      const tLbl = tagLabel[m.status];
+      const fillColor = m.status === 'done'   ? c :
+                        m.status === 'active'  ? `linear-gradient(90deg,${c},#f97316)` :
+                                                 'transparent';
+
+      html += `
+        <div class="mc ${sc}" id="${m.id}" onclick="toggleMs(this)" style="--pc:${c}">
+          <div class="mc-top">
+            <div class="mc-icon">${m.icon}</div>
+            <div class="mc-mid">
+              <div class="mc-name">${m.id}: ${m.th}</div>
+              <div class="mc-sub">${m.en}</div>
+            </div>
+            <div class="mc-right">
+              <span class="tag ${tCls}">${tLbl}</span>
+              <span class="mc-date">📅 ${m.date}</span>
+              <span class="mc-pct" style="color:${m.pct>0?c:'var(--t3)'}">${m.pct}%</span>
+            </div>
+            <div class="mc-chevron">▼</div>
+          </div>
+          <div class="mc-prog">
+            <div class="mc-fill" data-pct="${m.pct}" data-color="${m.status!=='pending'?c:''}" data-grad="${m.status==='active'?'1':'0'}"></div>
+          </div>
+          <div class="mc-detail">
+            <div class="mc-detail-in">
+              <div>
+                <div class="dl">คำอธิบาย</div>
+                <div class="dt">${m.desc}</div>
+              </div>
+              <div>
+                <div class="dl">ผลส่งมอบ (Deliverables)</div>
+                <ul class="dlist" style="--pc:${c}">
+                  ${m.items.map(i=>`<li style="--pc:${c}">${i}</li>`).join('')}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    });
+
+    html += `</div></div>`;
+  });
+
+  tl.innerHTML = html;
+
+  /* fix dlist bullet colors */
+  document.querySelectorAll('.dlist li').forEach(li => {
+    const c = getComputedStyle(li).getPropertyValue('--pc').trim();
+    li.style.setProperty('--pc', c || '#22d3ee');
+  });
+
+  /* animate progress bars after paint */
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      document.querySelectorAll('.mc-fill').forEach(f => {
+        const pct  = parseInt(f.dataset.pct) || 0;
+        const col  = f.dataset.color;
+        const grad = f.dataset.grad === '1';
+        f.style.width = pct + '%';
+        if (pct > 0) {
+          if (grad) {
+            /* derive end color from base */
+            f.style.background = `linear-gradient(90deg,${col},#f97316)`;
+          } else {
+            f.style.background = col || 'var(--done)';
+          }
+        }
+      });
+    }, 200);
+  });
+}
+
+function toggleMs(el) {
+  const detail = el.querySelector('.mc-detail');
+  const isOpen = el.classList.contains('open');
+  /* close all */
+  document.querySelectorAll('.mc.open').forEach(c => {
+    if (c !== el) {
+      c.classList.remove('open');
+      c.querySelector('.mc-detail').classList.remove('open');
+    }
+  });
+  el.classList.toggle('open', !isOpen);
+  detail.classList.toggle('open', !isOpen);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  initClock();
+  buildStats();
+  buildGantt();
+  buildTimeline();
+});
+</script>
+</body>
+</html>
